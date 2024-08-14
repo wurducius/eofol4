@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./scripts/start.js",
     "build": "node ./scripts/build.js",
-    "serve": "npx eofol-live-server ./build -a 0.0.0.0 -p 3000 -o --quiet",
+    "serve": "node ./scripts/serve.js",
     "clean": "node ./scripts/clean.js",
     "build-serve": "npm run build && npm run serve",
     "check": "npx eslint -c eslint.config.mjs .",
@@ -15,6 +15,7 @@
     "lint": "npm run check-fix && npm run prettify",
     "analyze": "node ./scripts/analyze.js 1",
     "reinstall": "node ./scripts/reinstall.js",
+    "reinstall-force": "node ./scripts/reinstall.js -f",
     "deploy": "npm run build && call c:/code/eofol4-deploy.bat",
     "docker-build": "docker build -t eofol4-test ./docker-test",
     "docker-run": "docker run -p 3000:3000 eofol4-test",

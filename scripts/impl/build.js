@@ -27,6 +27,9 @@ const build = () => {
 
   // @TODO dont do this
   touch(resolve(PATH_BUILD, "fonts"))
+  touch(resolve(PATH_BUILD, "assets"))
+  touch(resolve(PATH_BUILD, "assets", "media"))
+  touch(resolve(PATH_BUILD, "assets", "media", "images"))
 
   const templatePromises = readDir(resolve(PATH_CWD, "templates")).map((templateName) => {
     const templateContent = read(resolve(PATH_CWD, "templates", templateName)).toString()
