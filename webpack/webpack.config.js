@@ -4,7 +4,7 @@ const { PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD } = req
 
 const views = ["index"]
 
-const entry = views.reduce((acc, next) => ({ ...acc, [next]: resolve(PATH_SRC, `${next}.js`) }), {})
+const entry = views.reduce((acc, next) => ({ ...acc, [next]: resolve(PATH_SRC, `${next}.ts`) }), {})
 
 module.exports = {
   mode: "development",
@@ -21,6 +21,18 @@ module.exports = {
     open: BROWSER,
     host: HOST,
     server: PROTOCOL,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".ts", ".js"],
   },
   plugins: [new EofolPlugin()],
 }

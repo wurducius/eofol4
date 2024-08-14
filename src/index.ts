@@ -1,6 +1,6 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
 
-const injectElement = (id, content, condition) => {
+const injectElement = (id: string, content: string, condition: boolean) => {
   if (condition && id) {
     const scriptElement = document.getElementById(id)
 
@@ -13,4 +13,4 @@ const injectElement = (id, content, condition) => {
 // ===================================================================
 
 injectElement("script", "Script injected and working!", true)
-injectElement("module", "External dependency imported and working!", hexToCSSFilter)
+injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
