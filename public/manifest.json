@@ -1,0 +1,34 @@
+{
+  "short_name": "eofol4-app",
+  "name": "Eofol4 app",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/media/images/logo-sm.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/media/images/logo-md.png",
+      "type": "image/png",
+      "sizes": "320x320",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/media/images/logo-lg.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#26d9d9",
+  "background_color": "#000000"
+}
