@@ -2,7 +2,7 @@ const EofolPlugin = require("../compiler")
 const { resolve } = require("../util")
 const { PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD } = require("../config")
 
-const views = ["index"]
+const views = ["index", "index2"]
 
 const entry = views.reduce((acc, next) => ({ ...acc, [next]: resolve(PATH_SRC, `${next}.ts`) }), {})
 

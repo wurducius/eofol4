@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./scripts/start.js",
     "build": "node ./scripts/build.js",
-    "serve": "node ./scripts/serve.js",
+    "serve": "npx eofol-live-server ./build -a 0.0.0.0 -p 3000 -o --quiet",
     "clean": "node ./scripts/clean.js",
     "build-serve": "npm run build && npm run serve",
     "check": "npx eslint -c eslint.config.mjs .",
@@ -24,6 +24,7 @@
   "dependencies": {
     "cross-spawn": "^7.0.3",
     "hex-to-css-filter": "^5.4.0",
+    "html-to-json-parser": "^2.0.1",
     "rimraf": "^6.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "eofol-live-server": "^1.2.4",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
     "prettier": "3.3.3",
