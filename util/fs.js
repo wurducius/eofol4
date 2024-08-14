@@ -5,6 +5,8 @@ const rimraf = require("rimraf")
 
 const resolve = path.resolve
 
+const exists = fs.existsSync
+
 const rm = rimraf.rimrafSync
 
 const mkdir = fs.mkdirSync
@@ -22,4 +24,4 @@ const cp = fs.promises.copyFile
 
 const isDirectory = (path) => fs.lstatSync(path).isDirectory()
 
-module.exports = { resolve, rm, mkdir, readDir, touch, cp, isDirectory }
+module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory }
