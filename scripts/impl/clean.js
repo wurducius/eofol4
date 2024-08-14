@@ -1,13 +1,12 @@
 const rimraf = require("rimraf")
-const {PATH_BUILD} = require("../../config");
+const { PATH_BUILD } = require("../../config")
 
 const cleanPaths = [PATH_BUILD]
 
 const clean = () => {
-    cleanPaths.forEach((cleanPath) => {
-        rimraf.rimrafSync(cleanPath)
-    })
+  cleanPaths.forEach((cleanPath) => {
+    rimraf.rimrafSync(cleanPath)
+  })
 }
-
 
 module.exports = clean

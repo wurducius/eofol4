@@ -1,3 +1,3 @@
-const { build} = require("./impl")
+const { build } = require("./impl")
 
 build()

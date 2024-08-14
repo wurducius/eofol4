@@ -1,13 +1,13 @@
-const Webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
+const Webpack = require("webpack")
+const WebpackDevServer = require("webpack-dev-server")
 
 const webpackConfig = require("../webpack/webpack.config")
 
-const server = new WebpackDevServer(webpackConfig.devServer, Webpack(webpackConfig));
+const server = new WebpackDevServer(webpackConfig.devServer, Webpack(webpackConfig))
 
 const runServer = async () => {
-    console.log('Starting server...');
-    await server.start();
-};
+  console.log("Starting server...")
+  await server.start()
+}
 
-runServer();
+runServer()

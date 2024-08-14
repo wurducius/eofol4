@@ -1,13 +1,13 @@
-import { hexToCSSFilter } from 'hex-to-css-filter';
+import { hexToCSSFilter } from "hex-to-css-filter"
 
-const injectElement = (id,content, condition) => {
-    if(condition && id) {
-        const scriptElement = document.getElementById(id)
+const injectElement = (id, content, condition) => {
+  if (condition && id) {
+    const scriptElement = document.getElementById(id)
 
-        if (scriptElement) {
-            scriptElement.innerHTML = content
-        }
+    if (scriptElement) {
+      scriptElement.innerHTML = content
     }
+  }
 }
 
 // ===================================================================

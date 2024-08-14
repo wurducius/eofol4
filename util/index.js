@@ -1,3 +1,3 @@
 const Fs = require("./fs")
 
-module.exports = { ...Fs}
+module.exports = { ...Fs }

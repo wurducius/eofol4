@@ -1,15 +1,17 @@
-const pluginName = 'ConsoleLogOnBuildWebpackPlugin';
+const pluginName = "ConsoleLogOnBuildWebpackPlugin"
 
 class ConsoleLogOnBuildWebpackPlugin {
-    apply(compiler) {
-        compiler.hooks.run.tap(pluginName, (compilation) => {
-            console.log('Eofol4 build');
-        });
+  apply(compiler) {
+    // eslint-disable-next-line no-unused-vars
+    compiler.hooks.run.tap(pluginName, (compilation) => {
+      console.log("Eofol4 build")
+    })
 
-        compiler.hooks.watchRun.tap(pluginName, (compilation) => {
-            console.log('Eofol4 start');
-        });
-    }
+    // eslint-disable-next-line no-unused-vars
+    compiler.hooks.watchRun.tap(pluginName, (compilation) => {
+      console.log("Eofol4 start")
+    })
+  }
 }
 
-module.exports = ConsoleLogOnBuildWebpackPlugin;
+module.exports = ConsoleLogOnBuildWebpackPlugin

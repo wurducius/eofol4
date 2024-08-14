@@ -1,3 +1,3 @@
-const { serve} = require("./impl")
+const { serve } = require("./impl")
 
 serve()
