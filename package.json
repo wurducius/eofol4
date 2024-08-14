@@ -13,24 +13,31 @@
     "check-fix": "npx eslint -c eslint.config.mjs --fix .",
     "prettify": "npx prettier --config .prettierrc --write .",
     "lint": "npm run check-fix && npm run prettify",
+    "analyze": "node ./scripts/analyze.js 1",
     "reinstall": "node ./scripts/reinstall.js",
-    "deploy": "npm run build && call c:/code/eofol4-deploy.bat"
+    "deploy": "npm run build && call c:/code/eofol4-deploy.bat",
+    "docker-build": "docker build -t eofol4-test ./docker-test",
+    "docker-run": "docker run -p 3000:3000 eofol4-test",
+    "docker-stop": "bash ./docker-test/docker-stop.sh",
+    "docker-test": "npm run docker-stop && npm run docker-build && npm run docker-run"
   },
   "dependencies": {
-    "hex-to-css-filter": "^5.4.0"
+    "hex-to-css-filter": "^5.4.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "cross-spawn": "^7.0.3",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
     "prettier": "3.3.3",
     "rimraf": "^6.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.1.0",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "typescript-eslint": "^8.1.0"
+
   },
   "author": "wurducius@gmail.com",
   "bugs": "https://github.com/wurducius/eofol4/issues",

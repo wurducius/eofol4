@@ -14,8 +14,8 @@ const mkdir = fs.mkdirSync
 const readDir = fs.readdirSync
 
 const touch = (path) => {
-  if (!fs.existsSync(path)) {
-    mkdir(path)
+  if (!exists(path)) {
+    fs.mkdirSync(path, { recursive: true })
   }
 }
 
@@ -24,4 +24,10 @@ const cp = fs.promises.copyFile
 
 const isDirectory = (path) => fs.lstatSync(path).isDirectory()
 
-module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory }
+const stat = (path) => fs.statSync(path)
+
+const read = (path) => fs.readFileSync(path)
+
+const write = (path, content) => fs.writeFileSync(path, content)
+
+module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory, stat, read, write }
