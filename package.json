@@ -1,6 +1,6 @@
 {
   "name": "eofol4",
-  "description": "",
+  "description": "All-inclusive blazingly fast reactive web framework with zero configuration, batteries included!",
   "version": "4.0.0",
   "main": "index.js",
   "scripts": {
@@ -16,5 +16,10 @@
     "webpack-dev-server": "^5.0.4"
   },
   "author": "wurducius@gmail.com",
+  "bugs": "https://github.com/wurducius/eofol4/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wurducius/eofol4.git"
+  },
   "license": "MIT"
 }

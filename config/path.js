@@ -1,4 +1,4 @@
-const {resolve} = require("path")
+const {resolve} = require("../util")
 const {DIRNAME_BUILD, DIRNAME_PUBLIC, DIRNAME_SRC} = require("./env")
 
 const PATH_CWD = resolve(process.cwd())

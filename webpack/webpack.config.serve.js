@@ -1,6 +1,6 @@
 // const EofolPlugin = require("./compiler")
 
-const {PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD} = require("./config");
+const {PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD} = require("../config");
 
 module.exports = {
     mode: 'development',

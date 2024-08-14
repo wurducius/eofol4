@@ -1,12 +1,10 @@
-const path = require('path');
-
-const EofolPlugin = require("./compiler")
-
-const {PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD} = require("./config");
+const EofolPlugin = require("../compiler")
+const {resolve} = require("../util")
+const {PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD} = require("../config");
 
 const views = ["index"]
 
-const entry = views.reduce((acc, next) => ({...acc, [next]: path.resolve(PATH_SRC, `${next}.js`)}), {})
+const entry = views.reduce((acc, next) => ({...acc, [next]: resolve(PATH_SRC, `${next}.js`)}), {})
 
 module.exports = {
     mode: 'development',
