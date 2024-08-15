@@ -7,7 +7,7 @@ const webpackConfig = require("../../webpack/webpack.config")
 const { PATH_CWD, PATH_BUILD, PATH_PUBLIC } = require("../../config")
 const { resolve, read, write, touch, isDirectory, readDir, cp } = require("../../util")
 const clean = require("./clean")
-const htmlTemplate = require("../../compiler/head")
+const htmlTemplate = require("../../compiler/head/head")
 
 // @TODO handle better tree structure
 const copyPublic = () =>
@@ -26,17 +26,19 @@ const build = () => {
   touch(PATH_BUILD)
 
   // @TODO dont do this
-  touch(resolve(PATH_BUILD, "fonts"))
   touch(resolve(PATH_BUILD, "assets"))
   touch(resolve(PATH_BUILD, "assets", "media"))
   touch(resolve(PATH_BUILD, "assets", "media", "images"))
+  touch(resolve(PATH_BUILD, "assets", "media", "icons"))
+  touch(resolve(PATH_BUILD, "assets", "media", "fonts"))
 
-  const templatePromises = readDir(resolve(PATH_CWD, "templates")).map((templateName) => {
-    const templateContent = read(resolve(PATH_CWD, "templates", templateName)).toString()
-    return JSONToHTML(htmlTemplate(path.parse(templateName).name)(templateContent)).then((templateHtml) => {
+  const templatePromises = readDir(resolve(PATH_CWD, "templates")).map((templateName) =>
+    JSONToHTML(
+      htmlTemplate(path.parse(templateName).name)(read(resolve(PATH_CWD, "templates", templateName)).toString()),
+    ).then((templateHtml) => {
       write(resolve(PATH_PUBLIC, templateName), templateHtml.toString())
-    })
-  })
+    }),
+  )
 
   Promise.all(templatePromises)
     .then(() => copyPublic())

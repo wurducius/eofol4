@@ -1,16 +1,3 @@
-import { hexToCSSFilter } from "hex-to-css-filter"
+import { getPageName, injectElement } from "./util"
 
-const injectElement = (id: string, content: string, condition: boolean) => {
-  if (condition && id) {
-    const scriptElement = document.getElementById(id)
-
-    if (scriptElement) {
-      scriptElement.innerHTML = content
-    }
-  }
-}
-
-// ===================================================================
-
-injectElement("script", "Script injected and working!", true)
-injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
+injectElement("404-msg", `The requested page "${getPageName()}" does not exist.`)

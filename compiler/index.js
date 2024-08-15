@@ -1,17 +1,5 @@
-const pluginName = "ConsoleLogOnBuildWebpackPlugin"
+const htmlTemplate = require("./head/head")
+const minifyHtml = require("./scripts/minify-html")
+const minifyJs = require("./scripts/minify-js")
 
-class ConsoleLogOnBuildWebpackPlugin {
-  apply(compiler) {
-    // eslint-disable-next-line no-unused-vars
-    compiler.hooks.run.tap(pluginName, (compilation) => {
-      console.log("Eofol4 build")
-    })
-
-    // eslint-disable-next-line no-unused-vars
-    compiler.hooks.watchRun.tap(pluginName, (compilation) => {
-      console.log("Eofol4 start")
-    })
-  }
-}
-
-module.exports = ConsoleLogOnBuildWebpackPlugin
+module.exports = { htmlTemplate, minifyHtml, minifyJs }

@@ -1,4 +1,4 @@
-const EofolPlugin = require("../compiler")
+const EofolPlugin = require("../plugin")
 const { resolve } = require("../util")
 const { PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD } = require("../config")
 

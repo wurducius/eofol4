@@ -1,5 +1,6 @@
-const { read, resolve } = require("../util/fs")
-const { PATH_CWD } = require("../config/path")
+const { read, resolve } = require("../../util")
+const { PATH_CWD } = require("../../config")
+
 const htmlElement = (tagname, content, attributes) => ({
   type: tagname,
   content,
@@ -15,10 +16,10 @@ compileAllStyles(PATH_BASE_STYLES_CSS, PATH_BASE_STYLES_LESS, "").then((baseStyl
 const relativizePath = (x) => x
 const relativizeFontStyle = (x) => x
 
-const baseStyle = read(resolve(PATH_CWD, "compiler", "base.css")).toString()
+const baseStyle = read(resolve(PATH_CWD, "compiler", "head", "base.css")).toString()
 
 const htmlTemplate = (view) => (body) => {
-  const data = require(resolve(PATH_CWD, "compiler", "metadata-default.js"))
+  const data = require(resolve(PATH_CWD, "compiler", "head", "metadata-default.js"))
 
   return htmlElement(
     "html",

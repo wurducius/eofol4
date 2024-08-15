@@ -12,7 +12,7 @@ const data = {
   favicon: "favicon.png",
   appleTouchIcon: "./assets/media/images/logo-sm.png",
   manifest: "manifest.json",
-  fontStyle: '@font-face { font-family: "Inter"; src: url("./fonts/Inter.woff2") format("woff2"); }',
+  fontStyle: '@font-face { font-family: "Inter"; src: url("./assets/media/fonts/Inter.woff2") format("woff2"); }',
 }
 
 module.exports = data
