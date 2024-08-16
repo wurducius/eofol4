@@ -1,78 +1,28 @@
 const { minifyJs } = require("../compiler")
 const { prettySize } = require("../util/dev-util")
-
-const pluginName = "eofol4-compiler"
-
-const sourceSize = (source) => Buffer.byteLength(source, "utf8")
-
-const VERBOSE = true
-
-const log = (msg) => {
-  if (VERBOSE) {
-    console.log(msg)
-  }
-}
-
-const transformAssets =
-  (transformPropertyName, transform, logStart, logFinishedAsset, extraProperty, conditional) =>
-  (compiler, compilation) =>
-  async (assets) => {
-    logStart()
-    Object.keys(assets)
-      .filter((assetName) => !conditional || conditional(assets[assetName].info))
-      .map((assetName) => {
-        const asset = assets[assetName]
-        const source = asset.source()
-        const map = asset.map()
-
-        const nextSource = transform(source)
-        const nextSize = sourceSize(nextSource)
-        const nextInfo = { ...asset.info, [transformPropertyName]: true, ...extraProperty }
-
-        const nextAsset = {
-          source: () => nextSource,
-          map: () => map,
-          sourceAndMap: () => ({
-            source: nextSource,
-            map,
-          }),
-          size: () => nextSize,
-          info: nextInfo,
-        }
-
-        logFinishedAsset({ source, nextSource, nextSize })
-
-        assets[assetName] = nextAsset
-        return nextAsset
-      })
-  }
+const transformAssets = require("./transform-assets")
+const { log, sourceSize } = require("./util")
+const { pluginName } = require("./config")
 
 const processAssets = (compiler, compilation) => (assets) => {
-  return transformAssets(
-    "typed",
-    (x) => x,
-    () => {},
-    () => {},
-    { type: "js" },
-  )(
+  return transformAssets({ transformPropertyName: "typed", extraProperty: { type: "js" } })(
     compiler,
     compilation,
   )(assets).then(() => {
-    return transformAssets(
-      "minified",
-      minifyJs,
-      () => {
+    return transformAssets({
+      transformPropertyName: "minified",
+      transform: minifyJs,
+      logStart: () => {
         log("Minify JS")
       },
-      ({ nextSize, source }) => {
-        const prevSize = sourceSize(source)
+      logFinishedAsset: ({ nextSize, source, transform }) => {
+        const prevSize = transform ? sourceSize(source) : nextSize
         log(
           `Original size = ${prettySize(prevSize)}, minified size = ${prettySize(nextSize)}, saved = ${prettySize(prevSize - nextSize)}.`,
         )
       },
-      undefined,
-      (info) => !info.minified && info.type === "js",
-    )(
+      conditional: (info) => !info.minified && info.type === "js",
+    })(
       compiler,
       compilation,
     )(assets)
