@@ -32,3 +32,9 @@ body {
 p {
   margin: 0 0 0 0;
 }
+
+.phi {
+  background-color: #1a9595;
+  border-radius: 8px;
+  margin: 32px 0 32px 0;
+}
