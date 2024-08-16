@@ -1,4 +1,4 @@
-const { minify } = require("compiler/scripts/minify-js")
+const { minify } = require("uglify-js")
 
 const uglifyOptions = {
   parse: {},
