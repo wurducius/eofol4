@@ -1,4 +1,5 @@
 const { VERBOSE } = require("./config")
+const { prettySize } = require("../util/dev-util")
 
 const log = (msg) => {
   if (VERBOSE) {
@@ -9,7 +10,7 @@ const log = (msg) => {
 const sourceSize = (source) => Buffer.byteLength(source, "utf8")
 
 const getAsset = ({ asset, nextSource, nextSize, nextInfo }) => {
-  const map = asset.map()
+  const map = asset ? asset.map() : null
 
   return {
     source: () => nextSource,
@@ -23,4 +24,10 @@ const getAsset = ({ asset, nextSource, nextSize, nextInfo }) => {
   }
 }
 
-module.exports = { log, sourceSize, getAsset }
+const logSizeDelta = (filename, prevSize, nextSize) => {
+  log(
+    `[${filename}]: original size = ${prettySize(prevSize)}, minified size = ${prettySize(nextSize)}, saved = ${prettySize(prevSize - nextSize)}.`,
+  )
+}
+
+module.exports = { log, sourceSize, getAsset, logSizeDelta }

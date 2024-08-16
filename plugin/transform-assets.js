@@ -19,7 +19,7 @@ const transformAssets =
     }
 
     Object.keys(assets)
-      .filter((assetName) => !conditional || conditional(assets[assetName].info))
+      .filter((assetName) => conditional === undefined || conditional(assets[assetName].info ?? {}, assetName))
       .map((assetName) => {
         if (logStartedAsset) {
           logStartedAsset({ assetName })
@@ -28,7 +28,7 @@ const transformAssets =
         const asset = assets[assetName]
         const source = asset.source()
 
-        const nextSource = transform ? transform(source) : source
+        const nextSource = transform !== undefined ? transform(source) : source
         const nextSize = sourceSize(nextSource)
         const nextInfo = { ...asset.info, [transformPropertyName]: true, ...extraProperty }
 
