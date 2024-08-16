@@ -21,22 +21,12 @@ const build = () => {
   touch(resolve(PATH_BUILD, "assets", "media", "icons"))
   touch(resolve(PATH_BUILD, "assets", "media", "fonts"))
 
-  const templatePromises = readDir(resolve(PATH_CWD, "templates")).map((templateName) =>
-    JSONToHTML(
-      htmlTemplate(path.parse(templateName).name)(read(resolve(PATH_CWD, "templates", templateName)).toString()),
-    ).then((templateHtml) => {
-      write(resolve(PATH_PUBLIC, templateName), templateHtml.toString())
-    }),
-  )
-
-  Promise.all(templatePromises).then(() => {
-    const webpackConfigImpl = { ...webpackConfig, mode: "production" }
-    webpack(webpackConfigImpl, (err, stats) => {
-      if (err || stats.hasErrors()) {
-        console.log(`Webpack error: ${err}`)
-      }
-      console.log(`Eofol4 project built at ${PATH_BUILD}`)
-    })
+  const webpackConfigImpl = { ...webpackConfig, mode: "production" }
+  webpack(webpackConfigImpl, (err, stats) => {
+    if (err || stats.hasErrors()) {
+      console.log(`Webpack error: ${err}`)
+    }
+    console.log(`Eofol4 project built at ${PATH_BUILD}`)
   })
 }
 
