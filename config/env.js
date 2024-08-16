@@ -8,10 +8,37 @@ const PROTOCOL = "http"
 const DIRNAME_BUILD = "build"
 const DIRNAME_SRC = "src"
 const DIRNAME_PUBLIC = "public"
+const DIRNAME_PAGES = "pages"
+const DIRNAME_ASSETS = "assets"
+const DIRNAME_JS = "js"
+const DIRNAME_CSS = "css"
+const DIRNAME_MEDIA = "media"
+const DIRNAME_IMAGES = "images"
+const DIRNAME_ICONS = "icons"
+const DIRNAME_FONTS = "fonts"
+const DIRNAME_TEMPLATES = "templates"
 
 const PAGE_FALLBACK = "404.html"
 
-const defaultEnv = { PORT, BROWSER, HOST, PROTOCOL, DIRNAME_BUILD, DIRNAME_SRC, DIRNAME_PUBLIC, PAGE_FALLBACK }
+const defaultEnv = {
+  PORT,
+  BROWSER,
+  HOST,
+  PROTOCOL,
+  DIRNAME_BUILD,
+  DIRNAME_SRC,
+  DIRNAME_PUBLIC,
+  DIRNAME_PAGES,
+  DIRNAME_ASSETS,
+  DIRNAME_JS,
+  DIRNAME_CSS,
+  DIRNAME_MEDIA,
+  DIRNAME_IMAGES,
+  DIRNAME_ICONS,
+  DIRNAME_FONTS,
+  DIRNAME_TEMPLATES,
+  PAGE_FALLBACK,
+}
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 
