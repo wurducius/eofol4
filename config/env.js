@@ -7,7 +7,7 @@ const PROTOCOL = "http"
 
 const DIRNAME_BUILD = "build"
 const DIRNAME_SRC = "src"
-const DIRNAME_PUBLIC = "public"
+const DIRNAME_STATIC = "static"
 const DIRNAME_PAGES = "pages"
 const DIRNAME_ASSETS = "assets"
 const DIRNAME_JS = "js"
@@ -27,7 +27,7 @@ const defaultEnv = {
   PROTOCOL,
   DIRNAME_BUILD,
   DIRNAME_SRC,
-  DIRNAME_PUBLIC,
+  DIRNAME_STATIC,
   DIRNAME_PAGES,
   DIRNAME_ASSETS,
   DIRNAME_JS,

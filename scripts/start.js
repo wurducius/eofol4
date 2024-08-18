@@ -1,13 +1,9 @@
-const Webpack = require("webpack")
-const WebpackDevServer = require("webpack-dev-server")
+const { build, serve } = require("./impl")
+const { sleep } = require("../util")
 
-const webpackConfig = require("../webpack/webpack.config")
+build()
 
-const server = new WebpackDevServer(webpackConfig.devServer, Webpack(webpackConfig))
-
-const runServer = async () => {
-  console.log("Starting server...")
-  await server.start()
-}
-
-runServer()
+// @TODO do not sleep instead fix async promise handling in build
+sleep(20).then(() => {
+  serve()
+})

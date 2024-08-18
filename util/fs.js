@@ -19,8 +19,7 @@ const touch = (path) => {
   }
 }
 
-// @TODO unite async/sync - at this moment `cp` is the only async function
-const cp = fs.promises.copyFile
+const cp = fs.cpSync
 
 const isDirectory = (path) => fs.lstatSync(path).isDirectory()
 
@@ -30,4 +29,6 @@ const read = (path) => fs.readFileSync(path)
 
 const write = (path, content) => fs.writeFileSync(path, content)
 
-module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory, stat, read, write }
+const parse = path.parse
+
+module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory, stat, read, write, parse }
