@@ -3,7 +3,7 @@ const minifyHtml = require("../compiler/scripts/minify-html")
 const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
-const { readDir, resolve, read, isDirectory, parse } = require("../util")
+const { pipe, readDir, resolve, read, isDirectory, parse } = require("../util")
 const { PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
 const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head/head")
@@ -44,15 +44,20 @@ const processStaticAssets = (compilation) => (basepath) =>
     }),
   )
 
+const injectDoctype = (content) => `<!doctype html>${content}`
+
 const processTemplates = () =>
   Promise.all(
     readDir(PATH_TEMPLATES).map((templateName) =>
-      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString())),
+      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString())).then(
+        (content) => injectDoctype(content),
+      ),
     ),
   )
 
 const processTemplatesPost = (compilation) => (generatedPages) =>
   generatedPages.map((content) => {
+    // @TODO process tree structure generated pages in PATH_TEMPLATES
     const filename = "index2.html"
     return processStatic(filename, content, ".html").then((processed) => {
       compilation.assets[filename] = getAsset({
