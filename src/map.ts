@@ -5,6 +5,12 @@ import { injectElement, registerServiceworker } from "./util"
 const collectedViews = ["index.html", "index2.html", "license.html", "map.html", "404.html"]
 
 const maplistContent = collectedViews
+  .map((view) =>
+    view
+      .split("")
+      .map((letter, i) => (i === 0 ? letter.toUpperCase() : letter))
+      .join(""),
+  )
   .map((view) => `<li><a href="${view}">${view.replace(".html", "")}</a></li>`)
   .join("")
 

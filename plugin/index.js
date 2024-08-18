@@ -118,7 +118,7 @@ const onInitCompilation = (compiler) => (compilation) => {
 
 // eslint-disable-next-line no-unused-vars
 const onBuildStarted = (compilation) => {
-  console.log("Eofol4 build")
+  // console.log("Eofol4 build")
 }
 
 // eslint-disable-next-line no-unused-vars

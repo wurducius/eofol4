@@ -1,13 +1,21 @@
 const Watchpack = require("watchpack")
-const { build, serve } = require("./impl")
+const { build, serve, devParams } = require("./impl")
 const { sleep, primary, success } = require("../util")
-const { DIRNAME_SRC, DIRNAME_PAGES, DIRNAME_STATIC, DIRNAME_TEMPLATES, PROTOCOL, HOST, PORT } = require("../config")
-
-const webpackParams = { mode: "development" }
+const {
+  DIRNAME_SRC,
+  DIRNAME_PAGES,
+  DIRNAME_STATIC,
+  DIRNAME_TEMPLATES,
+  PROTOCOL,
+  HOST,
+  PORT,
+  HOT_UPDATE_WATCH_INTERNAL_MS,
+  HOT_UPDATE_WATCH_POLL,
+} = require("../config")
 
 const watchpackOptions = {
-  aggregateTimeout: 250,
-  poll: true,
+  aggregateTimeout: HOT_UPDATE_WATCH_INTERNAL_MS,
+  poll: HOT_UPDATE_WATCH_POLL,
   followSymlinks: true,
   ignored: "**/.git",
 }
@@ -30,7 +38,7 @@ const SERVE_URL = `${PROTOCOL}://${HOST}:${PORT}`
 
 const recompile = async () => {
   console.log(primary("Recompiling..."))
-  build(webpackParams, true)
+  build(devParams, true)
   return await sleep(20).then(() => {
     console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
   })
@@ -44,7 +52,7 @@ const handleRemove = async () => {
   await recompile()
 }
 
-build(webpackParams, false)
+build(devParams, false)
 
 // @TODO do not sleep instead fix async promise handling in build
 sleep(20).then(() => {

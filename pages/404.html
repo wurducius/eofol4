@@ -1,79 +1,114 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Eofol4 - Page not found</title>
-    <meta charset="UTF-8"></meta>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta>
-    <meta name="theme-color" content="#000000"></meta>
-    <meta name="description" content="All inclusive web framework with zero configuration, batteries included!"></meta>
-    <meta property="og:description"
-          content="All inclusive web framework with zero configuration, batteries included!"></meta>
-    <meta name="keywords" content="JS,Frontend framework"></meta>
-    <meta name="author" content="Jakub Eliáš"></meta>
-    <meta property="og:image" content="./assets/media/images/logo-lg.png"></meta>
-    <meta property="og:image:type" content="image/png"></meta>
-    <meta property="og:image:width" content="512"></meta>
-    <meta property="og:image:height" content="512"></meta>
-    <link rel="icon" href="favicon.png"></link>
-    <link rel="apple-touch-icon" href="./assets/media/images/logo-sm.png"></link>
-    <link rel="manifest" href="manifest.json"></link>
+<head>
+  <title>Eofol4 - Page not found</title>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta>
+  <meta name="theme-color" content="#000000"></meta>
+  <meta name="description" content="All inclusive web framework with zero configuration, batteries included!"></meta>
+  <meta property="og:description"
+        content="All inclusive web framework with zero configuration, batteries included!"></meta>
+  <meta name="keywords" content="JS,Frontend framework"></meta>
+  <meta name="author" content="Jakub Eliáš"></meta>
+  <meta property="og:image" content="./assets/media/images/logo-lg.png"></meta>
+  <meta property="og:image:type" content="image/png"></meta>
+  <meta property="og:image:width" content="512"></meta>
+  <meta property="og:image:height" content="512"></meta>
+  <link rel="icon" href="favicon.png"></link>
+  <link rel="apple-touch-icon" href="./assets/media/images/logo-sm.png"></link>
+  <link rel="manifest" href="manifest.json"></link>
 
-    <style>
+  <style>
       html {
-        margin: 0;
-        height: 100%;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -webkit-text-size-adjust: 100%;
-        line-height: 1.5;
-        -moz-osx-font-smoothing: grayscale;
-        touch-action: manipulation;
+          margin: 0;
+          height: 100%;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -webkit-text-size-adjust: 100%;
+          line-height: 1.5;
+          -moz-osx-font-smoothing: grayscale;
+          touch-action: manipulation;
       }
 
       body {
-        margin: 0;
-        height: 100%;
-        background-size: cover;
-        background-color: #1a202c;
-        background-blend-mode: multiply;
-        background-attachment: fixed;
+          margin: 0;
+          height: 100%;
+          background-size: cover;
+          background-color: #1a202c;
+          background-blend-mode: multiply;
+          background-attachment: fixed;
           background-image: url("./assets/media/images/rainbow-mountains-peru.jpg");
-        font-family: Inter, sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        color: #edf2f7;
+          font-family: Inter, sans-serif;
+          font-size: 16px;
+          font-weight: 400;
+          color: #edf2f7;
       }
 
       .container {
-        margin: 0 auto 0 auto;
-        padding: 32px 32px;
-        text-align: center;
+          margin: 0 auto 0 auto;
+          padding: 32px 32px;
+          text-align: center;
       }
 
       p {
-        margin: 0 0 0 0;
+          margin: 0 0 0 0;
+      }
+
+      .col {
+          display: flex;
+          flex-direction: column;
+      }
+
+      a {
+          text-decoration: none;
+          font-weight: 700;
+          color: #1a9595;
+      }
+
+      a:visited {
+          color: #197a7a;
+      }
+
+      a:hover {
+          color: #46c8c8;
+      }
+
+      a:active {
+          color: #197a7a;
+      }
+
+      .m-t-md {
+          margin-top: 16px;
       }
 
       @font-face {
-        font-family: "Inter";
-        src: url("./assets/media/fonts/Inter.woff2") format("woff2");
+          font-family: "Inter";
+          src: url("./assets/media/fonts/Inter.woff2") format("woff2");
       }
 
       .phi {
-        background-color: #1a9595;
-        border-radius: 8px;
-        margin: 32px 0 32px 0;
+          background-color: #1a9595;
+          border-radius: 8px;
+          margin: 32px 0 32px 0;
       }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Page not found</h1>
-      <img src="assets/media/icons/phi.svg" alt="Eofol logo greek letter Phi" height="192px" width="192px" class="phi" />
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Page not found</h1>
+  <img src="assets/media/icons/phi.svg" alt="Eofol logo greek letter Phi" height="192px" width="192px" class="phi" />
 
-      <p id="404-msg">The requested page does not exist.</p>
-    </div>
+  <p id="404-msg">The requested page does not exist.</p>
 
-    <script src="./assets/js/404.js"></script>
-  </body>
+  <div class="col m-t-md ">
+    <a href="javascript:history.back()">Back</a>
+    <a href="./index.html">Back to index page</a>
+  </div>
+</div>
+
+<script src="./assets/js/runtime.js" defer async></script>
+<script src="./assets/js/dependencies.js" defer async></script>
+<script src="./assets/js/404.js" defer async></script>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+</body>
 </html>
