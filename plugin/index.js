@@ -9,6 +9,7 @@ const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head")
 const injectDoctype = require("../compiler/scripts/inject-doctype")
 const collectViews = require("../compiler/collect-views")
+const sharp = require("sharp")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -58,9 +59,16 @@ const processStatic = async (filename, content, ext) => {
     logSizeDelta(filename, content.length, processedHtml.length)
     return processedHtml
   }
+
+  const filePath = resolve(PATH_STATIC, filename)
+
   if (ext === ".jpg" || ext === ".jpeg") {
-    return content
+    return await sharp(filePath).jpeg({ quality: 25 }).toBuffer()
   }
+  if (ext === ".png") {
+    return await sharp(filePath).png({ compressionLevel: 9, quality: 60, effort: 10 }).toBuffer()
+  }
+
   // @TODO finish
   return content
 }
