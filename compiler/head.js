@@ -55,6 +55,16 @@ const htmlTemplate = (view) => (body) => {
           body,
           htmlElement("noscript", ["You need to enable JavaScript to run this app."], {}),
           htmlElement("script", [], {
+            src: relativizePath("assets/js/runtime.js"),
+            async: true,
+            defer: true,
+          }),
+          htmlElement("script", [], {
+            src: relativizePath("assets/js/dependencies.js"),
+            async: true,
+            defer: true,
+          }),
+          htmlElement("script", [], {
             src: relativizePath(`assets/js/${view}.js`),
             async: true,
             defer: true,

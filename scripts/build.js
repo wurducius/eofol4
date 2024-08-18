@@ -1,5 +1,6 @@
-const { build } = require("./impl")
+const { build, devParams } = require("./impl")
 
-const analyze = process.argv[2] && process.argv[2] === "--analyze"
+const analyze = process.argv[2] && (process.argv[2] === "--analyze" || process.argv[2] === "-a")
 
-build({ mode: "production", analyze }, false)
+console.log("Eofol4 build")
+build({ ...devParams, analyze }, false)

@@ -20,6 +20,9 @@ const DIRNAME_TEMPLATES = "templates"
 
 const PAGE_FALLBACK = "404.html"
 
+const HOT_UPDATE_WATCH_INTERNAL_MS = 250
+const HOT_UPDATE_WATCH_POLL = true
+
 const defaultEnv = {
   PORT,
   BROWSER,
@@ -38,6 +41,8 @@ const defaultEnv = {
   DIRNAME_FONTS,
   DIRNAME_TEMPLATES,
   PAGE_FALLBACK,
+  HOT_UPDATE_WATCH_INTERNAL_MS,
+  HOT_UPDATE_WATCH_POLL,
 }
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min

@@ -29,6 +29,21 @@ const getWebpackConfig = (params) => {
       extensions: [".ts", ".js"],
     },
     plugins: [new EofolPlugin(), analyze && new BundleAnalyzerPlugin()].filter(Boolean),
+    optimization: {
+      moduleIds: "deterministic",
+      runtimeChunk: "single",
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "dependencies",
+            chunks: "all",
+            reuseExistingChunk: true,
+            idHint: "dependencies",
+          },
+        },
+      },
+    },
   }
 }
 
