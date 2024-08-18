@@ -19,8 +19,7 @@ const touch = (path) => {
   }
 }
 
-// @TODO unite async/sync - at this moment `cp` is the only async function
-const cp = fs.promises.copyFile
+const cp = fs.cpSync
 
 const isDirectory = (path) => fs.lstatSync(path).isDirectory()
 

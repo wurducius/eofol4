@@ -4,10 +4,11 @@ const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
 const { readDir, resolve, read, isDirectory, parse } = require("../util")
-const { PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
+const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
 const { JSONToHTML } = require("html-to-json-parser")
-const htmlTemplate = require("../compiler/head/head")
+const htmlTemplate = require("../compiler/head")
 const injectDoctype = require("../compiler/scripts/inject-doctype")
+const collectViews = require("../compiler/collect-views")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -91,6 +92,23 @@ const processViews = (compiler, compilation) => {
   const pages = processStaticAssetsImpl(PATH_PAGES)
   const publicx = processStaticAssetsImpl(PATH_STATIC)
   const templates = processTemplates().then(processTemplatesPost(compilation))
+
+  const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
+
+  // @TODO do not call collectViews() twice
+  const collectedViews = collectViews()
+
+  const serviceWorkerContent = read(resolve(PATH_CWD, "compiler-data", "service-worker", "service-worker.js"))
+    .toString()
+    .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, collectedViews.map((view) => `"${view}"`).join(", "))
+  compilation.assets["service-worker.js"] = getAsset({
+    nextSize: serviceWorkerContent.length,
+    nextInfo: {},
+    nextSource: serviceWorkerContent,
+  })
+
+  console.log(serviceWorkerContent)
+
   return Promise.all([pages, publicx, templates])
 }
 
