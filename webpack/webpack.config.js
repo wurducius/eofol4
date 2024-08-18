@@ -1,9 +1,10 @@
 const EofolPlugin = require("../plugin")
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const { resolve } = require("../util")
 const { PATH_SRC, PATH_BUILD } = require("../config")
 
 const getWebpackConfig = (params) => {
-  const { views, mode } = params
+  const { views, mode, analyze } = params
 
   // @TODO handle also .js scripts
   const entry = views.reduce((acc, next) => ({ ...acc, [next]: resolve(PATH_SRC, `${next}.ts`) }), {})
@@ -27,7 +28,7 @@ const getWebpackConfig = (params) => {
     resolve: {
       extensions: [".ts", ".js"],
     },
-    plugins: [new EofolPlugin()],
+    plugins: [new EofolPlugin(), analyze && new BundleAnalyzerPlugin()].filter(Boolean),
   }
 }
 
