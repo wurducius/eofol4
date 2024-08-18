@@ -7,7 +7,7 @@ const PROTOCOL = "http"
 
 const DIRNAME_BUILD = "build"
 const DIRNAME_SRC = "src"
-const DIRNAME_PUBLIC = "public"
+const DIRNAME_STATIC = "static"
 const DIRNAME_PAGES = "pages"
 const DIRNAME_ASSETS = "assets"
 const DIRNAME_JS = "js"
