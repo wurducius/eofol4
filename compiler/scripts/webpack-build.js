@@ -4,11 +4,10 @@ const { PATH_BUILD } = require("../../config")
 const collectViews = require("../collect-views")
 const { parse } = require("../../util")
 
-const webpackBuild = () => {
+const webpackBuild = (params) => {
   const views = collectViews().map((view) => parse(view).name)
-  const mode = "production"
 
-  const webpackParams = { views, mode }
+  const webpackParams = { views, ...params }
   const webpackConfig = getWebpackConfig(webpackParams)
 
   webpack(webpackConfig, (err, stats) => {
