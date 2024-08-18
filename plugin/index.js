@@ -10,6 +10,7 @@ const htmlTemplate = require("../compiler/head")
 const injectDoctype = require("../compiler/scripts/inject-doctype")
 const collectViews = require("../compiler/collect-views")
 const sharp = require("sharp")
+const { jpegOptions, pngOptions } = require("./options")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -35,9 +36,7 @@ const processStaticAssets = (compilation) => (basepath) =>
       if (isDirectory(filePath)) {
         return undefined
       }
-      const content = (await read(filePath)).toString()
-      const ext = parse(filename).ext
-      return await processStatic(filename, content, ext).then((processed) => {
+      return await processStatic(filename, basepath, parse(filename).ext).then((processed) => {
         compilation.assets[filename] = getAsset({
           nextSize: processed.length,
           nextInfo: {},
@@ -47,31 +46,41 @@ const processStaticAssets = (compilation) => (basepath) =>
     }),
   )
 
-const processStatic = async (filename, content, ext) => {
-  if (ext === ".html" || ext === ".htm") {
-    const minifiedHtml = (await minifyHtml(content)).toString()
-    let processedHtml
-    if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
-      processedHtml = minifiedHtml
-    } else {
-      processedHtml = injectDoctype(minifiedHtml)
-    }
-    logSizeDelta(filename, content.length, processedHtml.length)
-    return processedHtml
+const processHtml = async (filename, content) => {
+  const minifiedHtml = (await minifyHtml(content)).toString()
+  let processedHtml
+  if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
+    processedHtml = minifiedHtml
+  } else {
+    processedHtml = injectDoctype(minifiedHtml)
   }
+  logSizeDelta(filename, content.length, processedHtml.length)
+  return processedHtml
+}
 
-  const filePath = resolve(PATH_STATIC, filename)
+const processStatic = async (filename, basepath, ext) => {
+  const filePath = resolve(basepath, filename)
+
+  if (ext === ".html" || ext === ".htm") {
+    return processHtml(filename, read(filePath).toString())
+  }
 
   if (ext === ".jpg" || ext === ".jpeg") {
-    return await sharp(filePath).jpeg({ quality: 25 }).toBuffer()
+    return await sharp(filePath).jpeg(jpegOptions).toBuffer()
   }
   if (ext === ".png") {
-    return await sharp(filePath).png({ compressionLevel: 9, quality: 60, effort: 10 }).toBuffer()
+    return await sharp(filePath).png(pngOptions).toBuffer()
+  }
+
+  if (ext === ".woff2" || ext === ".woff" || ext === ".otp" || ext === ".ttf" || ext === ".eot") {
+    return read(filePath, { encoding: "binary" })
   }
 
   // @TODO finish
-  return content
+  return read(filePath, { encoding: "binary" })
 }
+
+const processPage = async (filename, content) => await processHtml(filename, content)
 
 const injectServiceWorker = (compilation) => {
   const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
@@ -98,7 +107,7 @@ const processViews = (compiler, compilation) => {
     readDir(PATH_TEMPLATES).map((templateName) =>
       JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
         .then((content) => injectDoctype(content))
-        .then((content) => processStatic(templateName, content, ".html"))
+        .then((content) => processPage(templateName, content))
         .then((processed) => {
           compilation.assets[templateName] = getAsset({
             nextSize: processed.length,
