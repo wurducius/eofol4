@@ -3,6 +3,7 @@ const { primary, success, error, prettyTime } = require("../util/dev-util")
 
 const baseUrl = "https://eofol.com/eofol4/"
 
+// @TODO add smoke test cases
 const items = [
   { url: `${baseUrl}index.html`, check: "<title>Eofol4</title>" },
   { url: `${baseUrl}index2.html`, check: "<h1>Eofol4 app - Second page</h1>" },

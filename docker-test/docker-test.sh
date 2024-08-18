@@ -8,5 +8,4 @@ rm ./package-lock.json
 echo "[2/3] Installing Eofol4..."
 npm i
 echo "[3/3] Running Eofo43..."
-# npm start
-npm run build-serve
+npm start
