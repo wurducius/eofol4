@@ -4,7 +4,7 @@ const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
 const { readDir, resolve, read, isDirectory, parse } = require("../util")
-const { PATH_PAGES, PATH_TEMPLATES, PATH_PUBLIC } = require("../config/path")
+const { PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
 const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head/head")
 
@@ -79,7 +79,7 @@ const processStatic = async (filename, content, ext) => {
 const processViews = (compiler, compilation) => {
   const processStaticAssetsImpl = processStaticAssets(compilation)
   const pages = processStaticAssetsImpl(PATH_PAGES)
-  const publicx = processStaticAssetsImpl(PATH_PUBLIC)
+  const publicx = processStaticAssetsImpl(PATH_STATIC)
   const templates = processTemplates().then(processTemplatesPost(compilation))
   return Promise.all([pages, publicx, templates])
 }

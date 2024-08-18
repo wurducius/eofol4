@@ -1,6 +1,6 @@
 const EofolPlugin = require("../plugin")
 const { resolve } = require("../util")
-const { PORT, BROWSER, HOST, PROTOCOL, PATH_SRC, PATH_PUBLIC, PATH_BUILD } = require("../config")
+const { PATH_SRC, PATH_BUILD } = require("../config")
 
 const views = ["index", "index2", "404"]
 
@@ -12,16 +12,6 @@ module.exports = {
   output: {
     filename: "assets/js/[name].js",
     path: PATH_BUILD,
-  },
-  devServer: {
-    static: PATH_PUBLIC,
-    compress: true,
-    hot: true,
-    port: PORT,
-    open: BROWSER,
-    host: HOST,
-    server: PROTOCOL,
-    historyApiFallback: true,
   },
   module: {
     rules: [

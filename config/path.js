@@ -1,7 +1,7 @@
 const { resolve } = require("../util")
 const {
   DIRNAME_BUILD,
-  DIRNAME_PUBLIC,
+  DIRNAME_STATIC,
   DIRNAME_SRC,
   DIRNAME_PAGES,
   DIRNAME_ASSETS,
@@ -18,7 +18,7 @@ const PATH_CWD = resolve(process.cwd())
 
 const PATH_SRC = resolve(PATH_CWD, DIRNAME_SRC)
 const PATH_BUILD = resolve(PATH_CWD, DIRNAME_BUILD)
-const PATH_PUBLIC = resolve(PATH_CWD, DIRNAME_PUBLIC)
+const PATH_STATIC = resolve(PATH_CWD, DIRNAME_STATIC)
 const PATH_PAGES = resolve(PATH_CWD, DIRNAME_PAGES)
 const PATH_ASSETS = resolve(PATH_BUILD, DIRNAME_ASSETS)
 const PATH_JS = resolve(PATH_ASSETS, DIRNAME_JS)
@@ -32,7 +32,7 @@ const PATH_TEMPLATES = resolve(PATH_CWD, DIRNAME_TEMPLATES)
 module.exports = {
   PATH_CWD,
   PATH_BUILD,
-  PATH_PUBLIC,
+  PATH_STATIC,
   PATH_SRC,
   PATH_PAGES,
   PATH_ASSETS,
