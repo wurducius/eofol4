@@ -1,10 +1,12 @@
 const clean = require("./clean")
 const { touchBuildDirs, webpackBuild } = require("../../compiler")
 
-const build = () => {
-  clean()
-  touchBuildDirs()
-  webpackBuild()
+const build = (webpackParams, isHot) => {
+  if (!isHot) {
+    clean()
+    touchBuildDirs()
+  }
+  webpackBuild(webpackParams)
 }
 
 module.exports = build

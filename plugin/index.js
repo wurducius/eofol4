@@ -46,28 +46,6 @@ const processStaticAssets = (compilation) => (basepath) =>
     }),
   )
 
-const processTemplates = () =>
-  Promise.all(
-    readDir(PATH_TEMPLATES).map((templateName) =>
-      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString())).then(
-        (content) => injectDoctype(content),
-      ),
-    ),
-  )
-
-const processTemplatesPost = (compilation) => (generatedPages) =>
-  generatedPages.map(async (content) => {
-    // @TODO process tree structure generated pages in PATH_TEMPLATES
-    const filename = "index2.html"
-    return await processStatic(filename, content, ".html").then((processed) => {
-      compilation.assets[filename] = getAsset({
-        nextSize: processed.length,
-        nextInfo: {},
-        nextSource: processed,
-      })
-    })
-  })
-
 const processStatic = async (filename, content, ext) => {
   if (ext === ".html" || ext === ".htm") {
     const minifiedHtml = (await minifyHtml(content)).toString()
@@ -105,13 +83,27 @@ const injectServiceWorker = (compilation) => {
 
 const processViews = (compiler, compilation) => {
   const processStaticAssetsImpl = processStaticAssets(compilation)
+  const staticFiles = processStaticAssetsImpl(PATH_STATIC)
   const pages = processStaticAssetsImpl(PATH_PAGES)
-  const publicx = processStaticAssetsImpl(PATH_STATIC)
-  const templates = processTemplates().then(processTemplatesPost(compilation))
+
+  const templates = Promise.all(
+    readDir(PATH_TEMPLATES).map((templateName) =>
+      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
+        .then((content) => injectDoctype(content))
+        .then((content) => processStatic(templateName, content, ".html"))
+        .then((processed) => {
+          compilation.assets[templateName] = getAsset({
+            nextSize: processed.length,
+            nextInfo: {},
+            nextSource: processed,
+          })
+        }),
+    ),
+  )
 
   injectServiceWorker(compilation)
 
-  return Promise.all([pages, publicx, templates])
+  return Promise.all([staticFiles, pages, templates])
 }
 
 const onInitCompilation = (compiler) => (compilation) => {

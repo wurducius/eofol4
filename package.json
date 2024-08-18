@@ -30,7 +30,6 @@
     "hex-to-css-filter": "^5.4.0",
     "html-minifier-terser": "^7.2.0",
     "html-to-json-parser": "^2.0.1",
-    "less": "^4.2.0",
     "rimraf": "^6.0.1",
     "sharp": "^0.33.5",
     "ts-loader": "^9.5.1",

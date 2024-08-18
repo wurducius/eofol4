@@ -1,3 +1,3 @@
 const { build } = require("./impl")
 
-build()
+build({ mode: "production" }, false)
