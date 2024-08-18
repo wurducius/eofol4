@@ -109,7 +109,7 @@ const processViews = (compiler, compilation) => {
   const publicx = processStaticAssetsImpl(PATH_STATIC)
   const templates = processTemplates().then(processTemplatesPost(compilation))
 
-  injectServiceWorker()
+  injectServiceWorker(compilation)
 
   return Promise.all([pages, publicx, templates])
 }
