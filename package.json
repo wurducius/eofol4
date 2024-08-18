@@ -8,7 +8,7 @@
     "build": "node ./scripts/build.js",
     "serve": "node ./scripts/serve.js",
     "clean": "node ./scripts/clean.js",
-    "build-serve": "npm run build && npm run serve",
+    "test": "jest",
     "check": "npx eslint -c eslint.config.mjs .",
     "check-fix": "npx eslint -c eslint.config.mjs --fix .",
     "prettify": "npx prettier --config .prettierrc --write .",
@@ -38,10 +38,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.12",
     "eofol-live-server": "^1.2.4",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
+    "jest": "^29.7.0",
     "prettier": "3.3.3",
+    "ts-jest": "^29.2.4",
     "typescript-eslint": "^8.1.0"
   },
   "author": "wurducius@gmail.com",
