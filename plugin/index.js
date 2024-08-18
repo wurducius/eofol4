@@ -87,12 +87,7 @@ const processStatic = async (filename, content, ext) => {
   return content
 }
 
-const processViews = (compiler, compilation) => {
-  const processStaticAssetsImpl = processStaticAssets(compilation)
-  const pages = processStaticAssetsImpl(PATH_PAGES)
-  const publicx = processStaticAssetsImpl(PATH_STATIC)
-  const templates = processTemplates().then(processTemplatesPost(compilation))
-
+const injectServiceWorker = (compilation) => {
   const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
 
   // @TODO do not call collectViews() twice
@@ -106,8 +101,15 @@ const processViews = (compiler, compilation) => {
     nextInfo: {},
     nextSource: serviceWorkerContent,
   })
+}
 
-  console.log(serviceWorkerContent)
+const processViews = (compiler, compilation) => {
+  const processStaticAssetsImpl = processStaticAssets(compilation)
+  const pages = processStaticAssetsImpl(PATH_PAGES)
+  const publicx = processStaticAssetsImpl(PATH_STATIC)
+  const templates = processTemplates().then(processTemplatesPost(compilation))
+
+  injectServiceWorker()
 
   return Promise.all([pages, publicx, templates])
 }
