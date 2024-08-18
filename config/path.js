@@ -35,6 +35,7 @@ module.exports = {
   PATH_PUBLIC,
   PATH_SRC,
   PATH_PAGES,
+  PATH_ASSETS,
   PATH_JS,
   PATH_CSS,
   PATH_MEDIA,

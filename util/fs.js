@@ -30,4 +30,6 @@ const read = (path) => fs.readFileSync(path)
 
 const write = (path, content) => fs.writeFileSync(path, content)
 
-module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory, stat, read, write }
+const parse = path.parse
+
+module.exports = { resolve, exists, rm, mkdir, readDir, touch, cp, isDirectory, stat, read, write, parse }

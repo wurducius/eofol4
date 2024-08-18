@@ -1,10 +1,9 @@
-const path = require("path")
-
-const { minifyJs, minifyHtml } = require("../compiler")
+const minifyJs = require("../compiler/scripts/minify-js")
+const minifyHtml = require("../compiler/scripts/minify-html")
 const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
-const { readDir, resolve, read, isDirectory } = require("../util")
+const { readDir, resolve, read, isDirectory, parse } = require("../util")
 const { PATH_PAGES, PATH_TEMPLATES, PATH_PUBLIC } = require("../config/path")
 const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head/head")
@@ -20,7 +19,7 @@ const processAssets = (compiler, compilation) => (assets) =>
       const prevSize = transform ? sourceSize(source) : nextSize
       logSizeDelta(assetName, prevSize, nextSize)
     },
-    conditional: (info, assetName) => !info.minified && path.parse(assetName).ext === ".js",
+    conditional: (info, assetName) => !info.minified && parse(assetName).ext === ".js",
   })(
     compiler,
     compilation,
@@ -34,7 +33,7 @@ const processStaticAssets = (compilation) => (basepath) =>
         return undefined
       }
       const content = (await read(filePath)).toString()
-      const ext = path.parse(filename).ext
+      const ext = parse(filename).ext
       return processStatic(filename, content, ext).then((processed) => {
         compilation.assets[filename] = getAsset({
           nextSize: processed.length,
@@ -48,7 +47,7 @@ const processStaticAssets = (compilation) => (basepath) =>
 const processTemplates = () =>
   Promise.all(
     readDir(PATH_TEMPLATES).map((templateName) =>
-      JSONToHTML(htmlTemplate(path.parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString())),
+      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString())),
     ),
   )
 
