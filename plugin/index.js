@@ -3,10 +3,11 @@ const minifyHtml = require("../compiler/scripts/minify-html")
 const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
-const { pipe, readDir, resolve, read, isDirectory, parse } = require("../util")
+const { readDir, resolve, read, isDirectory, parse } = require("../util")
 const { PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
 const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head/head")
+const injectDoctype = require("../compiler/scripts/inject-doctype")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -34,7 +35,7 @@ const processStaticAssets = (compilation) => (basepath) =>
       }
       const content = (await read(filePath)).toString()
       const ext = parse(filename).ext
-      return processStatic(filename, content, ext).then((processed) => {
+      return await processStatic(filename, content, ext).then((processed) => {
         compilation.assets[filename] = getAsset({
           nextSize: processed.length,
           nextInfo: {},
@@ -43,8 +44,6 @@ const processStaticAssets = (compilation) => (basepath) =>
       })
     }),
   )
-
-const injectDoctype = (content) => `<!doctype html>${content}`
 
 const processTemplates = () =>
   Promise.all(
@@ -56,10 +55,10 @@ const processTemplates = () =>
   )
 
 const processTemplatesPost = (compilation) => (generatedPages) =>
-  generatedPages.map((content) => {
+  generatedPages.map(async (content) => {
     // @TODO process tree structure generated pages in PATH_TEMPLATES
     const filename = "index2.html"
-    return processStatic(filename, content, ".html").then((processed) => {
+    return await processStatic(filename, content, ".html").then((processed) => {
       compilation.assets[filename] = getAsset({
         nextSize: processed.length,
         nextInfo: {},
@@ -70,9 +69,15 @@ const processTemplatesPost = (compilation) => (generatedPages) =>
 
 const processStatic = async (filename, content, ext) => {
   if (ext === ".html" || ext === ".htm") {
-    const minifiedHtml = await minifyHtml(content)
-    logSizeDelta(filename, content.length, minifiedHtml.toString().length)
-    return minifiedHtml
+    const minifiedHtml = (await minifyHtml(content)).toString()
+    let processedHtml
+    if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
+      processedHtml = minifiedHtml
+    } else {
+      processedHtml = injectDoctype(minifiedHtml)
+    }
+    logSizeDelta(filename, content.length, processedHtml.length)
+    return processedHtml
   }
   if (ext === ".jpg" || ext === ".jpeg") {
     return content
