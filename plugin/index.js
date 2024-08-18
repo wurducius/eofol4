@@ -27,21 +27,23 @@ const processAssets = (compiler, compilation) => (assets) =>
   )(assets)
 
 const processStaticAssets = (compilation) => (basepath) =>
-  readDir(basepath, { recursive: true }).map((filename) => {
-    const filePath = resolve(basepath, filename)
-    if (isDirectory(filePath)) {
-      return undefined
-    }
-    const content = read(filePath).toString()
-    const ext = path.parse(filename).ext
-    return processStatic(filename, content, ext).then((processed) => {
-      compilation.assets[filename] = getAsset({
-        nextSize: processed.length,
-        nextInfo: {},
-        nextSource: processed,
+  Promise.all(
+    readDir(basepath, { recursive: true }).map(async (filename) => {
+      const filePath = resolve(basepath, filename)
+      if (isDirectory(filePath)) {
+        return undefined
+      }
+      const content = (await read(filePath)).toString()
+      const ext = path.parse(filename).ext
+      return processStatic(filename, content, ext).then((processed) => {
+        compilation.assets[filename] = getAsset({
+          nextSize: processed.length,
+          nextInfo: {},
+          nextSource: processed,
+        })
       })
-    })
-  })
+    }),
+  )
 
 const processTemplates = () =>
   Promise.all(
@@ -80,7 +82,7 @@ const processViews = (compiler, compilation) => {
   const pages = processStaticAssetsImpl(PATH_PAGES)
   const publicx = processStaticAssetsImpl(PATH_PUBLIC)
   const templates = processTemplates().then(processTemplatesPost(compilation))
-  return Promise.all([...pages, ...publicx, templates])
+  return Promise.all([pages, publicx, templates])
 }
 
 const onInitCompilation = (compiler) => (compilation) => {
