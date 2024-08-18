@@ -1,9 +1,7 @@
 const Fs = require("./fs")
 const DevUtil = require("./dev-util")
+const Func = require("./func")
 
-const sleep = (ms) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
+const mergeDeep = require("./merge-deep")
 
-module.exports = { ...Fs, ...DevUtil, sleep }
+module.exports = { ...Fs, ...DevUtil, ...Func, mergeDeep }
