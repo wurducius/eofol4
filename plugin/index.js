@@ -5,14 +5,13 @@ const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
 const { readDir, resolve, read, isDirectory, parse } = require("../util")
 const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
-const { JSONToHTML } = require("html-to-json-parser")
 const htmlTemplate = require("../compiler/head")
 const injectDoctype = require("../compiler/scripts/inject-doctype")
 const collectViews = require("../compiler/collect-views")
-const sharp = require("sharp")
-const { jpegOptions, pngOptions } = require("./options")
 const compile = require("./compile")
-const { isHtml, isJpeg, isPng } = require("../util/ext")
+const { isHtml, isJpeg, isPng, isSvg } = require("../util/ext")
+const jsonToHtml = require("../compiler/scripts/json-to-html")
+const { processSvg, processPng, processJpeg } = require("../compiler/scripts/img")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -69,11 +68,15 @@ const processStatic = async (filename, basepath, ext) => {
   }
 
   if (isJpeg(ext)) {
-    return await sharp(filePath).jpeg(jpegOptions).toBuffer()
+    return processJpeg(filePath)
   }
 
   if (isPng(ext)) {
-    return await sharp(filePath).png(pngOptions).toBuffer()
+    return processPng(filePath)
+  }
+
+  if (isSvg(ext)) {
+    return processSvg(filePath)
   }
 
   return read(filePath)
@@ -104,7 +107,7 @@ const processViews = (compiler, compilation) => {
 
   const templates = Promise.all(
     readDir(PATH_TEMPLATES).map((templateName) =>
-      JSONToHTML(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
+      jsonToHtml(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
         .then((content) => injectDoctype(content))
         .then((content) => processPage(templateName, content))
         .then((processed) => {

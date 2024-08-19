@@ -1,4 +1,5 @@
-const { HTMLToJSON, JSONToHTML } = require("html-to-json-parser")
+const htmlToJson = require("../compiler/scripts/html-to-json")
+const jsonToHtml = require("../compiler/scripts/json-to-html")
 
 const traverseTree = (node, result) => {
   result = node
@@ -20,10 +21,11 @@ const compileTree = (tree, result) => {
 }
 
 const compile = async (content) => {
-  // const json = await HTMLToJSON(content)
-  // console.log(json)
-  // const compiled = compileTree(json, {})
-  // return await JSONToHTML(compiled, false)
+  /*
+  const json = await htmlToJson(content)
+  const compiled = compileTree(json, {})
+  return await jsonToHtml(compiled, false)
+   */
   return content
 }
 
