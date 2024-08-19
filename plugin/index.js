@@ -12,6 +12,7 @@ const compile = require("./compile")
 const { isHtml, isJpeg, isPng, isSvg, isGif } = require("../util/ext")
 const jsonToHtml = require("../compiler/scripts/json-to-html")
 const { processSvg, processPng, processJpeg, processGif } = require("../compiler/scripts/img")
+const { sep } = require("path")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -96,7 +97,10 @@ const injectServiceWorker = (compilation) => {
 
   const serviceWorkerContent = read(resolve(PATH_CWD, "compiler-data", "service-worker", "service-worker.js"))
     .toString()
-    .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, collectedViews.map((view) => `"${view}"`).join(", "))
+    .replace(
+      SERVICE_WORKER_PAGES_PLACEHOLDER,
+      collectedViews.map((view) => `"${view.replaceAll(sep, "/")}"`).join(", "),
+    )
   compilation.assets["service-worker.js"] = getAsset({
     nextSize: serviceWorkerContent.length,
     nextInfo: {},
