@@ -25,8 +25,10 @@ const getAsset = ({ asset, nextSource, nextSize, nextInfo }) => {
 }
 
 const logSizeDelta = (filename, prevSize, nextSize) => {
+  const delta = prevSize - nextSize
+  const isSaved = delta >= 0
   log(
-    `[${filename}]: original size = ${prettySize(prevSize)}, minified size = ${prettySize(nextSize)}, saved = ${prettySize(prevSize - nextSize)}.`,
+    `[${filename}]: original size = ${prettySize(prevSize)}, minified size = ${prettySize(nextSize)}, ${isSaved ? "saved" : "added"} = ${prettySize(isSaved ? delta : -delta)}.`,
   )
 }
 
