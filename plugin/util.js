@@ -1,5 +1,5 @@
 const { VERBOSE } = require("./config")
-const { prettySize } = require("../util/dev-util")
+const { prettySize } = require("../util")
 
 const log = (msg) => {
   if (VERBOSE) {
