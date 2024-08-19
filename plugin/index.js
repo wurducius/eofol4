@@ -54,17 +54,21 @@ const processStaticAssets = (compilation) => (basepath) =>
       if (isDirectory(filePath)) {
         return undefined
       }
-      return await processStatic(filename, basepath, parse(filename).ext).then((processed) => {
+      const info = compilation.assets[filename]?.info
+      return await processStatic(filename, basepath, parse(filename).ext, info).then((processed) => {
         compilation.assets[filename] = getAsset({
           nextSize: processed.length,
-          nextInfo: {},
+          nextInfo: { processed: true },
           nextSource: processed,
         })
       })
     }),
   )
 
-const processHtml = async (filename, content) => {
+const processHtml = async (filename, content, info) => {
+  if (info?.processed) {
+    return content
+  }
   const compiledHtml = await compile(content)
   const minifiedHtml = (await minifyHtml(compiledHtml)).toString()
   let processedHtml
@@ -77,11 +81,11 @@ const processHtml = async (filename, content) => {
   return processedHtml
 }
 
-const processStatic = async (filename, basepath, ext) => {
+const processStatic = async (filename, basepath, ext, info) => {
   const filePath = resolve(basepath, filename)
 
   if (isHtml(ext)) {
-    return processHtml(filename, read(filePath).toString())
+    return processHtml(filename, read(filePath).toString(), info)
   }
 
   if (isJpeg(ext)) {
@@ -103,7 +107,7 @@ const processStatic = async (filename, basepath, ext) => {
   return read(filePath)
 }
 
-const processPage = async (filename, content) => await processHtml(filename, content)
+const processPage = async (filename, content, info) => await processHtml(filename, content, info)
 
 const injectServiceWorker = (compilation) => {
   const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
@@ -132,12 +136,12 @@ const processViews = (compiler, compilation) => {
   const templates = Promise.all(
     readDir(PATH_TEMPLATES).map((templateName) =>
       jsonToHtml(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
-        .then((content) => injectDoctype(content))
-        .then((content) => processPage(templateName, content))
+        //   .then((content) => injectDoctype(content))
+        .then((content) => processPage(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {
           compilation.assets[templateName] = getAsset({
             nextSize: processed.length,
-            nextInfo: {},
+            nextInfo: { processed: true },
             nextSource: processed,
           })
         }),

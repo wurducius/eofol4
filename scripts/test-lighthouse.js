@@ -1,5 +1,5 @@
 const testLighthouse = require("./impl/test-lighthouse")
-const { prettyTime, success, error, primary } = require("../util/dev-util")
+const { prettyTime, success, error, primary } = require("../util")
 
 const TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT = 5
 let TEST_LIGHTHOUSE_PASS_COUNT = TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT

@@ -1,10 +1,10 @@
 const EofolPlugin = require("../plugin")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const { resolve, parse, exists, sep } = require("../util")
-const { PATH_SRC, PATH_BUILD } = require("../config")
+const { PATH_SRC, PATH_BUILD, MODE } = require("../config")
 
 const getWebpackConfig = (params) => {
-  const { views, mode, analyze } = params
+  const { views, analyze } = params
 
   // @TODO handle also .js scripts
   const entry = views.reduce((acc, next) => {
@@ -18,7 +18,7 @@ const getWebpackConfig = (params) => {
   }, {})
 
   return {
-    mode: mode ?? "development",
+    mode: MODE ?? "development",
     entry,
     output: {
       filename: "assets/js/[name].js",

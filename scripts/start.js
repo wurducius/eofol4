@@ -1,5 +1,5 @@
 const Watchpack = require("watchpack")
-const { build, serve, devParams } = require("./impl")
+const { build, serve } = require("./impl")
 const { sleep, primary, success } = require("../util")
 const {
   DIRNAME_SRC,
@@ -13,7 +13,7 @@ const {
   HOT_UPDATE_WATCH_POLL,
 } = require("../config")
 
-const COMPILER_SLEEP_INTERVAL_MS = 50
+const COMPILER_SLEEP_INTERVAL_MS = 200
 
 const sleepInterval = () => sleep(COMPILER_SLEEP_INTERVAL_MS)
 
@@ -42,7 +42,7 @@ const SERVE_URL = `${PROTOCOL}://${HOST}:${PORT}`
 
 const recompile = async () => {
   console.log(primary("Recompiling..."))
-  build(devParams, true)
+  build({}, true)
   return await sleepInterval().then(() => {
     console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
   })
@@ -56,7 +56,7 @@ const handleRemove = async () => {
   await recompile()
 }
 
-build(devParams, false)
+build(false)
 
 // @TODO do not sleep instead fix async promise handling in build
 sleepInterval().then(() => {

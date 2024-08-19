@@ -1,3 +1,3 @@
-const injectDoctype = (content) => `<!doctype html>${content}`
+const injectDoctype = (content) => `<!DOCTYPE html>${content}`
 
 module.exports = injectDoctype

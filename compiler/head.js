@@ -10,8 +10,8 @@ const htmlElement = (tagname, content, attributes) => ({
 const script = (scriptName) =>
   htmlElement("script", [], {
     src: relativizePath(`./assets/js/${scriptName}.js`),
-    async: true,
-    defer: true,
+    async: "async",
+    defer: "defer",
   })
 
 /*

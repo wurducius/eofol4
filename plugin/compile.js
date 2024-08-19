@@ -1,5 +1,4 @@
-// const htmlToJson = require("../compiler/scripts/html-to-json")
-// const jsonToHtml = require("../compiler/scripts/json-to-html")
+const { htmlToJson, jsonToHtml } = require("../compiler")
 
 const traverseTree = (node, result) => {
   result = node
@@ -15,18 +14,15 @@ const traverseTree = (node, result) => {
 
 const compileTree = (tree, result) => {
   // console.log(tree)
-  const x = traverseTree(tree, result)
+  //const x = traverseTree(tree, result)
   // console.log(x)
-  return x
+  return tree
 }
 
 const compile = async (content) => {
-  /*
-  const json = await htmlToJson(content)
+  const json = await htmlToJson(content, false)
   const compiled = compileTree(json, {})
-  return await jsonToHtml(compiled, false)
-   */
-  return content
+  return await jsonToHtml(compiled, true)
 }
 
 module.exports = compile
