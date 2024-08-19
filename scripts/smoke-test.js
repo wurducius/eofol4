@@ -7,11 +7,11 @@ const baseUrl = "https://eofol.com/eofol4/"
 const items = [
   { url: `${baseUrl}index.html`, check: "<title>Eofol4</title>" },
   { url: `${baseUrl}index2.html`, check: "<h1>Eofol4 app - Second page</h1>" },
-  // { url: `${baseUrl}license.html`, check: "The MIT License (MIT)" },
+  { url: `${baseUrl}license.html`, check: "The MIT License (MIT)" },
   { url: `${baseUrl}asfaasd`, check: "Page not found" },
-  //  { url: `${baseUrl}assets/js/index.js`, check: "instances" },
-  // { url: `${baseUrl}assets/media/fonts/Roboto-Regular.ttf`, size: 166512 },
-  // { url: `${baseUrl}assets/media/images/logo-lg.png`, size: 3810 },
+  { url: `${baseUrl}assets/js/index.js`, check: "" },
+  { url: `${baseUrl}assets/media/fonts/Inter.woff2`, size: 34596 },
+  { url: `${baseUrl}assets/media/images/logo-lg.png`, size: 3063 },
 ]
 
 const WAIT_INTERVAL_MS = 2000
