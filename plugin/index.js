@@ -61,19 +61,16 @@ const processHtml = async (filename, content) => {
 const processStatic = async (filename, basepath, ext) => {
   const filePath = resolve(basepath, filename)
 
-  if (ext === ".html" || ext === ".htm") {
+  if (isHtml(ext)) {
     return processHtml(filename, read(filePath).toString())
   }
 
-  if (ext === ".jpg" || ext === ".jpeg") {
+  if (isJpeg(ext)) {
     return await sharp(filePath).jpeg(jpegOptions).toBuffer()
   }
-  if (ext === ".png") {
-    return await sharp(filePath).png(pngOptions).toBuffer()
-  }
 
-  if (ext === ".woff2" || ext === ".woff" || ext === ".otp" || ext === ".ttf" || ext === ".eot") {
-    return read(filePath, { encoding: "binary" })
+  if (isPng(ext)) {
+    return await sharp(filePath).png(pngOptions).toBuffer()
   }
 
   // @TODO finish
