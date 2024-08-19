@@ -12,6 +12,7 @@ const {
   HOT_UPDATE_WATCH_INTERNAL_MS,
   HOT_UPDATE_WATCH_POLL,
 } = require("../config")
+const { cancelPromise, setPromise } = require("../webpack/singleton")
 
 const COMPILER_SLEEP_INTERVAL_MS = 200
 
@@ -41,11 +42,15 @@ const listOfNotExistingItems = []
 const SERVE_URL = `${PROTOCOL}://${HOST}:${PORT}`
 
 const recompile = async () => {
-  console.log(primary("Recompiling..."))
-  build({}, true)
-  return await sleepInterval().then(() => {
-    console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
+  cancelPromise()
+  setPromise(async () => {
+    console.log(primary("Recompiling..."))
+    build({}, true)
+    return await sleepInterval().then(() => {
+      console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
+    })
   })
+  cancelPromise()
 }
 
 const handleChange = async () => {

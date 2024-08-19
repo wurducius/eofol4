@@ -26,6 +26,7 @@
     "docker-test": "npm run docker-stop && npm run docker-build && npm run docker-run"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "chalk": "2.4.2",
     "cross-spawn": "^7.0.3",
     "dotenv": "^16.4.5",
