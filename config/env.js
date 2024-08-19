@@ -23,6 +23,8 @@ const PAGE_FALLBACK = "404.html"
 const HOT_UPDATE_WATCH_INTERNAL_MS = 250
 const HOT_UPDATE_WATCH_POLL = true
 
+const IMAGE_PROCESSING_INCLUDE_METADATA = false
+
 const BASE_URL = "./"
 
 const defaultEnv = {
@@ -46,6 +48,7 @@ const defaultEnv = {
   HOT_UPDATE_WATCH_INTERNAL_MS,
   HOT_UPDATE_WATCH_POLL,
   BASE_URL,
+  IMAGE_PROCESSING_INCLUDE_METADATA,
 }
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min

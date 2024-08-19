@@ -9,9 +9,9 @@ const htmlTemplate = require("../compiler/head")
 const injectDoctype = require("../compiler/scripts/inject-doctype")
 const collectViews = require("../compiler/collect-views")
 const compile = require("./compile")
-const { isHtml, isJpeg, isPng, isSvg } = require("../util/ext")
+const { isHtml, isJpeg, isPng, isSvg, isGif } = require("../util/ext")
 const jsonToHtml = require("../compiler/scripts/json-to-html")
-const { processSvg, processPng, processJpeg } = require("../compiler/scripts/img")
+const { processSvg, processPng, processJpeg, processGif } = require("../compiler/scripts/img")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -73,6 +73,10 @@ const processStatic = async (filename, basepath, ext) => {
 
   if (isPng(ext)) {
     return processPng(filePath)
+  }
+
+  if (isGif(ext)) {
+    return processGif(filePath)
   }
 
   if (isSvg(ext)) {
