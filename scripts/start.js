@@ -13,7 +13,7 @@ const {
   HOT_UPDATE_WATCH_POLL,
 } = require("../config")
 
-const COMPILER_SLEEP_INTERVAL_MS = 50
+const COMPILER_SLEEP_INTERVAL_MS = 200
 
 const sleepInterval = () => sleep(COMPILER_SLEEP_INTERVAL_MS)
 
