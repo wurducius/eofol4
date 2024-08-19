@@ -11,6 +11,8 @@ const injectDoctype = require("../compiler/scripts/inject-doctype")
 const collectViews = require("../compiler/collect-views")
 const sharp = require("sharp")
 const { jpegOptions, pngOptions } = require("./options")
+const compile = require("./compile")
+const { isHtml, isJpeg, isPng } = require("../util/ext")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -47,7 +49,8 @@ const processStaticAssets = (compilation) => (basepath) =>
   )
 
 const processHtml = async (filename, content) => {
-  const minifiedHtml = (await minifyHtml(content)).toString()
+  const compiledHtml = await compile(content)
+  const minifiedHtml = (await minifyHtml(compiledHtml)).toString()
   let processedHtml
   if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
     processedHtml = minifiedHtml
@@ -73,8 +76,7 @@ const processStatic = async (filename, basepath, ext) => {
     return await sharp(filePath).png(pngOptions).toBuffer()
   }
 
-  // @TODO finish
-  return read(filePath, { encoding: "binary" })
+  return read(filePath)
 }
 
 const processPage = async (filename, content) => await processHtml(filename, content)
