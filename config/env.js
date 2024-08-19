@@ -28,6 +28,9 @@ const HOT_UPDATE_WATCH_POLL = true
 
 const IMAGE_PROCESSING_INCLUDE_METADATA = false
 
+const COMPILATION_VERBOSE = false
+const COMPILATION_SHOW_PROGRESS = true
+
 const BASE_URL = "./"
 
 const defaultEnv = {
@@ -52,6 +55,8 @@ const defaultEnv = {
   HOT_UPDATE_WATCH_POLL,
   BASE_URL,
   IMAGE_PROCESSING_INCLUDE_METADATA,
+  COMPILATION_VERBOSE,
+  COMPILATION_SHOW_PROGRESS,
 }
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
