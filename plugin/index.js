@@ -77,7 +77,7 @@ const processHtml = async (filename, content, info) => {
   } else {
     processedHtml = injectDoctype(minifiedHtml)
   }
-  logSizeDelta(filename, content.length, processedHtml.length)
+  logSizeDelta(filename, compiledHtml.length + 15, processedHtml.length)
   return processedHtml
 }
 
