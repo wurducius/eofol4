@@ -13,6 +13,10 @@ const {
   HOT_UPDATE_WATCH_POLL,
 } = require("../config")
 
+const COMPILER_SLEEP_INTERVAL_MS = 35
+
+const sleepInterval = () => sleep(COMPILER_SLEEP_INTERVAL_MS)
+
 const watchpackOptions = {
   aggregateTimeout: HOT_UPDATE_WATCH_INTERNAL_MS,
   poll: HOT_UPDATE_WATCH_POLL,
@@ -39,7 +43,7 @@ const SERVE_URL = `${PROTOCOL}://${HOST}:${PORT}`
 const recompile = async () => {
   console.log(primary("Recompiling..."))
   build(devParams, true)
-  return await sleep(20).then(() => {
+  return await sleepInterval().then(() => {
     console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
   })
 }
@@ -55,7 +59,7 @@ const handleRemove = async () => {
 build(devParams, false)
 
 // @TODO do not sleep instead fix async promise handling in build
-sleep(20).then(() => {
+sleepInterval().then(() => {
   console.log(primary("Starting the development server..."))
 
   const wp = new Watchpack(watchpackOptions)
