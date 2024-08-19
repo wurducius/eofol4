@@ -7,6 +7,13 @@ const htmlElement = (tagname, content, attributes) => ({
   attributes,
 })
 
+const script = (scriptName) =>
+  htmlElement("script", [], {
+    src: relativizePath(`./assets/js/${scriptName}.js`),
+    async: true,
+    defer: true,
+  })
+
 /*
 compileAllStyles(PATH_BASE_STYLES_CSS, PATH_BASE_STYLES_LESS, "").then((baseStyle) => {
     const metadataPage = requireIfExists(resolve(PATH_PAGES, `${view}${FILENAME_SUFFIX_PAGE_METADATA}`))
@@ -53,15 +60,9 @@ const htmlTemplate = (view) => (body) => {
         "body",
         [
           body,
-          htmlElement("script", [], {
-            src: relativizePath("./assets/js/runtime.js"),
-          }),
-          htmlElement("script", [], {
-            src: relativizePath("./assets/js/dependencies.js"),
-          }),
-          htmlElement("script", [], {
-            src: relativizePath(`./assets/js/${view}.js`),
-          }),
+          script("runtime"),
+          script("dependencies"),
+          script(view),
           htmlElement("noscript", ["You need to enable JavaScript to run this app."], {}),
         ],
         {},
