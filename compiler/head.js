@@ -47,7 +47,7 @@ const getHead = (data) =>
       htmlElement("link", [], { rel: "apple-touch-icon", href: relativizePath(data.appleTouchIcon) }),
       htmlElement("link", [], { rel: "manifest", href: relativizePath(data.manifest) }),
       htmlElement("title", [data.title], {}),
-      htmlElement("style", [relativizeFontStyle(data.fontStyle), baseStyle], {}),
+      htmlElement("style", [relativizeFontStyle(data.fontStyle), data.style, baseStyle].filter(Boolean), {}),
     ],
     {},
   )
