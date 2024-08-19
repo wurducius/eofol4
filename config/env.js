@@ -23,6 +23,8 @@ const PAGE_FALLBACK = "404.html"
 const HOT_UPDATE_WATCH_INTERNAL_MS = 250
 const HOT_UPDATE_WATCH_POLL = true
 
+const BASE_URL = "./"
+
 const defaultEnv = {
   PORT,
   BROWSER,
@@ -43,6 +45,7 @@ const defaultEnv = {
   PAGE_FALLBACK,
   HOT_UPDATE_WATCH_INTERNAL_MS,
   HOT_UPDATE_WATCH_POLL,
+  BASE_URL,
 }
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -62,4 +65,12 @@ const getPort = () => {
   }
 }
 
-module.exports = { ...defaultEnv, ...process.env, PORT: getPort() }
+const getBaseUrl = () => {
+  if (process.env.MODE === "production") {
+    return process.env.BASE_URL
+  } else {
+    return BASE_URL
+  }
+}
+
+module.exports = { ...defaultEnv, ...process.env, PORT: getPort(), BASE_URL: getBaseUrl() }
