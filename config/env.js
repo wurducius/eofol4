@@ -1,4 +1,7 @@
 require("dotenv").config()
+const getArgs = require("./args")
+
+const args = getArgs()
 
 const PORT = 3000
 const BROWSER = true
@@ -53,6 +56,8 @@ const defaultEnv = {
 
 const randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 
+const envPre = { ...defaultEnv, ...process.env, ...args }
+
 const getPort = () => {
   if (process.env.PORT === "random") {
     return randomInteger(3000, 8999)
@@ -69,11 +74,11 @@ const getPort = () => {
 }
 
 const getBaseUrl = () => {
-  if (process.env.MODE === "production") {
-    return process.env.BASE_URL
+  if (envPre.MODE === "production") {
+    return envPre.BASE_URL
   } else {
     return BASE_URL
   }
 }
 
-module.exports = { ...defaultEnv, ...process.env, PORT: getPort(), BASE_URL: getBaseUrl() }
+module.exports = { ...envPre, PORT: getPort(), BASE_URL: getBaseUrl() }

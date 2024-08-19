@@ -1,5 +1,5 @@
 const https = require("https")
-const { primary, success, error, prettyTime } = require("../util/dev-util")
+const { primary, success, error, prettyTime } = require("../util")
 
 const baseUrl = "https://eofol.com/eofol4/"
 
