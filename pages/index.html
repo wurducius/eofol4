@@ -83,6 +83,15 @@
         border-radius: 8px;
         margin: 32px 0 32px 0;
       }
+
+      .col {
+          display: flex;
+          flex-direction: column;
+      }
+
+      .m-t-md {
+          margin-top: 16px;
+      }
     </style>
   </head>
   <body>
@@ -93,8 +102,10 @@
       <p id="script">Script not injected.</p>
       <p id="module">External dependency not imported.</p>
 
+      <div class="col m-t-md ">
       <a href="./index2.html">Second page</a>
       <a href="./map.html">Map</a>
+      </div>
     </div>
 
     <script src="./assets/js/runtime.js" defer async></script>
