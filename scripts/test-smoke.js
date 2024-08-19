@@ -3,7 +3,6 @@ const { primary, success, error, prettyTime } = require("../util/dev-util")
 
 const baseUrl = "https://eofol.com/eofol4/"
 
-// @TODO add smoke test cases
 const items = [
   { url: `${baseUrl}index.html`, check: "<title>Eofol4</title>" },
   { url: `${baseUrl}index2.html`, check: "<h1>Eofol4 app - Second page</h1>" },
@@ -11,7 +10,9 @@ const items = [
   { url: `${baseUrl}asfaasd`, check: "Page not found" },
   { url: `${baseUrl}assets/js/index.js`, check: "" },
   { url: `${baseUrl}assets/media/fonts/Inter.woff2`, size: 34596 },
-  { url: `${baseUrl}assets/media/images/logo-lg.png`, size: 3063 },
+  { url: `${baseUrl}assets/media/images/logo-lg.png`, size: 3745 },
+  { url: `${baseUrl}assets/media/images/rainbow-mountains-peru.jpg`, size: 55378 },
+  { url: `${baseUrl}assets/media/icons/phi.svg`, size: 1280 },
 ]
 
 const WAIT_INTERVAL_MS = 2000
