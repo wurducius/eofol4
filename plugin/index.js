@@ -1,18 +1,34 @@
-const minifyJs = require("../compiler/scripts/minify-js")
-const minifyHtml = require("../compiler/scripts/minify-html")
 const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
 const { pluginName } = require("./config")
-const { readDir, resolve, read, isDirectory, parse } = require("../util")
+const {
+  isHtml,
+  isJpeg,
+  isPng,
+  isSvg,
+  isGif,
+  isJs,
+  readDir,
+  resolve,
+  read,
+  isDirectory,
+  parse,
+  sep,
+} = require("../util")
 const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
-const htmlTemplate = require("../compiler/head")
-const injectDoctype = require("../compiler/scripts/inject-doctype")
-const collectViews = require("../compiler/collect-views")
+const {
+  processSvg,
+  processPng,
+  processJpeg,
+  processGif,
+  injectDoctype,
+  collectViews,
+  jsonToHtml,
+  htmlTemplate,
+  minifyHtml,
+  minifyJs,
+} = require("../compiler")
 const compile = require("./compile")
-const { isHtml, isJpeg, isPng, isSvg, isGif } = require("../util/ext")
-const jsonToHtml = require("../compiler/scripts/json-to-html")
-const { processSvg, processPng, processJpeg, processGif } = require("../compiler/scripts/img")
-const { sep } = require("path")
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -25,7 +41,7 @@ const processAssets = (compiler, compilation) => (assets) =>
       const prevSize = transform ? sourceSize(source) : nextSize
       logSizeDelta(assetName, prevSize, nextSize)
     },
-    conditional: (info, assetName) => !info.minified && parse(assetName).ext === ".js",
+    conditional: (info, assetName) => !info.minified && isJs(parse(assetName).ext),
   })(
     compiler,
     compilation,

@@ -1,5 +1,6 @@
 const clean = require("./clean")
-const { touchBuildDirs, webpackBuild } = require("../../compiler")
+const webpackBuild = require("../../webpack/webpack-build")
+const touchBuildDirs = require("../../compiler/scripts/touch-build-dirs")
 
 const build = (webpackParams, isHot) => {
   if (!isHot) {

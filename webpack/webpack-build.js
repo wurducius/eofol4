@@ -1,7 +1,7 @@
 const webpack = require("webpack")
-const getWebpackConfig = require("../../webpack/webpack.config")
-const { PATH_BUILD } = require("../../config")
-const collectViews = require("../collect-views")
+const getWebpackConfig = require("./webpack.config")
+const { PATH_BUILD } = require("../config")
+const collectViews = require("../compiler/collect-views")
 
 const webpackBuild = (params) => {
   const views = collectViews()
