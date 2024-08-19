@@ -16,7 +16,6 @@ body {
   background-color: #1a202c;
   background-blend-mode: multiply;
   background-attachment: fixed;
-  background-image: url("./assets/media/images/rainbow-mountains-peru.jpg");
   font-family: Inter, sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -55,6 +54,20 @@ a:active {
   background-color: #1a9595;
   border-radius: 8px;
   margin: 32px 0 32px 0;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-t-md {
+  margin-top: 16px;
+}
+
+.license-container {
+  max-width: 800px;
+  margin: 0 auto 0 auto;
 }
 
 body::-webkit-scrollbar {

@@ -29,6 +29,9 @@ const {
   minifyJs,
 } = require("../compiler")
 const compile = require("./compile")
+const { resetProgress, incrementProgress, showProgress } = require("./progress")
+
+let progress = {}
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -47,13 +50,9 @@ const processAssets = (compiler, compilation) => (assets) =>
     compilation,
   )(assets)
 
-const processStaticAssets = (compilation) => (basepath) =>
+const processStaticAssets = (compilation) => (basepath, files) =>
   Promise.all(
-    readDir(basepath, { recursive: true }).map(async (filename) => {
-      const filePath = resolve(basepath, filename)
-      if (isDirectory(filePath)) {
-        return undefined
-      }
+    files.map(async (filename) => {
       const info = compilation.assets[filename]?.info
       return await processStatic(filename, basepath, parse(filename).ext, info).then((processed) => {
         compilation.assets[filename] = getAsset({
@@ -61,6 +60,8 @@ const processStaticAssets = (compilation) => (basepath) =>
           nextInfo: { processed: true },
           nextSource: processed,
         })
+        progress = incrementProgress(progress)
+        showProgress(progress, filename)
       })
     }),
   )
@@ -77,7 +78,7 @@ const processHtml = async (filename, content, info) => {
   } else {
     processedHtml = injectDoctype(minifiedHtml)
   }
-  logSizeDelta(filename, content.length, processedHtml.length)
+  logSizeDelta(filename, compiledHtml.length + 15, processedHtml.length)
   return processedHtml
 }
 
@@ -130,13 +131,24 @@ const injectServiceWorker = (compilation) => {
 
 const processViews = (compiler, compilation) => {
   const processStaticAssetsImpl = processStaticAssets(compilation)
-  const staticFiles = processStaticAssetsImpl(PATH_STATIC)
-  const pages = processStaticAssetsImpl(PATH_PAGES)
+
+  const staticList = readDir(PATH_STATIC, { recursive: true }).filter(
+    (file) => !isDirectory(resolve(PATH_STATIC, file)),
+  )
+  const pageList = readDir(PATH_PAGES, { recursive: true }).filter((file) => !isDirectory(resolve(PATH_PAGES, file)))
+  const templateList = readDir(PATH_TEMPLATES, { recursive: true }).filter(
+    (file) => !isDirectory(resolve(PATH_TEMPLATES, file)),
+  )
+
+  progress = resetProgress(staticList.length + pageList.length + templateList.length)
+  showProgress(progress, "(compilation start)")
+
+  const staticFiles = processStaticAssetsImpl(PATH_STATIC, staticList)
+  const pages = processStaticAssetsImpl(PATH_PAGES, pageList)
 
   const templates = Promise.all(
-    readDir(PATH_TEMPLATES).map((templateName) =>
+    templateList.map((templateName) =>
       jsonToHtml(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
-        //   .then((content) => injectDoctype(content))
         .then((content) => processPage(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {
           compilation.assets[templateName] = getAsset({
@@ -144,6 +156,8 @@ const processViews = (compiler, compilation) => {
             nextInfo: { processed: true },
             nextSource: processed,
           })
+          progress = incrementProgress(progress)
+          showProgress(progress, templateName)
         }),
     ),
   )
