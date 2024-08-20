@@ -1,6 +1,10 @@
 const testLighthouse = require("./impl/test-lighthouse")
 const { prettyTime, success, error, primary } = require("../util")
 
+const baseUrl = "https://eofol.com/eofol4/"
+const lighthouseUrl = `https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?url=${baseUrl}&strategy=mobile`
+const cateogies = ["performance"]
+
 const TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT = 5
 let TEST_LIGHTHOUSE_PASS_COUNT = TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT
 
@@ -8,6 +12,11 @@ const newline = () => console.log("")
 const log = (msg) => console.log(primary(`Eofol4 Lighthouse test ${msg}`))
 const logResultSuccess = (msg) => console.log(success(msg))
 const logResultFail = (msg) => console.log(error(msg))
+
+const sleep = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 
 const timeStart = new Date()
 
@@ -23,42 +32,59 @@ newline()
 
 const result = Array.from({ length: TEST_LIGHTHOUSE_PASS_COUNT })
 
-for (let i = 0; i < TEST_LIGHTHOUSE_PASS_COUNT; i++) {
-  testLighthouse((res) => {
+const promises = Array.from({ length: TEST_LIGHTHOUSE_PASS_COUNT })
+
+const test = async (lighthouseUrl, cateogies, i) =>
+  await testLighthouse(lighthouseUrl, cateogies).then((res) => {
     result[i] = res
     const resultScore = res.score
     const title = res.title
-    const score = `${resultScore.toFixed(0)}%`
+    const score = `${resultScore.toFixed(1)}%`
     const resultDisplay = `Test attempt (${i + 1}/${TEST_LIGHTHOUSE_PASS_COUNT}) -> ${title}: ${score}`
-    if (resultScore < 1) {
+    if (resultScore < 100) {
       logResultFail(resultDisplay)
     } else {
       logResultSuccess(resultDisplay)
     }
-    if (result.filter(Boolean).length === TEST_LIGHTHOUSE_PASS_COUNT) {
-      const averageScore = Number(
-        result.map((x) => x.score).reduce((acc, next) => acc + next / TEST_LIGHTHOUSE_PASS_COUNT, 0),
-      ).toFixed(1)
-      const average = `${averageScore}%`
-      const averageDisplay = `Average -> ${average}`
-      newline()
-      if (averageScore < 100) {
-        logResultFail(averageDisplay)
-        newline()
-        logResultFail("LIGHTHOUSE TEST FAILED")
-      } else {
-        logResultSuccess(averageDisplay)
-        newline()
-        logResultSuccess("LIGHTHOUSE TEST PASSED")
-      }
-      newline()
-      log(
-        `took ${prettyTime(new Date() - timeStart)
-          .split("")
-          .map((letter) => letter.toLowerCase())
-          .join("")}.`,
-      )
-      log("finished.")
-    }
+    return res
   })
+
+const run = async () => {
+  for (let i = 0; i < TEST_LIGHTHOUSE_PASS_COUNT; i++) {
+    promises[i] = await test(lighthouseUrl, cateogies, i).then(async (res) => {
+      if (i !== 0 && i % 5 === 0) {
+        return await sleep(1000).then(() => res)
+      } else {
+        return res
+      }
+    })
+  }
 }
+
+run().then(() => {
+  Promise.all(promises).then(() => {
+    const averageScore = Number(
+      result.map((x) => x.score).reduce((acc, next) => acc + next / TEST_LIGHTHOUSE_PASS_COUNT, 0),
+    ).toFixed(1)
+    const average = `${averageScore}%`
+    const averageDisplay = `Average -> ${average}`
+    newline()
+    if (averageScore < 100) {
+      logResultFail(averageDisplay)
+      newline()
+      logResultFail("LIGHTHOUSE TEST FAILED")
+    } else {
+      logResultSuccess(averageDisplay)
+      newline()
+      logResultSuccess("LIGHTHOUSE TEST PASSED")
+    }
+    newline()
+    log(
+      `took ${prettyTime(new Date() - timeStart)
+        .split("")
+        .map((letter) => letter.toLowerCase())
+        .join("")}.`,
+    )
+    log("finished.")
+  })
+})

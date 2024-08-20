@@ -19,6 +19,7 @@
     "reinstall-force": "node ./scripts/reinstall.js -f",
     "test-smoke": "node scripts/test-smoke.js",
     "test-lighthouse": "node scripts/test-lighthouse.js 10",
+    "test-lighthouse-max": "node scripts/test-lighthouse.js 100",
     "deploy": "npm run build -- --prod && call c:/code/eofol4-deploy.bat && npm run test-smoke && npm run test-lighthouse",
     "docker-build": "docker build -t eofol4-test ./docker-test",
     "docker-run": "docker run -p 3000:3000 eofol4-test",
