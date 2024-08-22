@@ -16,7 +16,7 @@ const collectedViews = [
 
 const maplistContent = collectedViews
   .map((view) => view)
-  .map((view) => `<li><a href="${view}">${capitalize(view).replace(".html", "")}</a></li>`)
+  .map((view) => `<li><div><a href="${view}">${capitalize(view).replace(".html", "")}</a></div></li>`)
   .join("")
 
 injectElement("map-list", maplistContent, Boolean(hexToCSSFilter))
