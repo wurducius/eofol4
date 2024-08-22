@@ -62,7 +62,7 @@ const handleRemove = async () => {
   await recompile()
 }
 
-build(false)
+build({}, false)
 
 // @TODO do not sleep instead fix async promise handling in build
 sleepInterval().then(() => {

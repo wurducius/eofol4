@@ -1,13 +1,9 @@
 import { BREAKPOINT } from "../constants"
 
-const mediaQuery = (maxWidth: number | undefined, minWidth: number | undefined) => {
-  console.log(
-    `${minWidth !== undefined ? `(min-width: ${minWidth}px)` : ""}${minWidth !== undefined && maxWidth !== undefined ? " and " : ""}${maxWidth !== undefined ? `(max-width: ${maxWidth}px)` : ""}`,
-  )
-  return window.matchMedia(
+const mediaQuery = (maxWidth: number | undefined, minWidth: number | undefined) =>
+  window.matchMedia(
     `${minWidth !== undefined ? `(min-width: ${minWidth}px)` : ""}${minWidth !== undefined && maxWidth !== undefined ? " and " : ""}${maxWidth !== undefined ? `(max-width: ${maxWidth}px)` : ""}`,
   ).matches
-}
 
 export const getBreakpoint = () => {
   if (typeof window !== "undefined") {

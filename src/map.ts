@@ -1,6 +1,6 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
-import { capitalize, injectElement } from "./util"
-import { registerServiceworker } from "../runtime"
+import { injectElement } from "./util"
+import { capitalize, registerServiceworker } from "../runtime"
 
 // @TODO automate collect views PRECOMPILE API
 const collectedViews = [

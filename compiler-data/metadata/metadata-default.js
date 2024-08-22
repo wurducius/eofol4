@@ -14,7 +14,7 @@ const data = {
   manifest: "manifest.json",
   fontStyle:
     '@font-face { font-family: "Inter"; src: url("./assets/media/fonts/Inter.woff2") format("woff2"); font-display: swap;}',
-  style: `body { background-image: url("./assets/media/images/rainbow-mountains-peru.jpg"); }`,
+  style: 'body { background-image: url("./assets/media/images/rainbow-mountains-peru.jpg"); }',
 }
 
 module.exports = data
