@@ -1,14 +1,18 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
-import { injectElement, registerServiceworker } from "./util"
+import { capitalize, injectElement } from "./util"
+import { registerServiceworker } from "../runtime"
 
-// @TODO automate collect views
-const collectedViews = ["index.html", "index2.html", "license.html", "map.html", "404.html"]
-
-const capitalize = (str: string) =>
-  str
-    .split("")
-    .map((letter: string, i: number) => (i === 0 ? letter.toUpperCase() : letter))
-    .join("")
+// @TODO automate collect views PRECOMPILE API
+const collectedViews = [
+  "index.html",
+  "index2.html",
+  "license.html",
+  "map.html",
+  "static.html",
+  "level/index.html",
+  "level/second/index.html",
+  "404.html",
+]
 
 const maplistContent = collectedViews
   .map((view) => view)

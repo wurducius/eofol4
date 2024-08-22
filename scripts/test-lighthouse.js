@@ -50,7 +50,7 @@ const test = async (lighthouseUrl, cateogies, i) =>
     const resultScore = res.score
     const title = res.title
     const score = `${resultScore.toFixed(1)}%`
-    const resultDisplay = `Test attempt (${i + 1}/${TEST_LIGHTHOUSE_PASS_COUNT}) -> ${title}: ${score}`
+    const resultDisplay = `Test pass [${i + 1}/${TEST_LIGHTHOUSE_PASS_COUNT}] -> ${title}: ${score}`
     if (resultScore < 100) {
       logResultFail(resultDisplay)
     } else {

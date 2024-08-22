@@ -34,6 +34,7 @@ const listOfDirectories = [
   "compiler",
   "compiler-data",
   "plugin",
+  "runtime",
   "util",
 ]
 const listOfFiles = []
