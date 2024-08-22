@@ -1,3 +1,5 @@
+const processArgs = require("../util/args")
+
 const CLI_ARGS = [
   {
     short: "a",
@@ -15,17 +17,6 @@ const CLI_ARGS = [
   },
 ]
 
-const getArgs = () => {
-  let args = {}
-  for (let i = 2; i < process.argv.length; i++) {
-    for (let j = 0; j < CLI_ARGS.length; j++) {
-      const { short, long, handler } = CLI_ARGS[j]
-      if (process.argv[i] === `-${short}` || process.argv[i] === `--${long}`) {
-        handler(args)
-      }
-    }
-  }
-  return args
-}
+const getArgs = () => processArgs(CLI_ARGS)
 
 module.exports = getArgs
