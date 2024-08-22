@@ -63,7 +63,6 @@ const htmlTemplate = (view) => (body) => {
         [
           body,
           script("runtime"),
-          script("eofol"),
           script("dependencies"),
           script(view),
           htmlElement("noscript", ["You need to enable JavaScript to run this app."], {}),
