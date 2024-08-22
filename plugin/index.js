@@ -1,5 +1,5 @@
 const transformAssets = require("./transform-assets")
-const { log, sourceSize, getAsset, logSizeDelta } = require("./util")
+const { log, sourceSize, getAsset, logSizeDelta, getFileSizes } = require("./util")
 const { pluginName } = require("./config")
 const {
   isHtml,
@@ -43,6 +43,8 @@ const processAssets = (compiler, compilation) => (assets) =>
     logFinishedAsset: ({ nextSize, source, transform, assetName }) => {
       const prevSize = transform ? sourceSize(source) : nextSize
       logSizeDelta(assetName, prevSize, nextSize)
+      progress = incrementProgress(progress, prevSize)
+      showProgress(progress, assetName)
     },
     conditional: (info, assetName) => !info.minified && isJs(parse(assetName).ext),
   })(
@@ -60,7 +62,7 @@ const processStaticAssets = (compilation) => (basepath, files) =>
           nextInfo: { processed: true },
           nextSource: processed,
         })
-        progress = incrementProgress(progress)
+        progress = incrementProgress(progress, processed.length)
         showProgress(progress, filename)
       })
     }),
@@ -140,8 +142,14 @@ const processViews = (compiler, compilation) => {
     (file) => !isDirectory(resolve(PATH_TEMPLATES, file)),
   )
 
-  progress = resetProgress(staticList.length + pageList.length + templateList.length)
-  showProgress(progress, "(compilation start)")
+  progress = resetProgress(
+    getFileSizes(staticList, PATH_STATIC) +
+      getFileSizes(pageList, PATH_PAGES) +
+      getFileSizes(templateList, PATH_TEMPLATES),
+    staticList.length + pageList.length + templateList.length,
+  )
+
+  console.log("Compiling assets...")
 
   const staticFiles = processStaticAssetsImpl(PATH_STATIC, staticList)
   const pages = processStaticAssetsImpl(PATH_PAGES, pageList)
@@ -156,7 +164,7 @@ const processViews = (compiler, compilation) => {
             nextInfo: { processed: true },
             nextSource: processed,
           })
-          progress = incrementProgress(progress)
+          progress = incrementProgress(progress, processed.length)
           showProgress(progress, templateName)
         }),
     ),
@@ -194,7 +202,15 @@ const onCompilationFinished = (compiler) => (compilation) => {
       stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
       additionalAssets: true,
     },
-    processAssets(compiler, compilation),
+    (assets) => {
+      const assetSize = Object.keys(assets)
+        .filter((asset) => asset.endsWith(".js"))
+        .map((asset) => assets[asset].size())
+        .reduce((acc, next) => ({ count: acc.count + 1, size: acc.size + next }), { count: 0, size: 0 })
+      progress = resetProgress(assetSize.size, assetSize.count)
+      console.log("Optimizing assets...")
+      return processAssets(compiler, compilation)(assets)
+    },
   )
 }
 

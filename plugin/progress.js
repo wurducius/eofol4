@@ -1,19 +1,21 @@
 const { PROGRESS } = require("./config")
 
-const resetProgress = (total) => {
+const resetProgress = (totalSize, totalCount) => {
   if (PROGRESS) {
     return {
-      index: 0,
-      total,
+      indexSize: 0,
+      indexCount: 0,
+      totalSize,
+      totalCount,
     }
   } else {
     return {}
   }
 }
 
-const incrementProgress = (data) => {
+const incrementProgress = (data, incrementSize) => {
   if (PROGRESS) {
-    return { ...data, index: data.index + 1 }
+    return { ...data, indexSize: data.indexSize + incrementSize, indexCount: data.indexCount + 1 }
   } else {
     return {}
   }
@@ -21,7 +23,9 @@ const incrementProgress = (data) => {
 
 const showProgress = (data, filename) => {
   if (PROGRESS) {
-    console.log(`[${data.index}/${data.total}] ${filename} -> ${(100 * (data.index / data.total)).toFixed(0)}%`)
+    console.log(
+      `[${data.indexCount}/${data.totalCount}] ${filename} -> ${(100 * (data.indexSize / data.totalSize)).toFixed(0)}%`,
+    )
   }
 }
 

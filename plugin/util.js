@@ -1,5 +1,6 @@
 const { VERBOSE } = require("./config")
-const { prettySize } = require("../util")
+const { prettySize, resolve } = require("../util")
+const { stat } = require("../util/fs")
 
 const log = (msg) => {
   if (VERBOSE) {
@@ -32,4 +33,7 @@ const logSizeDelta = (filename, prevSize, nextSize) => {
   )
 }
 
-module.exports = { log, sourceSize, getAsset, logSizeDelta }
+const getFileSizes = (filenames, basepath) =>
+  filenames.map((filename) => stat(resolve(basepath, filename)).size).reduce((acc, next) => acc + next, 0)
+
+module.exports = { log, sourceSize, getAsset, logSizeDelta, getFileSizes }
