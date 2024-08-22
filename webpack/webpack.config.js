@@ -57,6 +57,7 @@ const getWebpackConfig = (params) => {
         },
       },
     },
+    devtool: MODE === "development" ? "source-map" : false,
   }
 }
 
