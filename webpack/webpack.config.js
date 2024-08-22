@@ -1,10 +1,10 @@
 const EofolPlugin = require("../plugin")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const { resolve, parse, exists, sep } = require("../util")
-const { PATH_SRC, PATH_BUILD, MODE } = require("../config")
+const { PATH_SRC, PATH_BUILD, MODE, ANALYZE } = require("../config")
 
 const getWebpackConfig = (params) => {
-  const { views, analyze } = params
+  const { views } = params
 
   // @TODO handle also .js scripts
   const entry = views.reduce((acc, next) => {
@@ -28,7 +28,12 @@ const getWebpackConfig = (params) => {
       rules: [
         {
           test: /\.ts?$/,
-          use: "ts-loader",
+          use: {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
           exclude: /node_modules/,
         },
       ],
@@ -36,19 +41,12 @@ const getWebpackConfig = (params) => {
     resolve: {
       extensions: [".ts", ".js"],
     },
-    plugins: [new EofolPlugin(), analyze && new BundleAnalyzerPlugin()].filter(Boolean),
+    plugins: [new EofolPlugin(), ANALYZE && new BundleAnalyzerPlugin()].filter(Boolean),
     optimization: {
       moduleIds: "deterministic",
       runtimeChunk: "single",
       splitChunks: {
         cacheGroups: {
-          eofol: {
-            test: /[\\/]runtime[\\/]/,
-            name: "eofol",
-            chunks: "all",
-            reuseExistingChunk: true,
-            idHint: "eofol",
-          },
           dependencies: {
             test: /[\\/]node_modules[\\/]/,
             name: "dependencies",

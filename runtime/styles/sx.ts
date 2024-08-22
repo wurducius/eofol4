@@ -1,5 +1,5 @@
 import { SxStyleObject } from "../types"
-import { getHash, isBrowser } from "../util"
+import { camelCaseToKebabCase, getHash, isBrowser } from "../util"
 import { SX } from "../constants"
 
 let compileCache = ""
@@ -22,10 +22,9 @@ const injectStyle = (hash: string, styleContent: string, prefix?: string, skipCo
   cache.push(hash)
 }
 
-const getStyleContent = (
-  styleObj: SxStyleObject,
-  selector?: string, // @ts-ignore
-) => `${selector || ""} { ${Object.keys(styleObj).reduce((acc, next) => `${acc} ${next}: ${styleObj[next]};`, "")} } `
+const getStyleContent = (styleObj: SxStyleObject, selector?: string) =>
+  // @ts-ignore
+  `${selector || ""} { ${Object.keys(styleObj).reduce((acc, next) => `${acc} ${camelCaseToKebabCase(next)}: ${styleObj[next]};`, "")} } `
 
 export const sx = (styleObj: SxStyleObject, selector?: string, prefix?: string, skipCompileCache?: boolean) => {
   const styleContent = getStyleContent(styleObj, selector)
