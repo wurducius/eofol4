@@ -8,6 +8,9 @@ const cateogies = ["performance"]
 const TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT = 5
 let TEST_LIGHTHOUSE_PASS_COUNT = TEST_LIGHTHOUSE_PASS_COUNT_DEFAULT
 
+const TEST_LIGHTHOUSE_WAIT_INTERVAL_MS_DEFAULT = 1000
+let TEST_LIGHTHOUSE_WAIT_INTERVAL_MS = TEST_LIGHTHOUSE_WAIT_INTERVAL_MS_DEFAULT
+
 const newline = () => console.log("")
 const log = (msg) => console.log(primary(`Eofol4 Lighthouse test ${msg}`))
 const logResultSuccess = (msg) => console.log(success(msg))
@@ -27,7 +30,14 @@ if (process.argv.length >= 3 && process.argv[2] !== undefined) {
   }
 }
 
-log(`starting with ${TEST_LIGHTHOUSE_PASS_COUNT} passes...`)
+if (process.argv.length >= 4 && process.argv[3] !== undefined) {
+  const numberArg = Number(process.argv[3])
+  if (Number.isInteger(numberArg) && numberArg >= 0) {
+    TEST_LIGHTHOUSE_WAIT_INTERVAL_MS = numberArg
+  }
+}
+
+log(`starting with ${TEST_LIGHTHOUSE_PASS_COUNT} passes with wait interval ${TEST_LIGHTHOUSE_WAIT_INTERVAL_MS}...`)
 newline()
 
 const result = Array.from({ length: TEST_LIGHTHOUSE_PASS_COUNT })
@@ -40,7 +50,7 @@ const test = async (lighthouseUrl, cateogies, i) =>
     const resultScore = res.score
     const title = res.title
     const score = `${resultScore.toFixed(1)}%`
-    const resultDisplay = `Test attempt (${i + 1}/${TEST_LIGHTHOUSE_PASS_COUNT}) -> ${title}: ${score}`
+    const resultDisplay = `Test pass [${i + 1}/${TEST_LIGHTHOUSE_PASS_COUNT}] -> ${title}: ${score}`
     if (resultScore < 100) {
       logResultFail(resultDisplay)
     } else {
@@ -53,7 +63,7 @@ const run = async () => {
   for (let i = 0; i < TEST_LIGHTHOUSE_PASS_COUNT; i++) {
     promises[i] = await test(lighthouseUrl, cateogies, i).then(async (res) => {
       if (i !== 0 && i % 5 === 0) {
-        return await sleep(1000).then(() => res)
+        return await sleep(TEST_LIGHTHOUSE_WAIT_INTERVAL_MS).then(() => res)
       } else {
         return res
       }
