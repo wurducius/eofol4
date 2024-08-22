@@ -42,7 +42,14 @@ const getWebpackConfig = (params) => {
       runtimeChunk: "single",
       splitChunks: {
         cacheGroups: {
-          vendors: {
+          eofol: {
+            test: /[\\/]runtime[\\/]/,
+            name: "eofol",
+            chunks: "all",
+            reuseExistingChunk: true,
+            idHint: "eofol",
+          },
+          dependencies: {
             test: /[\\/]node_modules[\\/]/,
             name: "dependencies",
             chunks: "all",
