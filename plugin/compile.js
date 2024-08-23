@@ -1,14 +1,19 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve } = require("../util")
 const { PATH_CWD } = require("../config")
+const { isEofolTag, compileEofol } = require("./eofol-compile")
 
 const traverseTree = (node, result) => {
   if (typeof node === "object") {
-    result = { type: node.type, attributes: node.attributes, content: [] }
-    if (node.content && node.content.length > 0) {
-      node.content.map((child, i) => {
-        result.content[i] = traverseTree(child, result.content[i])
-      })
+    if (isEofolTag(node.type)) {
+      result = compileEofol(node)
+    } else {
+      result = { type: node.type, attributes: node.attributes, content: [] }
+      if (node.content && node.content.length > 0) {
+        node.content.map((child, i) => {
+          result.content[i] = traverseTree(child, node.content[i])
+        })
+      }
     }
   } else {
     result = node
