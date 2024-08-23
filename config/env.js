@@ -20,6 +20,7 @@ const DIRNAME_IMAGES = "images"
 const DIRNAME_ICONS = "icons"
 const DIRNAME_FONTS = "fonts"
 const DIRNAME_TEMPLATES = "templates"
+const DIRNAME_DIST = "dist"
 
 const PAGE_FALLBACK = "404.html"
 
@@ -50,6 +51,7 @@ const defaultEnv = {
   DIRNAME_ICONS,
   DIRNAME_FONTS,
   DIRNAME_TEMPLATES,
+  DIRNAME_DIST,
   PAGE_FALLBACK,
   HOT_UPDATE_WATCH_INTERNAL_MS,
   HOT_UPDATE_WATCH_POLL,

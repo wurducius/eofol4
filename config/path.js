@@ -12,6 +12,7 @@ const {
   DIRNAME_CSS,
   DIRNAME_JS,
   DIRNAME_TEMPLATES,
+  DIRNAME_DIST,
 } = require("./env")
 
 const PATH_CWD = resolve(process.cwd())
@@ -28,6 +29,7 @@ const PATH_IMAGES = resolve(PATH_MEDIA, DIRNAME_IMAGES)
 const PATH_ICONS = resolve(PATH_MEDIA, DIRNAME_ICONS)
 const PATH_FONTS = resolve(PATH_MEDIA, DIRNAME_FONTS)
 const PATH_TEMPLATES = resolve(PATH_CWD, DIRNAME_TEMPLATES)
+const PATH_DIST = resolve(PATH_CWD, DIRNAME_DIST)
 
 module.exports = {
   PATH_CWD,
@@ -43,4 +45,5 @@ module.exports = {
   PATH_ICONS,
   PATH_FONTS,
   PATH_TEMPLATES,
+  PATH_DIST,
 }
