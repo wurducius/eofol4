@@ -1,4 +1,4 @@
-const testLighthouse = require("./impl/test-lighthouse")
+const { testLighthouse } = require("./impl")
 const { prettyTime, success, error, primary } = require("../util")
 
 const baseUrl = "https://eofol.com/eofol4/"
