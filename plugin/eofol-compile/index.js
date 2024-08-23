@@ -1,5 +1,6 @@
 const { PATH_DIST } = require("../../config")
-const { sx } = require(PATH_DIST)
+const { resolve } = require("../../util")
+const { sx } = require(resolve(PATH_DIST, "runtime"))
 
 const COMPILER_LOG_ERROR_MSG_PREFIX = "Eofol4 compilation error: "
 const logCompileError = (msg) => console.log(COMPILER_LOG_ERROR_MSG_PREFIX + msg)

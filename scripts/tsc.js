@@ -1,9 +1,14 @@
 const { spawn } = require("../util")
 const { spawnOptions } = require("./impl/options")
-const { DIRNAME_DIST } = require("../config")
+const { DIRNAME_DIST, PATH_SRC } = require("../config")
+const { resolve, readDir, stat } = require("../util")
 
 const tsc = () => {
-  spawn.sync("tsc", ["-outDir", DIRNAME_DIST, "./runtime/index.ts"], spawnOptions)
+  const scripts = readDir(PATH_SRC, { recursive: true })
+    .map((filename) => resolve(PATH_SRC, filename))
+    .filter((fullPath) => !stat(fullPath).isDirectory())
+  spawn.sync("tsc", ["-outDir", resolve(DIRNAME_DIST, "runtime"), "./runtime/index.ts"], spawnOptions)
+  spawn.sync("tsc", ["-outDir", resolve(DIRNAME_DIST, "src"), ...scripts], spawnOptions)
 }
 
 tsc()
