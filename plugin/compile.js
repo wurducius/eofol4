@@ -3,7 +3,7 @@ const { read, resolve } = require("../util")
 const { PATH_CWD, PATH_DIST } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
 
-const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runtime"))
+const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "src", "runtime"))
 
 const traverseTree = (node, result) => {
   if (typeof node === "object") {

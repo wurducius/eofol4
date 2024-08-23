@@ -1,9 +1,8 @@
 import { isBrowser } from "../../runtime"
 
 export const injectElement = (id: string, content: string, condition?: boolean) => {
-  if ((condition === undefined || condition) && id) {
+  if ((condition === undefined || condition) && id && isBrowser()) {
     const scriptElement = document.getElementById(id)
-
     if (scriptElement) {
       scriptElement.innerHTML = content
     }
