@@ -1,5 +1,5 @@
-// const { resolve } = require("path")
-// const { sx } = require(resolve(process.cwd(), "runtime"))
+const { PATH_DIST } = require("../../config")
+const { sx } = require(PATH_DIST)
 
 const COMPILER_LOG_ERROR_MSG_PREFIX = "Eofol4 compilation error: "
 const logCompileError = (msg) => console.log(COMPILER_LOG_ERROR_MSG_PREFIX + msg)
@@ -16,13 +16,12 @@ const e = (tag, style, content, attributes, properties) => {
   }
 }
 
-// sx({ color: "red" })
 const first = {
   name: "first",
   render: (attributes, children) =>
     e(
       "h1",
-      undefined,
+      sx({ color: "red" }),
       e(
         "ul",
         undefined,
@@ -30,9 +29,6 @@ const first = {
           e("div", undefined, child),
         ),
       ),
-      {
-        style: "color:red;",
-      },
     ),
 }
 

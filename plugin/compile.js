@@ -1,7 +1,9 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve } = require("../util")
-const { PATH_CWD } = require("../config")
+const { PATH_CWD, PATH_DIST } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
+
+const { clearCompileCache, getCompileCache } = require(PATH_DIST)
 
 const traverseTree = (node, result) => {
   if (typeof node === "object") {
@@ -26,10 +28,11 @@ const compileTree = (tree, result) => traverseTree(tree, result)
 const baseStyles = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
 
 const compile = async (content) => {
+  clearCompileCache()
   const json = await htmlToJson(content, false)
-  const head = json.content.find((child) => child.type === "head")
-  head.content.push({ type: "style", content: [baseStyles] })
   const compiled = compileTree(json, {})
+  const head = compiled.content.find((child) => child.type === "head")
+  head.content.push({ type: "style", content: [baseStyles, getCompileCache()] })
   return await jsonToHtml(compiled, true)
 }
 
