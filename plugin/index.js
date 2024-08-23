@@ -72,7 +72,7 @@ const processHtml = async (filename, content, info) => {
   if (info?.processed) {
     return content
   }
-  const compiledHtml = await compile(content)
+  const compiledHtml = await compile(content, filename)
   const minifiedHtml = (await minifyHtml(compiledHtml)).toString()
   let processedHtml
   if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
