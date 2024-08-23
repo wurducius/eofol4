@@ -1,25 +1,27 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve } = require("../util")
 const { PATH_CWD } = require("../config")
+const { isEofolTag, compileEofol } = require("./eofol-compile")
 
 const traverseTree = (node, result) => {
-  result = node
-
-  if (node.content) {
-    return node.content.map((child, i) => {
-      return traverseTree(child, result[i])
-    })
+  if (typeof node === "object") {
+    if (isEofolTag(node.type)) {
+      result = compileEofol(node)
+    } else {
+      result = { type: node.type, attributes: node.attributes, content: [] }
+      if (node.content && node.content.length > 0) {
+        node.content.map((child, i) => {
+          result.content[i] = traverseTree(child, node.content[i])
+        })
+      }
+    }
   } else {
-    return result
+    result = node
   }
+  return result
 }
 
-const compileTree = (tree, result) => {
-  // console.log(tree)
-  //const x = traverseTree(tree, result)
-  // console.log(x)
-  return tree
-}
+const compileTree = (tree, result) => traverseTree(tree, result)
 
 const baseStyles = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
 

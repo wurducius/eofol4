@@ -2,7 +2,7 @@ import globals from "globals"
 import pluginJs from "@eslint/js"
 import tseslint from "typescript-eslint"
 
-const ignores = ["build/**/*.js", "node_modules/**/*.js", ".idea/**/*"]
+const ignores = ["build/**/*.js", "node_modules/**/*.js", ".idea/**/*", "test/**/*"]
 
 export default [
   {
