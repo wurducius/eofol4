@@ -1,5 +1,5 @@
 const Watchpack = require("watchpack")
-const { build, serve } = require("./impl")
+const { build, serve, precompile } = require("./impl")
 const { sleep, primary, success } = require("../util")
 const {
   DIRNAME_SRC,
@@ -46,6 +46,7 @@ const recompile = async () => {
   cancelPromise()
   setPromise(async () => {
     console.log(primary("Recompiling..."))
+    precompile()
     build({}, true)
     return await sleepInterval().then(() => {
       console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
