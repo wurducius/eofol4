@@ -1,6 +1,7 @@
 const { PATH_DIST } = require("../../config")
 const { resolve } = require("../../util")
-const { sx } = require(resolve(PATH_DIST, "runtime"))
+
+const { first } = require(resolve(PATH_DIST, "src", "src", "index.js"))
 
 const COMPILER_LOG_ERROR_MSG_PREFIX = "Eofol4 compilation error: "
 const logCompileError = (msg) => console.log(COMPILER_LOG_ERROR_MSG_PREFIX + msg)
@@ -8,30 +9,6 @@ const logDefNotFound = (name) => logCompileError(`Component definition not found
 const logEofolTagHasNoName = (tag) => logCompileError(`Eofol component has no attribute "name" for tagname =  ${tag}`)
 
 const COMPILER_EOFOL_TAGS = ["e", "eofol"]
-
-const e = (tag, style, content, attributes, properties) => {
-  return {
-    type: tag,
-    attributes: { ...properties, ...attributes, class: style },
-    content: Array.isArray(content) ? content : [content],
-  }
-}
-
-const first = {
-  name: "first",
-  render: (attributes, children) =>
-    e(
-      "h1",
-      sx({ color: "red" }),
-      e(
-        "ul",
-        undefined,
-        ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolAttribute}`, ...children].map((child) =>
-          e("div", undefined, child),
-        ),
-      ),
-    ),
-}
 
 const defs = [first]
 
@@ -50,7 +27,11 @@ const compileEofol = (node) => {
     logDefNotFound(name)
     return
   }
-  return def.render(node.attributes, node.content)
+  return def.render(
+    node.attributes,
+    // @TODO either remove whitespace from html before eofol compile or trim children manually like this
+    node.content?.filter((x) => typeof x !== "string" || !(typeof x === "string" && x.trim().length === 0)),
+  )
 }
 
 module.exports = { isEofolTag, compileEofol }
