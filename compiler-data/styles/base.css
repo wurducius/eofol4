@@ -35,19 +35,19 @@ p {
 a {
   text-decoration: none;
   font-weight: 700;
-  color: #1a9595;
+  color: #30cccc;
 }
 
 a:visited {
-  color: #197a7a;
+  color: #299393;
 }
 
 a:hover {
-  color: #46c8c8;
+  color: #4fd1d1;
 }
 
 a:active {
-  color: #197a7a;
+  color: #4fd1d1;
 }
 
 .phi {
