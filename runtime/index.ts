@@ -3,6 +3,8 @@ export * from "./types"
 
 export * from "./breakpoint"
 export * from "./fetch"
+export * from "./internals"
+export * from "./prefetch"
 export * from "./service-worker"
 export * from "./styles"
 export * from "./util"
