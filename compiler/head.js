@@ -15,16 +15,13 @@ const script = (scriptName) =>
     defer: "defer",
   })
 
-/*
-compileAllStyles(PATH_BASE_STYLES_CSS, PATH_BASE_STYLES_LESS, "").then((baseStyle) => {
-    const metadataPage = requireIfExists(resolve(PATH_PAGES, `${view}${FILENAME_SUFFIX_PAGE_METADATA}`))
-    const data = { ...metadataDefault, ...metadataProjectDefault, ...metadataPage }
- */
-
 const relativizePath = (x) => x
 const relativizeFontStyle = (x) => x
 
 const baseStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
+
+// @TODO temporary workaround
+const themedStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "themed.css")).toString()
 
 const getHead = (data, viewStyles) =>
   htmlElement(
@@ -50,7 +47,7 @@ const getHead = (data, viewStyles) =>
       htmlElement("title", [data.title], {}),
       htmlElement(
         "style",
-        [relativizeFontStyle(data.fontStyle), data.style, baseStyle, viewStyles].filter(Boolean),
+        [relativizeFontStyle(data.fontStyle), data.style, baseStyle, themedStyle, viewStyles].filter(Boolean),
         {},
       ),
     ],

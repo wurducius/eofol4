@@ -35,6 +35,9 @@ const compileTree = (tree, result, defs) => traverseTree(tree, result, defs)
 
 const baseStyles = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
 
+// @TODO temporary workaround
+const themedStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "themed.css")).toString()
+
 const compile = async (content, filename) => {
   clearCompileCache()
   const parsed = parse(filename)
@@ -48,7 +51,7 @@ const compile = async (content, filename) => {
   if (exists(viewStylesPath)) {
     viewStyles = read(viewStylesPath).toString()
   }
-  head.content.push({ type: "style", content: [baseStyles, viewStyles, getCompileCache()] })
+  head.content.push({ type: "style", content: [baseStyles, themedStyle, viewStyles, getCompileCache()] })
   return await jsonToHtml(compiled, true)
 }
 
