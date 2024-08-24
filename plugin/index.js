@@ -22,7 +22,6 @@ const {
   processJpeg,
   processGif,
   injectDoctype,
-  collectViews,
   jsonToHtml,
   htmlTemplate,
   minifyHtml,
@@ -31,6 +30,9 @@ const {
 const compile = require("./compile")
 const { resetProgress, incrementProgress, showProgress } = require("./progress")
 const getInternals = require("./internals")
+const { VIEWS } = require("../config/internal")
+
+const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
 
 let progress = {}
 
@@ -114,17 +116,9 @@ const processStatic = async (filename, basepath, ext, info) => {
 const processPage = async (filename, content, info) => await processHtml(filename, content, info)
 
 const injectServiceWorker = (compilation) => {
-  const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
-
-  // @TODO do not call collectViews() twice
-  const collectedViews = collectViews()
-
   const serviceWorkerContent = read(resolve(PATH_CWD, "compiler-data", "service-worker", "service-worker.js"))
     .toString()
-    .replace(
-      SERVICE_WORKER_PAGES_PLACEHOLDER,
-      collectedViews.map((view) => `"${view.replaceAll(sep, "/")}"`).join(", "),
-    )
+    .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, VIEWS.map((view) => `"${view.replaceAll(sep, "/")}"`).join(", "))
   compilation.assets["service-worker.js"] = getAsset({
     nextSize: serviceWorkerContent.length,
     nextInfo: {},

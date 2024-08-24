@@ -3,13 +3,12 @@ const touchBuildDirs = require("../../compiler/scripts/touch-build-dirs")
 // const tsc = require("../tsc")
 const webpackBuild = require("../../webpack/webpack-build")
 
-const build = (webpackParams, isHot) => {
+const build = (isHot) => {
   if (!isHot) {
     clean()
     touchBuildDirs()
   }
-  // tsc()
-  webpackBuild(webpackParams)
+  webpackBuild()
 }
 
 module.exports = build
