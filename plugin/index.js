@@ -133,9 +133,10 @@ const processViews = (compiler, compilation) => {
     (file) => !isDirectory(resolve(PATH_STATIC, file)),
   )
   const pageList = readDir(PATH_PAGES, { recursive: true }).filter((file) => !isDirectory(resolve(PATH_PAGES, file)))
-  const templateList = readDir(PATH_TEMPLATES, { recursive: true }).filter(
-    (file) => !isDirectory(resolve(PATH_TEMPLATES, file)),
-  )
+  const templateList = readDir(PATH_TEMPLATES, { recursive: true }).filter((file) => {
+    const parsed = parse(resolve(PATH_TEMPLATES, file))
+    return !parsed.isDirectory && isHtml(parsed.ext)
+  })
 
   progress = resetProgress(
     getFileSizes(staticList, PATH_STATIC) +

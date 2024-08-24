@@ -1,6 +1,6 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve, exists, parse } = require("../util")
-const { PATH_CWD, PATH_DIST } = require("../config")
+const { PATH_CWD, PATH_DIST, PATH_PAGES } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
 const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runtime"))
 
@@ -42,7 +42,13 @@ const compile = async (content, filename) => {
   const json = await htmlToJson(content, false)
   const compiled = compileTree(json, {}, defs)
   const head = compiled.content.find((child) => child.type === "head")
-  head.content.push({ type: "style", content: [baseStyles, getCompileCache()] })
+  // @TODO allow also view styles for PATH_TEMPLATES, possibly also LESS files
+  const viewStylesPath = resolve(PATH_PAGES, parsed.dir, `${parsed.name}.css`)
+  let viewStyles = ""
+  if (exists(viewStylesPath)) {
+    viewStyles = read(viewStylesPath).toString()
+  }
+  head.content.push({ type: "style", content: [baseStyles, viewStyles, getCompileCache()] })
   return await jsonToHtml(compiled, true)
 }
 
