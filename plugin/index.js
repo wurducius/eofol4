@@ -1,6 +1,6 @@
 const transformAssets = require("./transform-assets")
 const { log, sourceSize, getAsset, logSizeDelta, getFileSizes } = require("./util")
-const { pluginName } = require("./config")
+const { pluginName, PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const {
   isHtml,
   isJpeg,
@@ -31,6 +31,7 @@ const compile = require("./compile")
 const { resetProgress, incrementProgress, showProgress } = require("./progress")
 const getInternals = require("./internals")
 const { VIEWS } = require("../config/internal")
+const lifecycle = require("./lifecycle")
 
 const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
 
@@ -39,15 +40,21 @@ let progress = {}
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
     transformPropertyName: "minified",
-    transform: (content) => minifyJs(`${getInternals()}${content}`),
+    transform: (content) => {
+      const x = lifecycle.onOptimizeAssetStart(content)
+      const y = minifyJs(`${getInternals()}${x}`)
+      return lifecycle.onOptimizeAssetFinished(y)
+    },
     logStart: () => {
       log("Minify JS")
     },
     logFinishedAsset: ({ nextSize, source, transform, assetName }) => {
       const prevSize = transform ? sourceSize(source) : nextSize
       logSizeDelta(assetName, prevSize, nextSize)
-      progress = incrementProgress(progress, prevSize)
-      showProgress(progress, assetName)
+      if (PROGRESS_OPTIMIZE_ASSETS) {
+        progress = incrementProgress(progress, prevSize)
+        showProgress(progress, assetName)
+      }
     },
     conditional: (info, assetName) => !info.minified && isJs(parse(assetName).ext),
   })(
@@ -60,12 +67,13 @@ const processStaticAssets = (compilation) => (basepath, files) =>
     files.map(async (filename) => {
       const info = compilation.assets[filename]?.info
       return await processStatic(filename, basepath, parse(filename).ext, info).then((processed) => {
+        const postprocessed = lifecycle.onCompileAssetFinished(processed)
         compilation.assets[filename] = getAsset({
-          nextSize: processed.length,
+          nextSize: postprocessed.length,
           nextInfo: { processed: true },
-          nextSource: processed,
+          nextSource: postprocessed,
         })
-        progress = incrementProgress(progress, processed.length)
+        progress = incrementProgress(progress, postprocessed.length)
         showProgress(progress, filename)
       })
     }),
@@ -75,19 +83,24 @@ const processHtml = async (filename, content, info) => {
   if (info?.processed) {
     return content
   }
-  const compiledHtml = await compile(content, filename)
-  const minifiedHtml = (await minifyHtml(compiledHtml)).toString()
+  const x = lifecycle.onCompileViewStart(content)
+  const compiledHtml = await compile(x, filename)
+  const y = lifecycle.onCompileViewCompiled(compiledHtml)
+  const minifiedHtml = (await minifyHtml(y)).toString()
   let processedHtml
   if (minifiedHtml.startsWith("<!doctype html>") || minifiedHtml.startsWith("<!DOCTYPE html>")) {
     processedHtml = minifiedHtml
   } else {
     processedHtml = injectDoctype(minifiedHtml)
   }
+  const z = lifecycle.onCompileViewFinished(processedHtml)
   logSizeDelta(filename, compiledHtml.length + 15, processedHtml.length)
-  return processedHtml
+  return z
 }
 
 const processStatic = async (filename, basepath, ext, info) => {
+  // @TODO Refactor in order to allow passing content as argument to onCompileAssetStart
+  lifecycle.onCompileAssetStart()
   const filePath = resolve(basepath, filename)
 
   if (isHtml(ext)) {
@@ -147,11 +160,17 @@ const processViews = (compiler, compilation) => {
 
   console.log("Compiling assets...")
 
-  const staticFiles = processStaticAssetsImpl(PATH_STATIC, staticList)
-  const pages = processStaticAssetsImpl(PATH_PAGES, pageList)
+  const {
+    staticList: preprocessedStaticList,
+    pageList: preprocessedPageList,
+    templateList: preprocessedTemplateList,
+  } = lifecycle.onCompileAssetsStart({ staticList, pageList, templateList })
+
+  const staticFiles = processStaticAssetsImpl(PATH_STATIC, preprocessedStaticList)
+  const pages = processStaticAssetsImpl(PATH_PAGES, preprocessedPageList)
 
   const templates = Promise.all(
-    templateList.map((templateName) =>
+    preprocessedTemplateList.map((templateName) =>
       jsonToHtml(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
         .then((content) => processPage(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {
@@ -168,7 +187,9 @@ const processViews = (compiler, compilation) => {
 
   injectServiceWorker(compilation)
 
-  return Promise.all([staticFiles, pages, templates])
+  return Promise.all([staticFiles, pages, templates]).then((files) => {
+    return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
+  })
 }
 
 const onInitCompilation = (compiler) => (compilation) => {
@@ -184,6 +205,7 @@ const onInitCompilation = (compiler) => (compilation) => {
 // eslint-disable-next-line no-unused-vars
 const onBuildStarted = (compilation) => {
   // console.log("Eofol4 build")
+  lifecycle.onCompilationStart()
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -199,15 +221,24 @@ const onCompilationFinished = (compiler) => (compilation) => {
       additionalAssets: true,
     },
     (assets) => {
-      const assetSize = Object.keys(assets)
-        .filter((asset) => asset.endsWith(".js"))
+      const assetsToOptimize = Object.keys(assets).filter((asset) => asset.endsWith(".js"))
+      const preprocessedAssetsToOptimize = lifecycle.onOptimizeAssetsStart(assetsToOptimize)
+      const assetSize = preprocessedAssetsToOptimize
         .map((asset) => assets[asset].size())
         .reduce((acc, next) => ({ count: acc.count + 1, size: acc.size + next }), { count: 0, size: 0 })
-      progress = resetProgress(assetSize.size, assetSize.count)
-      console.log("Optimizing assets...")
-      return processAssets(compiler, compilation)(assets)
+      if (PROGRESS_OPTIMIZE_ASSETS) {
+        progress = resetProgress(assetSize.size, assetSize.count)
+        console.log("Optimizing assets...")
+      }
+      const result = processAssets(compiler, compilation)(assets)
+      return lifecycle.onOptimizeAssetsFinished(result)
     },
   )
+}
+
+// eslint-disable-next-line no-unused-vars
+const onAfterCompile = (compiler) => (compilation) => {
+  lifecycle.onCompilationFinished()
 }
 
 class Eofol4CompilerWebpackPlugin {
@@ -216,6 +247,7 @@ class Eofol4CompilerWebpackPlugin {
     compiler.hooks.watchRun.tap(pluginName, onDevStarted)
     compiler.hooks.compilation.tap(pluginName, onCompilationFinished(compiler))
     compiler.hooks.thisCompilation.tap(pluginName, onInitCompilation(compiler))
+    compiler.hooks.afterCompile.tap(pluginName, onAfterCompile(compiler))
   }
 }
 

@@ -3,6 +3,8 @@ const { COMPILATION_VERBOSE, COMPILATION_SHOW_PROGRESS } = require("../config")
 const pluginName = "eofol4-compiler"
 
 const VERBOSE = COMPILATION_VERBOSE === "true" || COMPILATION_VERBOSE === true
+const VERBOSE_OPTIMIZE_ASSETS = false
 const PROGRESS = COMPILATION_SHOW_PROGRESS === "true" || COMPILATION_SHOW_PROGRESS === true
+const PROGRESS_OPTIMIZE_ASSETS = PROGRESS && VERBOSE_OPTIMIZE_ASSETS
 
-module.exports = { pluginName, VERBOSE, PROGRESS }
+module.exports = { pluginName, VERBOSE, PROGRESS, PROGRESS_OPTIMIZE_ASSETS }
