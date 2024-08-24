@@ -30,13 +30,14 @@ const {
 } = require("../compiler")
 const compile = require("./compile")
 const { resetProgress, incrementProgress, showProgress } = require("./progress")
+const getInternals = require("./internals")
 
 let progress = {}
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
     transformPropertyName: "minified",
-    transform: minifyJs,
+    transform: (content) => minifyJs(`${getInternals()}${content}`),
     logStart: () => {
       log("Minify JS")
     },
