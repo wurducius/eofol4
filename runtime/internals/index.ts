@@ -1,10 +1,23 @@
 import { isBrowser } from "../util"
 
-const emptyInternals = { env: {}, instances: {}, vdom: {}, assets: {} }
+const emptyInternals = {
+  env: { views: [], BASE_URL: "./" },
+  instances: {},
+  vdom: {},
+  assets: { pages: [], scripts: [], images: [], other: [] },
+}
+
+// @TODO finish typing instances & vdom
+type Internals = {
+  env: { views: { path: string; isStatic?: boolean }[]; BASE_URL: string }
+  instances: any[]
+  vdom: any
+  assets: { pages: string[]; scripts: string[]; images: string[]; other: string[] }
+}
 
 // @ts-ignore
 // eslint-disable-next-line no-undef
-export const getInternals = () => (isBrowser() ? internals : emptyInternals)
+export const getInternals = () => (isBrowser() ? (internals as Internals) : emptyInternals)
 
 // @ts-ignore
 export const getEnv = () => getInternals().env

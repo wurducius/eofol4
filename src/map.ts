@@ -3,8 +3,7 @@ import { injectElement } from "./util"
 import { capitalize, registerServiceworker } from "../runtime"
 import { getEnv } from "../runtime/internals"
 
-// @ts-ignore
-const maplistContent = (getEnv()?.views ?? [])
+const maplistContent = (getEnv()?.views.map(({ path }) => path) ?? [])
   .map((view: string) => `<li><div><a href="${view}">${capitalize(view).replace(".html", "")}</a></div></li>`)
   .join("")
 

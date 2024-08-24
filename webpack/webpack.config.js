@@ -7,7 +7,7 @@ const { VIEWS } = require("../config/internal")
 const getWebpackConfig = () => {
   // @TODO handle also .js scripts
   const entry = VIEWS.reduce((acc, next) => {
-    const parsed = parse(next)
+    const parsed = parse(next.path)
     const viewPath = resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`)
     if (exists(viewPath)) {
       return { ...acc, [[parsed.dir.replace(sep, "/"), parsed.name].filter(Boolean).join("/")]: viewPath }
