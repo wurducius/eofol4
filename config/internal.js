@@ -1,7 +1,7 @@
 const collectViews = require("../compiler/collect-views")
 const { sep } = require("../util")
 
-const VIEWS = collectViews().map((view) => view.replace(sep, "/"))
+const VIEWS = collectViews().map((view) => view.replaceAll(sep, "/"))
 
 const BASE_URL = process.env.BASE_URL
 
