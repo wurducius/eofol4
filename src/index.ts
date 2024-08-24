@@ -1,6 +1,7 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement } from "./util"
 import { getBreakpoint, isBrowser, registerServiceworker, sx, sy } from "../runtime"
+import { getTheme } from "../runtime/styles/theme"
 
 const injectBreakpoint = () => {
   const breakpoint = getBreakpoint()
@@ -20,6 +21,8 @@ if (isBrowser()) {
 }
 
 registerServiceworker()
+
+console.log(getTheme())
 
 const e = (tag: string, style: string | undefined, content: any, attributes?: any, properties?: any) => {
   const attributesImpl = { ...properties, ...attributes }

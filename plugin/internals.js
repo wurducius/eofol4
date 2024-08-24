@@ -1,9 +1,8 @@
-const { collectViews } = require("../compiler")
-const { sep } = require("../util")
+const { BASE_URL } = require("../config")
+const { VIEWS } = require("../config/internal")
 
 const getInternals = () => {
-  // @TODO dont call collectViews triple and also do not call per view!!!
-  const env = { BASE_URL: process.env.BASE_URL, views: collectViews().map((view) => view.replace(sep, "/")) }
+  const env = { BASE_URL: BASE_URL, views: VIEWS }
   const instances = {}
   const vdom = {}
   const assets = {}

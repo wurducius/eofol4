@@ -1,5 +1,6 @@
-const { read, resolve } = require("../util")
+const { read, resolve, parse, exists } = require("../util")
 const { PATH_CWD } = require("../config")
+const { PATH_TEMPLATES } = require("../config/path")
 
 const htmlElement = (tagname, content, attributes) => ({
   type: tagname,
@@ -25,7 +26,7 @@ const relativizeFontStyle = (x) => x
 
 const baseStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
 
-const getHead = (data) =>
+const getHead = (data, viewStyles) =>
   htmlElement(
     "head",
     [
@@ -47,17 +48,34 @@ const getHead = (data) =>
       htmlElement("link", [], { rel: "apple-touch-icon", href: relativizePath(data.appleTouchIcon) }),
       htmlElement("link", [], { rel: "manifest", href: relativizePath(data.manifest) }),
       htmlElement("title", [data.title], {}),
-      htmlElement("style", [relativizeFontStyle(data.fontStyle), data.style, baseStyle].filter(Boolean), {}),
+      htmlElement(
+        "style",
+        [relativizeFontStyle(data.fontStyle), data.style, baseStyle, viewStyles].filter(Boolean),
+        {},
+      ),
     ],
     {},
   )
 
 const htmlTemplate = (view) => (body) => {
-  const data = require(resolve(PATH_CWD, "compiler-data", "metadata", "metadata-default.js"))
+  const parsed = parse(view)
+  const viewStylePath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}.css`)
+  let viewStyles = ""
+  if (exists(viewStylePath)) {
+    viewStyles = read(viewStylePath).toString()
+  }
+  const defaultMetadata = require(resolve(PATH_CWD, "compiler-data", "metadata", "metadata-default.js"))
+  const viewMetadataPath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}-metadata.js`)
+  let viewMetadata = {}
+  if (exists(viewMetadataPath)) {
+    viewMetadata = require(viewMetadataPath)
+  }
+  const data = { ...defaultMetadata, ...viewMetadata }
+
   return htmlElement(
     "html",
     [
-      getHead(data),
+      getHead(data, viewStyles),
       htmlElement(
         "body",
         [

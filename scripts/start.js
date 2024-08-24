@@ -48,7 +48,7 @@ const recompile = async () => {
   setPromise(async () => {
     console.log(primary("Recompiling..."))
     precompile()
-    build({}, true)
+    build(true)
     return await sleepInterval().then(() => {
       console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
     })
@@ -64,7 +64,7 @@ const handleRemove = async () => {
   await recompile()
 }
 
-build({}, false)
+build(false)
 
 // @TODO do not sleep instead fix async promise handling in build
 sleepInterval().then(() => {
