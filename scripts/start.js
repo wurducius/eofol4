@@ -1,5 +1,5 @@
 const Watchpack = require("watchpack")
-const { build, serve, precompile } = require("./impl")
+const { build, serve } = require("./impl")
 const { sleep, primary, success } = require("../util")
 const {
   DIRNAME_SRC,
@@ -13,6 +13,7 @@ const {
   HOT_UPDATE_WATCH_POLL,
 } = require("../config")
 const { cancelPromise, setPromise } = require("../webpack/singleton")
+const precompile = require("./impl/precompile")
 
 const COMPILER_SLEEP_INTERVAL_MS = 2000
 
