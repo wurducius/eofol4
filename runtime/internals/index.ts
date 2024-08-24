@@ -1,6 +1,6 @@
 import { isBrowser } from "../util"
 
-const emptyInternals = { env: {}, instances: {}, vdom: {}, assets: {} }
+const emptyInternals = { env: {}, instances: {}, vdom: {}, assets: { pages: [], scripts: [], images: [], other: [] } }
 
 // @ts-ignore
 // eslint-disable-next-line no-undef

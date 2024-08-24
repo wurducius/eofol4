@@ -131,7 +131,7 @@ const processPage = async (filename, content, info) => await processHtml(filenam
 const injectServiceWorker = (compilation) => {
   const serviceWorkerContent = read(resolve(PATH_CWD, "compiler-data", "service-worker", "service-worker.js"))
     .toString()
-    .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, VIEWS.map((view) => `"${view.replaceAll(sep, "/")}"`).join(", "))
+    .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, VIEWS.map(({ path }) => `"${path.replaceAll(sep, "/")}"`).join(", "))
   compilation.assets["service-worker.js"] = getAsset({
     nextSize: serviceWorkerContent.length,
     nextInfo: {},
