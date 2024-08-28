@@ -14,8 +14,10 @@ const {
   isDirectory,
   parse,
   sep,
+  arrayCombinator,
+  exists,
 } = require("../util")
-const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC } = require("../config")
+const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC, PATH_SRC } = require("../config")
 const {
   processSvg,
   processPng,
@@ -30,12 +32,27 @@ const {
 const compile = require("./compile")
 const { resetProgress, incrementProgress, showProgress } = require("./progress")
 const getInternals = require("./internals")
-const { VIEWS } = require("../config/internal")
 const lifecycle = require("./lifecycle")
+const { VIEWS } = require("../config/internal")
 
 const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
 
 let progress = {}
+
+const addGeneratedPage = (compilation) => (createdPage) => {
+  compilation.assets[createdPage.name] = getAsset({
+    nextSize: createdPage.content.length,
+    nextInfo: { processed: true },
+    nextSource: createdPage.content,
+  })
+  if (createdPage.script) {
+    compilation.assets[createdPage.scriptName] = getAsset({
+      nextSize: createdPage.script.length,
+      nextInfo: { processed: false },
+      nextSource: createdPage.script,
+    })
+  }
+}
 
 const processAssets = (compiler, compilation) => (assets) =>
   transformAssets({
@@ -170,8 +187,12 @@ const processViews = (compiler, compilation) => {
   const pages = processStaticAssetsImpl(PATH_PAGES, preprocessedPageList)
 
   const templates = Promise.all(
-    preprocessedTemplateList.map((templateName) =>
-      jsonToHtml(htmlTemplate(parse(templateName).name)(read(resolve(PATH_TEMPLATES, templateName)).toString()))
+    preprocessedTemplateList.map((templateName) => {
+      const parsed = parse(templateName)
+      const isScript = exists(resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`))
+      return jsonToHtml(
+        htmlTemplate(parse(templateName).name, isScript)(read(resolve(PATH_TEMPLATES, templateName)).toString()),
+      )
         .then((content) => processPage(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {
           compilation.assets[templateName] = getAsset({
@@ -181,13 +202,34 @@ const processViews = (compiler, compilation) => {
           })
           progress = incrementProgress(progress, processed.length)
           showProgress(progress, templateName)
-        }),
-    ),
+        })
+    }),
   )
+
+  const nodeScript = require(resolve(PATH_SRC, "eofol-node.js"))
+  const createPages = nodeScript.createPages
+  let createPagesPromise = undefined
+  if (createPages) {
+    // @TODO promise handling
+    /*
+    createPagesPromise = createPages()
+      .then((created) => {
+        return created.map(async (createdPage) => {
+          const processedCreatedHtml = await processPage(createdPage.name, createdPage.content, { processed: true })
+          let processedCreatedScript = undefined
+          if (createdPage.script) {
+            processedCreatedScript = minifyJs(createdPage.script)
+          }
+          return { ...createdPage, content: processedCreatedHtml, script: processedCreatedScript }
+        })
+      })
+      .then(arrayCombinator(addGeneratedPage(compilation)))
+     */
+  }
 
   injectServiceWorker(compilation)
 
-  return Promise.all([staticFiles, pages, templates]).then((files) => {
+  return Promise.all([staticFiles, pages, templates, createPagesPromise].filter(Boolean)).then((files) => {
     return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
   })
 }

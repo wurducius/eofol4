@@ -54,7 +54,7 @@ const getHead = (data, viewStyles) =>
     {},
   )
 
-const htmlTemplate = (view) => (body) => {
+const htmlTemplate = (view) => (body, isScript) => {
   const parsed = parse(view)
   const viewStylePath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}.css`)
   let viewStyles = ""
@@ -79,9 +79,9 @@ const htmlTemplate = (view) => (body) => {
           body,
           script("runtime"),
           script("dependencies"),
-          script(view),
+          isScript && script(view),
           htmlElement("noscript", ["You need to enable JavaScript to run this app."], {}),
-        ],
+        ].filter(Boolean),
         {},
       ),
     ],
