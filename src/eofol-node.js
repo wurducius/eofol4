@@ -25,8 +25,8 @@ const createPages = () => {
   ]
 }
 
-const createAssets = async () => {
-  createAsset({ path: "g.txt", content: "TADA!!!" })
+const createAssets = () => {
+  return [createAsset({ path: "g.txt", content: "TADA!!!" })]
 }
 
 module.exports = { createPages, createAssets }

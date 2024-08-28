@@ -192,7 +192,7 @@ const processViews = (compiler, compilation) => {
 
   const nodeScript = require(resolve(PATH_SRC, "eofol-node.js"))
   const createPages = nodeScript.createPages
-  const addAssetx = addAsset(compilation)
+  const addAssetImpl = addAsset(compilation)
   let createPagesPromise = undefined
   if (createPages) {
     createPagesPromise = Promise.all(createPages()).then((created) =>
@@ -200,13 +200,23 @@ const processViews = (compiler, compilation) => {
         created.map(async (createdPage) => {
           const processedCreatedHtml = await processPage(createdPage.name, createdPage.content, {})
           const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
-          addAssetx(createdPage.name, processedCreatedHtml, { processed: true })
+          addAssetImpl(createdPage.name, processedCreatedHtml, { processed: true })
           if (createdPage.script) {
-            addAssetx(createdPage.scriptName, processedCreatedScript, { processed: true })
+            addAssetImpl(createdPage.scriptName, processedCreatedScript, { processed: true })
           }
         }),
       ),
     )
+  }
+
+  // @TODO move somewhere else generateAssets
+  const createAssets = nodeScript.createAssets
+  if (createAssets) {
+    Promise.all(createAssets()).then((createdAssets) => {
+      createdAssets.forEach((createdAsset) => {
+        addAssetImpl(createdAsset.path, createdAsset.content, {})
+      })
+    })
   }
 
   injectServiceWorker(compilation)
