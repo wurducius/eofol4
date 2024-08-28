@@ -26,7 +26,7 @@ const createPages = () => {
 }
 
 const createAssets = () => {
-  return [createAsset({ path: "g.txt", content: "TADA!!!" })]
+  return [createAsset({ name: "g.txt", content: "TADA!!!" })]
 }
 
 module.exports = { createPages, createAssets }

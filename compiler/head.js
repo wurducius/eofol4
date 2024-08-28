@@ -1,6 +1,5 @@
 const { read, resolve, parse, exists } = require("../util")
-const { PATH_CWD } = require("../config")
-const { PATH_TEMPLATES } = require("../config/path")
+const { PATH_BASE_STYLES, PATH_THEMED_STYLES, PATH_TEMPLATES, PATH_METADATA_DEFAULT } = require("../config")
 
 const htmlElement = (tagname, content, attributes) => ({
   type: tagname,
@@ -18,10 +17,10 @@ const script = (scriptName) =>
 const relativizePath = (x) => x
 const relativizeFontStyle = (x) => x
 
-const baseStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
+const baseStyle = read(PATH_BASE_STYLES).toString()
 
 // @TODO temporary workaround
-const themedStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "themed.css")).toString()
+const themedStyle = read(PATH_THEMED_STYLES).toString()
 
 const getHead = (data, viewStyles) =>
   htmlElement(
@@ -61,7 +60,7 @@ const htmlTemplate = (view) => (body, isScript, metadataArg) => {
   if (exists(viewStylePath)) {
     viewStyles = read(viewStylePath).toString()
   }
-  const defaultMetadata = require(resolve(PATH_CWD, "compiler-data", "metadata", "metadata-default.js"))
+  const defaultMetadata = require(PATH_METADATA_DEFAULT)
   let viewMetadata = {}
   if (metadataArg) {
     viewMetadata = metadataArg

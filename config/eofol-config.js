@@ -1,9 +1,12 @@
-const { resolve } = require("../util")
-const { PATH_CWD, PATH_SRC } = require("./path")
+const { PATH_EOFOL_CONFIG, PATH_EOFOL_CONFIG_DEFAULT } = require("./path")
+const { exists } = require("../util/fs")
 
 const getEofolConfig = () => {
-  const configDefault = require(resolve(PATH_CWD, "compiler-data", "eofol-config", "eofol-config-default.js"))
-  const configProject = require(resolve(PATH_SRC, "eofol-config.js"))
+  const configDefault = require(PATH_EOFOL_CONFIG_DEFAULT)
+  let configProject = {}
+  if (exists(PATH_EOFOL_CONFIG)) {
+    configProject = require(PATH_EOFOL_CONFIG)
+  }
   return { ...configDefault, ...configProject }
 }
 

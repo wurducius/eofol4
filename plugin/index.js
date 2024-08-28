@@ -16,7 +16,14 @@ const {
   sep,
   exists,
 } = require("../util")
-const { PATH_CWD, PATH_PAGES, PATH_TEMPLATES, PATH_STATIC, PATH_SRC } = require("../config")
+const {
+  PATH_EOFOL_NODE,
+  PATH_SERVICE_WORKER_SCRIPT,
+  PATH_PAGES,
+  PATH_TEMPLATES,
+  PATH_STATIC,
+  PATH_SRC,
+} = require("../config")
 const {
   processSvg,
   processPng,
@@ -134,7 +141,7 @@ const processStatic = async (filename, basepath, ext, info) => {
 const processPage = async (filename, content, info) => await processHtml(filename, content, info)
 
 const injectServiceWorker = (compilation) => {
-  const serviceWorkerContent = read(resolve(PATH_CWD, "compiler-data", "service-worker", "service-worker.js"))
+  const serviceWorkerContent = read(PATH_SERVICE_WORKER_SCRIPT)
     .toString()
     .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, VIEWS.map(({ path }) => `"${path.replaceAll(sep, "/")}"`).join(", "))
   addAsset(compilation)("service-worker.js", serviceWorkerContent, {})
@@ -190,40 +197,45 @@ const processViews = (compiler, compilation) => {
     }),
   )
 
-  const nodeScript = require(resolve(PATH_SRC, "eofol-node.js"))
-  const createPages = nodeScript.createPages
-  const addAssetImpl = addAsset(compilation)
   let createPagesPromise = undefined
-  if (createPages) {
-    createPagesPromise = Promise.all(createPages()).then((created) =>
-      Promise.all(
-        created.map(async (createdPage) => {
-          const processedCreatedHtml = await processPage(createdPage.name, createdPage.content, {})
-          const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
-          addAssetImpl(createdPage.name, processedCreatedHtml, { processed: true })
-          if (createdPage.script) {
-            addAssetImpl(createdPage.scriptName, processedCreatedScript, { processed: true })
-          }
-        }),
-      ),
-    )
-  }
+  let createAssetsPromise = undefined
+  if (exists(PATH_EOFOL_NODE)) {
+    const nodeScript = require(PATH_EOFOL_NODE)
+    const createPages = nodeScript.createPages
+    const addAssetImpl = addAsset(compilation)
+    if (createPages) {
+      createPagesPromise = Promise.all(createPages()).then((created) =>
+        Promise.all(
+          created.map(async (createdPage) => {
+            const processedCreatedHtml = await processPage(createdPage.name, createdPage.content, {})
+            const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
+            addAssetImpl(createdPage.name, processedCreatedHtml, { processed: true })
+            if (createdPage.script) {
+              addAssetImpl(createdPage.scriptName, processedCreatedScript, { processed: true })
+            }
+          }),
+        ),
+      )
+    }
 
-  // @TODO move somewhere else generateAssets
-  const createAssets = nodeScript.createAssets
-  if (createAssets) {
-    Promise.all(createAssets()).then((createdAssets) => {
-      createdAssets.forEach((createdAsset) => {
-        addAssetImpl(createdAsset.path, createdAsset.content, {})
-      })
-    })
+    // @TODO move somewhere else generateAssets
+    const createAssets = nodeScript.createAssets
+    if (createAssets) {
+      createAssetsPromise = Promise.all(createAssets()).then((createdAssets) =>
+        createdAssets.map((createdAsset) => {
+          addAssetImpl(createdAsset.name, createdAsset.content, {})
+        }),
+      )
+    }
   }
 
   injectServiceWorker(compilation)
 
-  return Promise.all([staticFiles, pages, templates, createPagesPromise].filter(Boolean)).then((files) => {
-    return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
-  })
+  return Promise.all([staticFiles, pages, templates, createPagesPromise, createAssetsPromise].filter(Boolean)).then(
+    (files) => {
+      return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
+    },
+  )
 }
 
 const onInitCompilation = (compiler) => (compilation) => {

@@ -13,6 +13,9 @@ const {
   DIRNAME_JS,
   DIRNAME_TEMPLATES,
   DIRNAME_DIST,
+  DIRNAME_COMPILER_DATA,
+  FILENAME_EOFOL_NODE,
+  FILENAME_EOFOL_CONFIG,
 } = require("./env")
 
 const PATH_CWD = resolve(process.cwd())
@@ -31,6 +34,16 @@ const PATH_FONTS = resolve(PATH_MEDIA, DIRNAME_FONTS)
 const PATH_TEMPLATES = resolve(PATH_CWD, DIRNAME_TEMPLATES)
 const PATH_DIST = resolve(PATH_CWD, DIRNAME_DIST)
 
+const PATH_COMPILER_DATA = resolve(PATH_CWD, DIRNAME_COMPILER_DATA)
+
+const PATH_EOFOL_NODE = resolve(PATH_SRC, FILENAME_EOFOL_NODE)
+const PATH_EOFOL_CONFIG = resolve(PATH_SRC, FILENAME_EOFOL_CONFIG)
+const PATH_EOFOL_CONFIG_DEFAULT = resolve(PATH_COMPILER_DATA, "eofol-config", "eofol-config-default.js")
+const PATH_METADATA_DEFAULT = resolve(PATH_COMPILER_DATA, "metadata", "metadata-default.js")
+const PATH_SERVICE_WORKER_SCRIPT = resolve(PATH_COMPILER_DATA, "service-worker", "service-worker.js")
+const PATH_BASE_STYLES = resolve(PATH_COMPILER_DATA, "styles", "base.css")
+const PATH_THEMED_STYLES = resolve(PATH_COMPILER_DATA, "styles", "themed.css")
+
 module.exports = {
   PATH_CWD,
   PATH_BUILD,
@@ -46,4 +59,12 @@ module.exports = {
   PATH_FONTS,
   PATH_TEMPLATES,
   PATH_DIST,
+  PATH_COMPILER_DATA,
+  PATH_EOFOL_NODE,
+  PATH_EOFOL_CONFIG,
+  PATH_EOFOL_CONFIG_DEFAULT,
+  PATH_METADATA_DEFAULT,
+  PATH_SERVICE_WORKER_SCRIPT,
+  PATH_BASE_STYLES,
+  PATH_THEMED_STYLES,
 }

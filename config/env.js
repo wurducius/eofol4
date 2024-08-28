@@ -1,5 +1,6 @@
 require("dotenv").config()
 const getArgs = require("./args")
+const { resolve } = require("../util")
 
 const args = getArgs()
 
@@ -21,6 +22,11 @@ const DIRNAME_ICONS = "icons"
 const DIRNAME_FONTS = "fonts"
 const DIRNAME_TEMPLATES = "templates"
 const DIRNAME_DIST = "dist"
+
+const DIRNAME_COMPILER_DATA = "compiler-data"
+
+const FILENAME_EOFOL_NODE = "eofol-node.js"
+const FILENAME_EOFOL_CONFIG = "eofol-config.js"
 
 const PAGE_FALLBACK = "404.html"
 
@@ -52,6 +58,9 @@ const defaultEnv = {
   DIRNAME_FONTS,
   DIRNAME_TEMPLATES,
   DIRNAME_DIST,
+  DIRNAME_COMPILER_DATA,
+  FILENAME_EOFOL_NODE,
+  FILENAME_EOFOL_CONFIG,
   PAGE_FALLBACK,
   HOT_UPDATE_WATCH_INTERNAL_MS,
   HOT_UPDATE_WATCH_POLL,
