@@ -6,4 +6,14 @@ const sleep = (ms) =>
     setTimeout(resolve, ms)
   })
 
-module.exports = { pipe, sleep }
+const arrayCombinator = (handler) => (data) => {
+  if (Array.isArray(data)) {
+    return data.map(handler)
+  } else if (data === undefined) {
+    return undefined
+  } else {
+    return handler(data)
+  }
+}
+
+module.exports = { pipe, sleep, arrayCombinator }

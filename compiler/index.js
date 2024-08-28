@@ -3,6 +3,8 @@ const Img = require("./scripts/img")
 const collectViews = require("./collect-views")
 const htmlTemplate = require("./head")
 
+const Node = require("./node")
+
 const htmlToJson = require("./scripts/html-to-json")
 const jsonToHtml = require("./scripts/json-to-html")
 const injectDoctype = require("./scripts/inject-doctype")
@@ -12,6 +14,7 @@ const touchBuildDirs = require("./scripts/touch-build-dirs")
 
 module.exports = {
   ...Img,
+  ...Node,
   collectViews,
   htmlTemplate,
   htmlToJson,
