@@ -12,4 +12,6 @@ const isFont = (ext) => ext === ".woff2" || ext === ".woff" || ext === ".otp" ||
 
 const isJs = (ext) => ext === ".js"
 
-module.exports = { isHtml, isJpeg, isPng, isGif, isSvg, isFont, isJs }
+const isCSS = (ext) => ext === ".css"
+
+module.exports = { isHtml, isJpeg, isPng, isGif, isSvg, isFont, isJs, isCSS }

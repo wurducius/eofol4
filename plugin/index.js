@@ -8,6 +8,7 @@ const {
   isSvg,
   isGif,
   isJs,
+  isCSS,
   readDir,
   resolve,
   read,
@@ -40,6 +41,7 @@ const { resetProgress, incrementProgress, showProgress } = require("./progress")
 const getInternals = require("./internals")
 const lifecycle = require("./lifecycle")
 const { VIEWS } = require("../config/internal")
+const { isFont } = require("../util/ext")
 
 const SERVICE_WORKER_PAGES_PLACEHOLDER = '"@@VIEWS@@"'
 
@@ -82,9 +84,10 @@ const processStaticAssets = (compilation) => (basepath, files) =>
   Promise.all(
     files.map(async (filename) => {
       const info = compilation.assets[filename]?.info
-      return await processStatic(filename, basepath, parse(filename).ext, info).then((processed) => {
-        const postprocessed = lifecycle.onCompileAssetFinished(processed)
-        addAsset(compilation)(filename, postprocessed, { processed: true })
+      return await processStatic(filename, basepath, parse(filename).ext, info).then(async (data) => {
+        const staticContent = await data.content
+        const postprocessed = lifecycle.onCompileAssetFinished(staticContent)
+        addAsset(compilation)(data.path, postprocessed, { processed: true })
         progress = incrementProgress(progress, postprocessed.length)
         showProgress(progress, filename)
       })
@@ -110,32 +113,54 @@ const processHtml = async (filename, content, info) => {
   return z
 }
 
+const processCSS = async (filename, content, info) => {
+  const mutatedPath = `assets/css/${filename}`
+  if (info?.processed) {
+    return { path: mutatedPath, content }
+  }
+  const x = lifecycle.onCompileViewStart(content)
+  const y = lifecycle.onCompileViewCompiled(x)
+  const z = lifecycle.onCompileViewFinished(y)
+  logSizeDelta(filename, content, z.length)
+  return { path: mutatedPath, content: z }
+}
+
 const processStatic = async (filename, basepath, ext, info) => {
   // @TODO Refactor in order to allow passing content as argument to onCompileAssetStart
   lifecycle.onCompileAssetStart()
   const filePath = resolve(basepath, filename)
+  const parsed = parse(filename)
+  const name = parsed.name + parsed.ext
 
   if (isHtml(ext)) {
-    return processHtml(filename, read(filePath).toString(), info)
+    return { path: filename, content: processHtml(filename, read(filePath).toString(), info) }
   }
 
   if (isJpeg(ext)) {
-    return processJpeg(filePath)
+    return { path: `assets/media/images/${name}`, content: processJpeg(filePath) }
   }
 
   if (isPng(ext)) {
-    return processPng(filePath)
+    return { path: `assets/media/images/${name}`, content: processPng(filePath) }
   }
 
   if (isGif(ext)) {
-    return processGif(filePath)
+    return { path: `assets/media/images/${name}`, content: processGif(filePath) }
   }
 
   if (isSvg(ext)) {
-    return processSvg(filePath)
+    return { path: `assets/media/icons/${name}`, content: processSvg(filePath) }
   }
 
-  return read(filePath)
+  if (isCSS(ext)) {
+    return processCSS(filename, read(filePath).toString(), info)
+  }
+
+  if (isFont(ext)) {
+    return { path: `assets/media/fonts/${name}`, content: read(filePath) }
+  }
+
+  return { path: filename, content: read(filePath) }
 }
 
 const processPage = async (filename, content, info) => await processHtml(filename, content, info)
