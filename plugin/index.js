@@ -180,13 +180,12 @@ const processViews = (compiler, compilation) => {
   const templates = Promise.all(
     preprocessedTemplateList.map((templateName) => {
       const parsed = parse(templateName)
-      const isScript = exists(resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`))
       return jsonToHtml(
-        htmlTemplate(
-          parse(templateName).name,
-          isScript,
+        htmlTemplate(parsed.name)(
+          read(resolve(PATH_TEMPLATES, templateName)).toString(),
+          exists(resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`)),
           undefined,
-        )(read(resolve(PATH_TEMPLATES, templateName)).toString()),
+        ),
       )
         .then((content) => processPage(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {

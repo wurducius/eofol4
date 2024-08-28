@@ -1,6 +1,5 @@
 require("dotenv").config()
 const getArgs = require("./args")
-const { resolve } = require("../util")
 
 const args = getArgs()
 

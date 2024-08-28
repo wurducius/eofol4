@@ -5,8 +5,7 @@ const generatedTemplate =
 
 const generatedScript = "document.getElementById('script').innerHTML = 'Script working!!!'"
 
-const generatedStyles =
-  'body { background-image: url("./assets/media/images/rainbow-mountains-peru.jpg"); } .phi { background-color: #1a9595; border-radius: 8px; margin: 32px 0 32px 0; }'
+const generatedStyles = ".phi { background-color: #1a9595; border-radius: 8px; margin: 32px 0 32px 0; }"
 
 const generatedMetadata = {
   title: "Generated page",
