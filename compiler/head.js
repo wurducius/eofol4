@@ -54,7 +54,7 @@ const getHead = (data, viewStyles) =>
     {},
   )
 
-const htmlTemplate = (view) => (body, isScript) => {
+const htmlTemplate = (view) => (body, isScript, metadataArg) => {
   const parsed = parse(view)
   const viewStylePath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}.css`)
   let viewStyles = ""
@@ -62,10 +62,14 @@ const htmlTemplate = (view) => (body, isScript) => {
     viewStyles = read(viewStylePath).toString()
   }
   const defaultMetadata = require(resolve(PATH_CWD, "compiler-data", "metadata", "metadata-default.js"))
-  const viewMetadataPath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}-metadata.js`)
   let viewMetadata = {}
-  if (exists(viewMetadataPath)) {
-    viewMetadata = require(viewMetadataPath)
+  if (metadataArg) {
+    viewMetadata = metadataArg
+  } else {
+    const viewMetadataPath = resolve(PATH_TEMPLATES, parsed.dir, `${parsed.name}-metadata.js`)
+    if (exists(viewMetadataPath)) {
+      viewMetadata = require(viewMetadataPath)
+    }
   }
   const data = { ...defaultMetadata, ...viewMetadata }
 
