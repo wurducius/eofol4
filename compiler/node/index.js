@@ -46,7 +46,7 @@ const createPage = async (props) => {
 const createAsset = (props) => {
   const { path, content } = props
 
-  console.log(`Creating asset at path = ${path}`)
+  console.log(`Creating asset at path = ${path}, content = ${content}`)
 }
 
 module.exports = { createPage, createAsset }
