@@ -153,7 +153,9 @@ const processViews = (compiler, compilation) => {
   const staticList = readDir(PATH_STATIC, { recursive: true }).filter(
     (file) => !isDirectory(resolve(PATH_STATIC, file)),
   )
-  const pageList = readDir(PATH_PAGES, { recursive: true }).filter((file) => !isDirectory(resolve(PATH_PAGES, file)))
+  const pageList = readDir(PATH_PAGES, { recursive: true }).filter(
+    (file) => !isDirectory(resolve(PATH_PAGES, file)) && parse(file).ext !== ".css",
+  )
   const templateList = readDir(PATH_TEMPLATES, { recursive: true }).filter((file) => {
     const parsed = parse(resolve(PATH_TEMPLATES, file))
     return !parsed.isDirectory && isHtml(parsed.ext)
