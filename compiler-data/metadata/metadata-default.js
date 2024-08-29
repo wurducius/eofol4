@@ -9,7 +9,7 @@ const data = {
   imageTypeOg: "image/png",
   imageWidthOg: "512",
   imageHeightOg: "512",
-  favicon: "favicon.png",
+  favicon: "./assets/media/images/favicon.png",
   appleTouchIcon: "./assets/media/images/logo-sm.png",
   manifest: "manifest.json",
   fontStyle:

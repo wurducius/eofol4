@@ -3,7 +3,7 @@
   "name": "Eofol4 app",
   "icons": [
     {
-      "src": "favicon.png",
+      "src": "./assets/media/images/favicon.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "any maskable"

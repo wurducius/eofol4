@@ -1,4 +1,13 @@
 const { PROGRESS } = require("./config")
+const { log } = require("./util")
+
+let progress = {}
+
+const getProgress = () => progress
+
+const setProgress = (nextProgress) => {
+  progress = nextProgress
+}
 
 const resetProgress = (totalSize, totalCount) => {
   if (PROGRESS) {
@@ -23,10 +32,10 @@ const incrementProgress = (data, incrementSize) => {
 
 const showProgress = (data, filename) => {
   if (PROGRESS) {
-    console.log(
+    log(
       `[${data.indexCount}/${data.totalCount}] ${filename} -> ${(100 * (data.indexSize / data.totalSize)).toFixed(0)}%`,
     )
   }
 }
 
-module.exports = { resetProgress, incrementProgress, showProgress }
+module.exports = { resetProgress, incrementProgress, showProgress, getProgress, setProgress }
