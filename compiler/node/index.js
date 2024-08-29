@@ -44,9 +44,8 @@ const createPage = async (props) => {
 }
 
 const createAsset = (props) => {
-  const { path, content } = props
-
-  return { path, content }
+  const { name, content } = props
+  return { name, content }
 }
 
 module.exports = { createPage, createAsset }

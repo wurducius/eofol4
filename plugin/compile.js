@@ -1,6 +1,6 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve, exists, parse } = require("../util")
-const { PATH_CWD, PATH_DIST, PATH_PAGES } = require("../config")
+const { PATH_BASE_STYLES, PATH_THEMED_STYLES, PATH_DIST, PATH_PAGES } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
 const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runtime"))
 
@@ -33,10 +33,10 @@ const traverseTree = (node, result, defs) => {
 
 const compileTree = (tree, result, defs) => traverseTree(tree, result, defs)
 
-const baseStyles = read(resolve(PATH_CWD, "compiler-data", "styles", "base.css")).toString()
+const baseStyles = read(PATH_BASE_STYLES).toString()
 
 // @TODO temporary workaround
-const themedStyle = read(resolve(PATH_CWD, "compiler-data", "styles", "themed.css")).toString()
+const themedStyle = read(PATH_THEMED_STYLES).toString()
 
 const compile = async (content, filename) => {
   clearCompileCache()
