@@ -1,6 +1,17 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement } from "./util"
-import { getBreakpoint, isBrowser, registerServiceworker, sx, sy, div, h1 } from "../runtime"
+import {
+  getBreakpoint,
+  isBrowser,
+  registerServiceworker,
+  sx,
+  sy,
+  div,
+  h1,
+  defineStateful,
+  Attributes,
+  Children,
+} from "../runtime"
 
 const injectBreakpoint = () => {
   const breakpoint = getBreakpoint()
@@ -21,13 +32,11 @@ if (isBrowser()) {
 
 registerServiceworker()
 
-export const first = {
-  name: "first",
-  render: (attributes: any, children: any) =>
-    div(
-      sx({ color: "red" }),
-      ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolAttribute}`, ...children].map((child) =>
-        h1(undefined, child),
-      ),
-    ),
-}
+export const first = defineStateful("first", {
+  render: (attributes: Attributes, children: Children) =>
+    div(sx({ color: "red" }), [
+      "Eofol compiled!!!",
+      `Attribute eofolAttribute = ${attributes.eofolAttribute}`,
+      ...(children ?? []).map((child) => h1(undefined, child)),
+    ]),
+})

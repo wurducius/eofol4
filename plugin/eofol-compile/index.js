@@ -15,6 +15,7 @@ const compileEofol = (node, defs) => {
     logDefNotFound(name)
     return
   }
+
   return def.render(
     node.attributes,
     // @TODO either remove whitespace from html before eofol compile or trim children manually like this

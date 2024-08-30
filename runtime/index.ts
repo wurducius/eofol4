@@ -3,6 +3,7 @@ export * from "./types"
 
 export * from "./breakpoint"
 export * from "./core"
+export * from "./defs"
 export * from "./fetch"
 export * from "./internals"
 export * from "./prefetch"
