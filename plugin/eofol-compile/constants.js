@@ -1,3 +1,5 @@
-const COMPILER_EOFOL_TAGS = ["e", "eofol"]
+const COMPILER_EOFOL_TAG_DEFAULT = "e"
 
-module.exports = { COMPILER_EOFOL_TAGS }
+const COMPILER_EOFOL_TAGS = [COMPILER_EOFOL_TAG_DEFAULT, "eofol"]
+
+module.exports = { COMPILER_EOFOL_TAG_DEFAULT, COMPILER_EOFOL_TAGS }
