@@ -40,3 +40,11 @@ export const first = defineStateful("first", {
       ...(children ?? []).map((child) => h1(undefined, child)),
     ]),
 })
+
+export const second = defineStateful("second", {
+  render: (attributes: Attributes, children: Children) =>
+    div(sx({ color: "green" }), [
+      "Second stateful component",
+      ...(children ?? []).map((child) => h1(undefined, child)),
+    ]),
+})
