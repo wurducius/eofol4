@@ -5,14 +5,14 @@ const { incrementProgress, showProgress, setProgress, getProgress } = require(".
 const { processJpeg, processPng, processGif, processSvg } = require("../compiler")
 const { processGeneralOutput, processHtml, processCSS } = require("./process")
 
-const processStatic = async (filename, basepath, ext, info) => {
+const processStatic = async (filename, basepath, ext, info, instances) => {
   // @TODO Refactor in order to allow passing content as argument to onCompileAssetStart
   lifecycle.onCompileAssetStart()
   // @TODO preserve static asset dir path
   const filePath = resolve(basepath, filename)
 
   if (isHtml(ext)) {
-    return processHtml(filename, read(filePath).toString(), info)
+    return processHtml(instances)(filename, read(filePath).toString(), info)
   }
 
   if (isJpeg(ext)) {
@@ -42,17 +42,20 @@ const processStatic = async (filename, basepath, ext, info) => {
   return processGeneralOutput(filename, read(filePath))
 }
 
-const processStaticAssets = (compilation) => (basepath, files) =>
+const processStaticAssets = (compilation, instances) => (basepath, files) =>
   Promise.all(
     files.map(async (filename) => {
       const info = compilation.assets[filename]?.info
-      return await processStatic(filename, basepath, parse(filename).ext, info).then(async (data) => {
-        const staticContent = await data.content
-        const postprocessed = lifecycle.onCompileAssetFinished(staticContent)
-        addAsset(compilation)(data.path, postprocessed, { processed: true })
-        setProgress(incrementProgress(getProgress(), postprocessed.length))
-        showProgress(getProgress(), filename)
-      })
+      instances[filename] = {}
+      return await processStatic(filename, basepath, parse(filename).ext, info, instances[filename]).then(
+        async (data) => {
+          const staticContent = await data.content
+          const postprocessed = lifecycle.onCompileAssetFinished(staticContent)
+          addAsset(compilation)(data.path, postprocessed, { processed: true })
+          setProgress(incrementProgress(getProgress(), postprocessed.length))
+          showProgress(getProgress(), filename)
+        },
+      )
     }),
   )
 

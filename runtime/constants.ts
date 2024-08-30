@@ -15,3 +15,9 @@ export const BREAKPOINT = {
 export const CRYPTO = {
   ID_GENERATED_LENGTH: 17,
 }
+
+export const EofolComponentType = {
+  Stateful: "stateful",
+  Flat: "flat",
+  Virtual: "virtual",
+}

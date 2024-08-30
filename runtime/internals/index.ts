@@ -2,7 +2,7 @@ import { isBrowser } from "../util"
 
 const emptyInternals = {
   env: { views: [], BASE_URL: "./" },
-  instances: {},
+  instances: {} as Record<string, any>,
   vdom: {},
   assets: { pages: [], scripts: [], images: [], other: [] },
 }
@@ -10,7 +10,7 @@ const emptyInternals = {
 // @TODO finish typing instances & vdom
 type Internals = {
   env: { views: { path: string; isStatic?: boolean }[]; BASE_URL: string }
-  instances: any[]
+  instances: Record<string, any>
   vdom: any
   assets: { pages: string[]; scripts: string[]; images: string[]; other: string[] }
 }

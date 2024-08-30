@@ -12,7 +12,7 @@ export type Handler<T> = (x: any) => void
 export type Classname = string | boolean | undefined | null
 
 // @TODO
-export type Attributes = Object
+// export type Attributes = Object
 
 // ==================      CSS     ==================
 

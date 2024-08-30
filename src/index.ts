@@ -1,6 +1,18 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement } from "./util"
-import { getBreakpoint, isBrowser, registerServiceworker, sx, sy, div, h1 } from "../runtime"
+import {
+  getBreakpoint,
+  isBrowser,
+  registerServiceworker,
+  sx,
+  sy,
+  div,
+  h1,
+  defineStateful,
+  Attributes,
+  Children,
+} from "../runtime"
+import { createEofolElement } from "../runtime/core/eofol"
 
 const injectBreakpoint = () => {
   const breakpoint = getBreakpoint()
@@ -21,13 +33,28 @@ if (isBrowser()) {
 
 registerServiceworker()
 
-export const first = {
-  name: "first",
-  render: (attributes: any, children: any) =>
-    div(
-      sx({ color: "red" }),
-      ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolAttribute}`, ...children].map((child) =>
-        h1(undefined, child),
-      ),
-    ),
-}
+export const first = defineStateful("first", {
+  // @ts-ignore
+  render: (state, attributes: Attributes, children: Children) =>
+    div(sx({ color: "red" }), [
+      "Eofol compiled!!!",
+      `Attribute eofolAttribute = ${attributes.eofolAttribute}`,
+      ...(children ?? []).map((child) => h1(undefined, child)),
+    ]),
+})
+
+// @ts-ignore
+export const second = defineStateful("second", {
+  render: (state, attributes: Attributes, children: Children) =>
+    // @ts-ignore
+    state?.isRequesting
+      ? div(sx({ color: "green" }), ["Dynamically rendered stateful component", createEofolElement("first")])
+      : div(sx({ color: "blue" }), ["Second stateful component"]),
+  initialState: { isRequesting: undefined },
+  // @ts-ignore
+  effect: (state, setState) => {
+    if (!state.isRequesting) {
+      setState({ ...state, isRequesting: true })
+    }
+  },
+})

@@ -1,9 +1,9 @@
 const { BASE_URL } = require("../config")
 const { VIEWS } = require("../config/internal")
 
-const getInternals = () => {
+const getInternals = (instances) => {
   const env = { BASE_URL: BASE_URL, views: VIEWS }
-  const instances = {}
+  const instancesImpl = instances ?? {}
   const vdom = {}
   const assets = {
     pages: VIEWS.map(({ path }) => path),
@@ -11,7 +11,7 @@ const getInternals = () => {
     images: [],
     other: [],
   }
-  const internals = { instances, vdom, env, assets }
+  const internals = { instances: instancesImpl, vdom, env, assets }
   return `var internals = ${JSON.stringify(internals)};\n`
 }
 

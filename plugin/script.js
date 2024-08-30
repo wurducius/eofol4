@@ -7,12 +7,14 @@ const { PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const { incrementProgress, showProgress, setProgress, getProgress } = require("./progress")
 const { isJs, parse } = require("../util")
 
-const processAssets = (compiler, compilation) => (assets) =>
+const processAssets = (compiler, compilation, instances) => (assets) =>
   transformAssets({
     transformPropertyName: "minified",
-    transform: (content) => {
+    transform: (content, asset) => {
       const x = lifecycle.onOptimizeAssetStart(content)
-      const y = minifyJs(`${getInternals()}${x}`)
+      const y = minifyJs(
+        `${getInternals(instances[asset.replace(".js", ".html").replace("assets/js/", "").replaceAll("/", "\\")])}${x}`,
+      )
       return lifecycle.onOptimizeAssetFinished(y)
     },
     logStart: () => {
