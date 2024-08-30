@@ -39,7 +39,7 @@ export const first = defineStateful("first", {
     div(sx({ color: "red" }), [
       "Eofol compiled!!!",
       `Attribute eofolAttribute = ${attributes.eofolAttribute}`,
-      ...(children ?? []).map((child) => h1(undefined, child)),
+      // ...(children ?? []).map((child) => h1(undefined, child)),
     ]),
 })
 
