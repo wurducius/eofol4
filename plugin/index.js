@@ -4,18 +4,21 @@ const processViews = require("./view")
 const { info } = require("./util")
 const optimizeAssets = require("./optimize")
 
+let instances = {}
+
 const onInitCompilation = (compiler) => (compilation) => {
   compilation.hooks.processAssets.tapPromise(
     {
       name: pluginName,
       stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
     },
-    () => processViews(compiler, compilation),
+    () => processViews(compiler, compilation, instances),
   )
 }
 
 // eslint-disable-next-line no-unused-vars
 const onBuildStarted = (compilation) => {
+  instances = {}
   lifecycle.onCompilationStart()
 }
 
@@ -31,7 +34,7 @@ const onCompilationFinished = (compiler) => (compilation) => {
       stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE,
       additionalAssets: true,
     },
-    optimizeAssets(compiler, compilation),
+    optimizeAssets(compiler, compilation, instances),
   )
 }
 

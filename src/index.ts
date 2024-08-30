@@ -12,6 +12,7 @@ import {
   Attributes,
   Children,
 } from "../runtime"
+import { createEofolElement } from "../runtime/core/eofol"
 
 const injectBreakpoint = () => {
   const breakpoint = getBreakpoint()
@@ -33,7 +34,8 @@ if (isBrowser()) {
 registerServiceworker()
 
 export const first = defineStateful("first", {
-  render: (attributes: Attributes, children: Children) =>
+  // @ts-ignore
+  render: (state, attributes: Attributes, children: Children) =>
     div(sx({ color: "red" }), [
       "Eofol compiled!!!",
       `Attribute eofolAttribute = ${attributes.eofolAttribute}`,
@@ -41,10 +43,18 @@ export const first = defineStateful("first", {
     ]),
 })
 
+// @ts-ignore
 export const second = defineStateful("second", {
-  render: (attributes: Attributes, children: Children) =>
-    div(sx({ color: "green" }), [
-      "Second stateful component",
-      ...(children ?? []).map((child) => h1(undefined, child)),
-    ]),
+  render: (state, attributes: Attributes, children: Children) =>
+    // @ts-ignore
+    state?.isRequesting
+      ? div(sx({ color: "green" }), ["Dynamically rendered stateful component", createEofolElement("first")])
+      : div(sx({ color: "blue" }), ["Second stateful component"]),
+  initialState: { isRequesting: undefined },
+  // @ts-ignore
+  effect: (state, setState) => {
+    if (!state.isRequesting) {
+      setState({ ...state, isRequesting: true })
+    }
+  },
 })

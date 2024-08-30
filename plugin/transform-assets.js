@@ -28,7 +28,7 @@ const transformAssets =
         const asset = assets[assetName]
         const source = asset.source()
 
-        const nextSource = transform !== undefined ? transform(source) : source
+        const nextSource = transform !== undefined ? transform(source, assetName) : source
         const nextSize = sourceSize(nextSource)
         const nextInfo = { ...asset.info, [transformPropertyName]: true, ...extraProperty }
 

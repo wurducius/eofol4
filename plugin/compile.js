@@ -13,15 +13,15 @@ const importDefs = (scriptPath) => {
   }
 }
 
-const traverseTree = (node, result, defs) => {
+const traverseTree = (node, result, defs, instances) => {
   if (typeof node === "object") {
     if (isEofolTag(node.type)) {
-      result = compileEofol(node, defs)
+      result = compileEofol(node, defs, instances)
     } else {
       result = { type: node.type, attributes: node.attributes, content: [] }
       if (node.content && node.content.length > 0) {
         node.content.map((child, i) => {
-          result.content[i] = traverseTree(child, node.content[i], defs)
+          result.content[i] = traverseTree(child, node.content[i], defs, instances)
         })
       }
     }
@@ -31,19 +31,21 @@ const traverseTree = (node, result, defs) => {
   return result
 }
 
-const compileTree = (tree, result, defs) => traverseTree(tree, result, defs)
+const compileTree = (tree, result, defs, instances) => traverseTree(tree, result, defs, instances)
 
 const baseStyles = read(PATH_BASE_STYLES).toString()
 
 // @TODO temporary workaround
 const themedStyle = read(PATH_THEMED_STYLES).toString()
 
-const compile = async (content, filename) => {
+const compile = async (content, filename, instances) => {
   clearCompileCache()
   const parsed = parse(filename)
   const defs = importDefs(resolve(PATH_DIST, "src", parsed.dir, `${parsed.name}.js`))
   const json = await htmlToJson(content, false)
-  const compiled = compileTree(json, {}, defs)
+  instances[filename] = {}
+  const viewInstances = instances[filename]
+  const compiled = compileTree(json, {}, defs, viewInstances)
   const head = compiled.content.find((child) => child.type === "head")
   // @TODO allow also view styles for PATH_TEMPLATES, possibly also LESS files
   const viewStylesPath = resolve(PATH_PAGES, parsed.dir, `${parsed.name}.css`)

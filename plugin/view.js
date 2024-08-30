@@ -7,8 +7,8 @@ const { jsonToHtml, htmlTemplate, minifyJs } = require("../compiler")
 const processStaticAssets = require("./static")
 const { processHtml } = require("./process")
 
-const processViews = (compiler, compilation) => {
-  const processStaticAssetsImpl = processStaticAssets(compilation)
+const processViews = (compiler, compilation, instances) => {
+  const processStaticAssetsImpl = processStaticAssets(compilation, instances)
 
   const staticList = readDir(PATH_STATIC, { recursive: true }).filter(
     (file) => !isDirectory(resolve(PATH_STATIC, file)),
@@ -51,7 +51,7 @@ const processViews = (compiler, compilation) => {
           undefined,
         ),
       )
-        .then((content) => processHtml(templateName, content, compilation.assets[templateName]?.info))
+        .then((content) => processHtml(instances)(templateName, content, compilation.assets[templateName]?.info))
         .then((processed) => {
           addAsset(compilation)(templateName, processed.content, { processed: true })
           setProgress(incrementProgress(getProgress(), processed.content.length))
@@ -70,7 +70,7 @@ const processViews = (compiler, compilation) => {
       createPagesPromise = Promise.all(createPages()).then((created) =>
         Promise.all(
           created.map(async (createdPage) => {
-            const processedCreatedHtml = await processHtml(createdPage.name, createdPage.content, {})
+            const processedCreatedHtml = await processHtml(instances)(createdPage.name, createdPage.content, {})
             const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
             addAssetImpl(createdPage.name, processedCreatedHtml.content, { processed: true })
             if (createdPage.script) {

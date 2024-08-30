@@ -4,7 +4,7 @@ const { setProgress, resetProgress } = require("./progress")
 const { info } = require("./util")
 const processAssets = require("./script")
 
-const optimizeAssets = (compiler, compilation) => (assets) => {
+const optimizeAssets = (compiler, compilation, instances) => (assets) => {
   const assetsToOptimize = Object.keys(assets).filter((asset) => asset.endsWith(".js"))
   const preprocessedAssetsToOptimize = lifecycle.onOptimizeAssetsStart(assetsToOptimize)
   const assetSize = preprocessedAssetsToOptimize
@@ -14,7 +14,7 @@ const optimizeAssets = (compiler, compilation) => (assets) => {
     setProgress(resetProgress(assetSize.size, assetSize.count))
     info("Optimizing assets...")
   }
-  const result = processAssets(compiler, compilation)(assets)
+  const result = processAssets(compiler, compilation, instances)(assets)
   return lifecycle.onOptimizeAssetsFinished(result)
 }
 

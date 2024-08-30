@@ -1,5 +1,7 @@
-import { getAssets } from "../internals"
+import { getAssets, getInstances } from "../internals"
 import { isBrowser } from "../util"
+import { getDef, getDefs } from "../defs"
+import { getSetState } from "../instances"
 
 // @TODO do not prefetch current page assets because thats redundant
 const prefetchAssets = () => {
@@ -43,5 +45,16 @@ const prefetchAssets = () => {
 if (isBrowser()) {
   window.onload = () => {
     prefetchAssets()
+    const instances = getInstances()["index.html"]
+    Object.keys(instances).map((id) => {
+      // @TODO FIX
+      const instance = instances[id]
+      // @TODO error logging
+      const def = getDefs()[instance.name]
+      const setState = getSetState(id)
+      if (def && def.effect) {
+        def.effect(instance.state, setState)
+      }
+    })
   }
 }

@@ -1,4 +1,12 @@
-import { COMPILER_EOFOL_TAG_DEFAULT } from "../../plugin/eofol-compile/constants"
-import { f } from "./create-element"
+import { createElement, f } from "./create-element"
 
-export const createEofolElement = f(COMPILER_EOFOL_TAG_DEFAULT)
+// @TODO extract
+const COMPILER_EOFOL_TAG_DEFAULT = "e"
+
+export const createEofolElement = (
+  name: string,
+  style?: string | undefined,
+  content?: any,
+  attributes?: any,
+  properties?: any,
+) => createElement(COMPILER_EOFOL_TAG_DEFAULT, style, content, { ...attributes, name }, properties)
