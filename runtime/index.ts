@@ -2,6 +2,7 @@ export * from "./constants"
 export * from "./types"
 
 export * from "./breakpoint"
+export * from "./core"
 export * from "./fetch"
 export * from "./internals"
 export * from "./prefetch"
