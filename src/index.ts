@@ -73,7 +73,7 @@ export const third = defineStateful("third", {
   render: () => {
     return button(
       `${sx({
-        backgroundColor: "fuchsia",
+        backgroundColor: "darkmagenta",
         border: "1px solid purple",
         color: "white",
         fontFamily: "inherit",
