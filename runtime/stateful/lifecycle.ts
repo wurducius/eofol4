@@ -23,5 +23,4 @@ export const onComponentUnmount = (id: string) => {
   removeInstance(id)
 }
 
-// eslint-disable-next-line no-unused-vars
-export const onComponentUnmounted = (id: string) => {}
+export const onComponentUnmounted = () => {}
