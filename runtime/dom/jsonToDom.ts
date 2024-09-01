@@ -3,7 +3,11 @@ import { appendChild } from "./children"
 const traverseJsonToDom = (jsonElement, result) => {
   if (typeof jsonElement === "object") {
     result = document.createElement(jsonElement.type)
-    // @TODO attributes
+    if (jsonElement.attributes) {
+      Object.keys(jsonElement.attributes).forEach((attributeName) => {
+        result.setAttribute(attributeName, jsonElement.attributes[attributeName])
+      })
+    }
     if (jsonElement.content && Array.isArray(jsonElement.content) && jsonElement.content.length > 0) {
       jsonElement.content.forEach((jsonChild, i) => {
         // @TODO FIXME
