@@ -7,7 +7,7 @@ export const prune = () => {
     const element = document.getElementById(id)
     if (!element) {
       onComponentUnmount(id)
-      onComponentUnmounted(id)
+      onComponentUnmounted()
     }
   })
 }
