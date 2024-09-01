@@ -10,8 +10,8 @@ export const appendChild = (target, child) => {
 
 export const domClearChildren = (domElement) => {
   const childrenToDelete = []
-  for (let i = 0; i < domElement.children.length; i++) {
-    childrenToDelete.push(domElement.children.item(i))
+  for (let i = 0; i < domElement.childNodes.length; i++) {
+    childrenToDelete.push(domElement.childNodes.item(i))
   }
   childrenToDelete.forEach((childToDelete) => {
     if (childToDelete) {
