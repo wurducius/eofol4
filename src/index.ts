@@ -7,7 +7,6 @@ import {
   sx,
   sy,
   div,
-  h1,
   defineStateful,
   Attributes,
   Children,
@@ -35,26 +34,35 @@ registerServiceworker()
 
 export const first = defineStateful("first", {
   // @ts-ignore
-  render: (state, attributes: Attributes, children: Children) =>
-    div(sx({ color: "red" }), [
-      "Eofol compiled!!!",
-      `Attribute eofolAttribute = ${attributes.eofolAttribute}`,
-      // ...(children ?? []).map((child) => h1(undefined, child)),
-    ]),
+  // eslint-disable-next-line no-unused-vars
+  render: (state, attributes: Attributes, children: Children) => {
+    return [
+      div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolattribute}`]),
+      "Output array !!!",
+      // ...children,
+    ]
+  },
 })
 
-// @ts-ignore
+export const firstx = defineStateful("firstx", {
+  // @ts-ignore
+  // eslint-disable-next-line no-unused-vars
+  render: (state, attributes: Attributes, children: Children) =>
+    div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
+})
+
 export const second = defineStateful("second", {
+  // eslint-disable-next-line no-unused-vars
   render: (state, attributes: Attributes, children: Children) =>
     // @ts-ignore
-    state?.isRequesting
-      ? div(sx({ color: "green" }), ["Dynamically rendered stateful component", createEofolElement("first")])
-      : div(sx({ color: "blue" }), ["Second stateful component"]),
-  initialState: { isRequesting: undefined },
+    state?.onStateChange
+      ? div(sx({ color: "green" }), ["Stateful component state and effect working!", createEofolElement("firstx")])
+      : div(sx({ color: "blue" }), ["Stateful component state and effect not working."]),
+  initialState: { onStateChange: false },
   // @ts-ignore
   effect: (state, setState) => {
-    if (!state.isRequesting) {
-      setState({ ...state, isRequesting: true })
+    if (!state.onStateChange) {
+      setState({ ...state, onStateChange: true })
     }
   },
 })

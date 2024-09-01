@@ -8,7 +8,7 @@ export type EofolNode = Multi<undefined | string>
 export type Attributes = Record<string, string>
 
 // @TODO Children typing
-export type Children = undefined | string[]
+export type Children = StaticElement[]
 
 // @TODO State typing
 export type State = Object | undefined

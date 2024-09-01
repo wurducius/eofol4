@@ -1,4 +1,4 @@
-import { createElement, f } from "./create-element"
+import { createElement } from "./create-element"
 
 // @TODO extract
 const COMPILER_EOFOL_TAG_DEFAULT = "e"
