@@ -1,3 +1,5 @@
+import { init } from "./init"
+
 export * from "./constants"
 export * from "./types"
 
@@ -9,5 +11,8 @@ export * from "./instances"
 export * from "./internals"
 export * from "./prefetch"
 export * from "./service-worker"
+export * from "./stateful"
 export * from "./styles"
 export * from "./util"
+
+init()

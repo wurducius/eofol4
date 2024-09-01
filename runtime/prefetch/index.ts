@@ -1,10 +1,7 @@
-import { getAssets, getInstances } from "../internals"
-import { isBrowser } from "../util"
-import { getDef, getDefs } from "../defs"
-import { getSetState } from "../instances"
+import { getAssets } from "../internals"
 
 // @TODO do not prefetch current page assets because thats redundant
-const prefetchAssets = () => {
+export const prefetchAssets = () => {
   const assets = getAssets()
   const queue: string[] = []
 
@@ -40,24 +37,4 @@ const prefetchAssets = () => {
   Promise.all(queue.map((asset) => fetch(asset).then(() => {}))).then(() => {
     console.log("Prefetch API -> All assets fetched.")
   })
-}
-
-if (isBrowser()) {
-  window.onload = () => {
-    prefetchAssets()
-    // @TODO FIXME SLEEP
-    setTimeout(() => {
-      const instances = getInstances()["index.html"]
-      Object.keys(instances).map((id) => {
-        // @TODO FIX
-        const instance = instances[id]
-        // @TODO error logging
-        const def = getDefs()[instance.name]
-        const setState = getSetState(id)
-        if (def && def.effect) {
-          def.effect(instance.state, setState)
-        }
-      })
-    }, 100)
-  }
 }

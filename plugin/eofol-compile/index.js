@@ -1,7 +1,7 @@
 const { COMPILER_EOFOL_TAGS, COMPILER_STATEFUL_WRAPPER_TAG } = require("./constants")
 const { logEofolTagHasNoName, logDefNotFound } = require("./logger")
 const { findDef } = require("./internals")
-const { getInitialState, isBrowser, generateId, getState, getSetState } = require("../../dist/runtime")
+const { getInitialState, generateId } = require("../../dist/runtime")
 
 const isEofolTag = (tag) => COMPILER_EOFOL_TAGS.includes(tag)
 
@@ -34,7 +34,6 @@ const compileEofol = (node, defs, instances) => {
   const id = generateId()
 
   const state = getInitialState(def.initialState)
-  const setState = getSetState(id)
 
   const instance = { id, name, state }
   //  saveInstance(id, instance)
@@ -50,19 +49,6 @@ const compileEofol = (node, defs, instances) => {
     // @TODO Fix children prop later after analysis
     [],
   )
-
-  // @TODO move play effect to lifecycle mounted/updated
-  if (isBrowser() && def.effect) {
-    if (Array.isArray(def.effect)) {
-      def.effect.forEach((singleEffect) => {
-        const localState = getState(id)
-        const localSetState = getSetState(id)
-        singleEffect(localState, localSetState)
-      })
-    } else {
-      def.effect(state, setState)
-    }
-  }
 
   return renderEofolWrapper(rendered, renderedAttributes)
 }
