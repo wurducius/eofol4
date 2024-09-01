@@ -16,7 +16,7 @@ export const onComponentMount = (jsonElement: StaticElement) => {
 }
 
 export const onComponentUpdate = (id: string) => {
-  rerender(id)
+  return rerender(id)
 }
 
 export const onComponentUnmount = (id: string) => {

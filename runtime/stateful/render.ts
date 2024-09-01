@@ -1,5 +1,5 @@
 import { Children, getDef, StaticElement } from "../defs"
-import { domAppendChildren, domAttributesToJson, domClearChildren, domToJson, jsonToDom } from "../dom"
+import { domAttributesToJson, domToJson, jsonToDom } from "../dom"
 import { generateId } from "../util"
 import { getInitialState } from "./state"
 import { getInstance, saveInstance } from "../instances"
@@ -22,10 +22,7 @@ export const rerender = (id: string) => {
       }
       const children: Children = domToJson(target.childNodes)
       const rendered = def.render({ state, attributes, children })
-      const domResult = jsonToDom(rendered)
-
-      domClearChildren(target)
-      domAppendChildren(domResult, target)
+      return jsonToDom(rendered)
     } else {
       console.log(`EOFOL ERROR: Definitipn with name = ${instance.name} does not exist.`)
     }
