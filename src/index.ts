@@ -28,7 +28,7 @@ export const first = defineStateful("first", {
     return [
       div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
       "Output array !!!",
-      // ...children,
+      // ...props.children,
     ]
   },
 })

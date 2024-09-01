@@ -40,11 +40,7 @@ const compileEofol = (node, defs, instances) => {
   instances[id] = instance
 
   const attributes = getAttributes(node.attributes, id)
-
-  // @TODO either remove whitespace from html before eofol compile or trim children manually like this
-  // node.content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0)),
-  // @TODO Fix children prop later after analysis
-  const children = []
+  const children = node.content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
 
   const rendered = def.render({ state, attributes, children })
 

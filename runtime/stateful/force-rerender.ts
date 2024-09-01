@@ -1,7 +1,7 @@
 import { isBrowser, sleepPromise } from "../util"
 import { getInstances } from "../internals"
 import { Children, getDef } from "../defs"
-import { domAppendChildren, domAttributesToJson, domClearChildren, jsonToDom } from "../dom"
+import { domAppendChildren, domAttributesToJson, domClearChildren, domToJson, jsonToDom } from "../dom"
 
 export const forceRerender = async () => {
   if (isBrowser()) {
@@ -15,7 +15,6 @@ export const forceRerender = async () => {
           const state = instance.state
           const attributes = domAttributesToJson(target.attributes)
 
-          //   const children = domToJson(target.childNodes)
           const childrenDom = []
           for (let i = 0; i < target.childNodes.length; i++) {
             const item = target.childNodes.item(i)
@@ -23,14 +22,10 @@ export const forceRerender = async () => {
               childrenDom.push(item)
             }
           }
-          // @TODO Fix children prop later after analysis
-          const children: Children = []
-
+          const children: Children = domToJson(target.childNodes)
           const rendered = def.render({ state, attributes, children })
-
           const domResult = jsonToDom(rendered)
 
-          // @TODO handle children tree
           domClearChildren(target)
           domAppendChildren(domResult, target)
         } else {
