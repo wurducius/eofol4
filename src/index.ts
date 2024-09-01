@@ -1,16 +1,6 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement } from "./util"
-import {
-  getBreakpoint,
-  isBrowser,
-  registerServiceworker,
-  sx,
-  sy,
-  div,
-  defineStateful,
-  Attributes,
-  Children,
-} from "../runtime"
+import { getBreakpoint, isBrowser, registerServiceworker, sx, sy, div, defineStateful } from "../runtime"
 import { createEofolElement } from "../runtime/core/eofol"
 
 const injectBreakpoint = () => {
@@ -34,10 +24,9 @@ registerServiceworker()
 
 export const first = defineStateful("first", {
   // @ts-ignore
-  // eslint-disable-next-line no-unused-vars
-  render: (state, attributes: Attributes, children: Children) => {
+  render: (props) => {
     return [
-      div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolattribute}`]),
+      div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
       "Output array !!!",
       // ...children,
     ]
@@ -45,22 +34,19 @@ export const first = defineStateful("first", {
 })
 
 export const firstx = defineStateful("firstx", {
-  // @ts-ignore
-  // eslint-disable-next-line no-unused-vars
-  render: (state, attributes: Attributes, children: Children) =>
-    div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
+  render: () => div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
 })
 
 export const second = defineStateful("second", {
-  // eslint-disable-next-line no-unused-vars
-  render: (state, attributes: Attributes, children: Children) =>
+  render: (props) =>
     // @ts-ignore
-    state?.onStateChange
+    props.state?.onStateChange
       ? div(sx({ color: "green" }), ["Stateful component state and effect working!", createEofolElement("firstx")])
       : div(sx({ color: "blue" }), ["Stateful component state and effect not working."]),
   initialState: { onStateChange: false },
   // @ts-ignore
-  effect: (state, setState) => {
+  effect: (props) => {
+    const { state, setState } = props
     if (!state.onStateChange) {
       setState({ ...state, onStateChange: true })
     }

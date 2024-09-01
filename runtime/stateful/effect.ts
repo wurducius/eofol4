@@ -1,21 +1,36 @@
 import { getInstances } from "../internals"
-import { Effect, EofolDef, getDefs, SetState, State } from "../defs"
+import { Effect, getDefs } from "../defs"
 import { getSetState, getState } from "./state"
 import { isBrowser } from "../util"
 
-const playEffectImpl = (effect: Effect, state: State, setState: SetState) => {
-  // @ts-ignore
-  effect(state, setState)
+const playEffectImpl = (effect: Effect, props) => {
+  if (effect) {
+    effect(props)
+  }
 }
 
-export const playEffect = (def: EofolDef, id: string) => {
-  if (isBrowser() && def.effect) {
-    if (Array.isArray(def.effect)) {
-      def.effect.forEach((singleEffect) => {
-        playEffectImpl(singleEffect, getState(id), getSetState(id))
-      })
-    } else {
-      playEffectImpl(def.effect, getState(id), getSetState(id))
+const getEffectProps = (id: string, attributes) => ({
+  state: getState(id),
+  setState: getSetState(id),
+  // @TODO FIXME add attributes to instances
+  attributes,
+})
+
+export const playEffect = (id: string) => {
+  if (isBrowser()) {
+    const instances = getInstances()["index.html"]
+    // @TODO FIX
+    const instance = instances[id]
+    // @TODO error logging
+    const def = getDefs()[instance.name]
+    if (def.effect) {
+      if (Array.isArray(def.effect)) {
+        def.effect.forEach((singleEffect) => {
+          playEffectImpl(singleEffect, getEffectProps(id, instance.attributes))
+        })
+      } else {
+        playEffectImpl(def.effect, getEffectProps(id, instance.attributes))
+      }
     }
   }
 }
@@ -23,10 +38,6 @@ export const playEffect = (def: EofolDef, id: string) => {
 export const replayInitialEffect = () => {
   const instances = getInstances()["index.html"]
   Object.keys(instances).map((id) => {
-    // @TODO FIX
-    const instance = instances[id]
-    // @TODO error logging
-    const def = getDefs()[instance.name]
-    playEffect(def, id)
+    playEffect(id)
   })
 }
