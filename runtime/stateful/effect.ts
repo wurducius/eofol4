@@ -1,7 +1,8 @@
 import { getInstances } from "../internals"
-import { Effect, getDefs } from "../defs"
+import { Effect, getDef } from "../defs"
 import { getSetState, getState } from "./state"
 import { isBrowser } from "../util"
+import { getInstance } from "../instances"
 
 const playEffectImpl = (effect: Effect, props) => {
   if (effect) {
@@ -18,11 +19,9 @@ const getEffectProps = (id: string, attributes) => ({
 
 export const playEffect = (id: string) => {
   if (isBrowser()) {
-    const instances = getInstances()
-    // @TODO FIX
-    const instance = instances[id]
+    const instance = getInstance(id)
     // @TODO error logging
-    const def = getDefs()[instance.name]
+    const def = getDef(instance.name)
     if (def.effect) {
       if (Array.isArray(def.effect)) {
         def.effect.forEach((singleEffect) => {

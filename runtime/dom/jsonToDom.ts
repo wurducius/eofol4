@@ -1,15 +1,17 @@
 import { appendChild } from "./children"
-import { getDef } from "../defs"
+import { onComponentMount, onComponentMounted } from "../stateful"
 
 const traverseJsonToDom = (jsonElement, result) => {
   if (typeof jsonElement === "object") {
-    // @TODO FIXME
-    if (jsonElement.type === "e") {
-      const name = jsonElement.attributes["name"]
-      const def = getDef(name)
-      const rendered = def.render({ state: {}, attributes: {}, children: [] })
-      // @TODO FIXME
-      result = jsonToDom(rendered)[0]
+    let isMounted = undefined
+    // @TODO Extract
+    if (["e", "eofol"].includes(jsonElement.type)) {
+      const mounted = onComponentMount(jsonElement)
+      if (mounted) {
+        const { id, result: mountResult } = mounted
+        isMounted = id
+        result = mountResult
+      }
     } else {
       result = document.createElement(jsonElement.type)
       if (jsonElement.attributes) {
@@ -25,6 +27,9 @@ const traverseJsonToDom = (jsonElement, result) => {
         nextResult = traverseJsonToDom(jsonElement.content[i], nextResult)
         appendChild(result, nextResult)
       })
+    }
+    if (isMounted) {
+      onComponentMounted(isMounted)
     }
   } else {
     result = jsonElement

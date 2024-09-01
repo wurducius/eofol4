@@ -1,19 +1,16 @@
 import { State } from "../defs"
-import { saveInstance } from "../instances"
-import { getInstances } from "../internals"
+import { getInstance, saveInstance } from "../instances"
 import { forceRerender } from "./force-rerender"
 
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
 
 export const getState = (id: string) => {
-  const instance = getInstances()[id]
+  const instance = getInstance(id)
   return instance?.state
 }
 
 export const getSetState = (id: string) => (nextState: State) => {
-  // @TODO merge
-  //const instance = getInstance(id)
-  const instance = getInstances()[id]
+  const instance = getInstance(id)
   saveInstance(id, { ...instance, state: nextState })
   forceRerender()
 }

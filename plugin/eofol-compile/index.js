@@ -1,7 +1,7 @@
 const { COMPILER_EOFOL_TAGS, COMPILER_STATEFUL_WRAPPER_TAG } = require("./constants")
 const { logEofolTagHasNoName, logDefNotFound } = require("./logger")
 const { findDef } = require("./internals")
-const { getInitialState, generateId } = require("../../dist/runtime")
+const { generateId, getInitialState } = require("../../dist/runtime")
 
 const isEofolTag = (tag) => COMPILER_EOFOL_TAGS.includes(tag)
 
@@ -35,7 +35,10 @@ const compileEofol = (node, defs, instances) => {
 
   const state = getInitialState(def.initialState)
 
-  const instance = { id, name, state }
+  const instance = { id, name }
+  if (state) {
+    instance.state = state
+  }
   //  saveInstance(id, instance)
   instances[id] = instance
 
