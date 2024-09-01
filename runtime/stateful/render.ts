@@ -1,13 +1,11 @@
 import { Children, getDef, StaticElement } from "../defs"
 import { domAppendChildren, domAttributesToJson, domClearChildren, domToJson, jsonToDom } from "../dom"
-import { getInstances } from "../internals"
 import { generateId } from "../util"
 import { getInitialState } from "./state"
-import { saveInstance } from "../instances"
+import { getInstance, saveInstance } from "../instances"
 
 export const rerender = (id: string) => {
-  const instances = getInstances()
-  const instance = instances[id]
+  const instance = getInstance(id)
   const target = document.getElementById(instance.id)
   if (target) {
     const def = getDef(instance.name)
