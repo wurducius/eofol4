@@ -19,6 +19,11 @@ const traverseJsonToDom = (jsonElement, result) => {
           result.setAttribute(attributeName, jsonElement.attributes[attributeName])
         })
       }
+      if (jsonElement.properties) {
+        Object.keys(jsonElement.properties).forEach((propertyName) => {
+          result[propertyName] = jsonElement.properties[propertyName]
+        })
+      }
     }
     if (jsonElement.content && Array.isArray(jsonElement.content) && jsonElement.content.length > 0) {
       jsonElement.content.forEach((jsonChild, i) => {

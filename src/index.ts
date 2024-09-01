@@ -1,6 +1,16 @@
 import { hexToCSSFilter } from "hex-to-css-filter"
-import { injectElement } from "./util"
-import { getBreakpoint, isBrowser, registerServiceworker, sx, sy, div, defineStateful } from "../runtime"
+import { injectElement, randomString } from "./util"
+import {
+  getBreakpoint,
+  isBrowser,
+  registerServiceworker,
+  sx,
+  sy,
+  div,
+  defineStateful,
+  button,
+  forceRerender,
+} from "../runtime"
 import { createEofolElement } from "../runtime/core/eofol"
 
 const injectBreakpoint = () => {
@@ -28,6 +38,7 @@ export const first = defineStateful("first", {
     return [
       div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
       "Output array !!!",
+      randomString(),
       // ...props.children,
     ]
   },
@@ -41,7 +52,11 @@ export const second = defineStateful("second", {
   render: (props) =>
     // @ts-ignore
     props.state?.onStateChange
-      ? div(sx({ color: "green" }), ["Stateful component state and effect working!", createEofolElement("firstx")])
+      ? div(sx({ color: "green" }), [
+          "Stateful component state and effect working!",
+          createEofolElement("firstx"),
+          createEofolElement("third"),
+        ])
       : div(sx({ color: "blue" }), ["Stateful component state and effect not working."]),
   initialState: { onStateChange: false },
   // @ts-ignore
@@ -50,5 +65,32 @@ export const second = defineStateful("second", {
     if (!state.onStateChange) {
       setState({ ...state, onStateChange: true })
     }
+  },
+})
+
+export const third = defineStateful("third", {
+  // @ts-ignore
+  render: () => {
+    return button(
+      `${sx({
+        backgroundColor: "fuchsia",
+        border: "1px solid purple",
+        color: "white",
+        fontFamily: "inherit",
+        fontSize: "16px",
+        fontWeight: 500,
+        cursor: "pointer",
+        padding: "4px 16px",
+      })} ${sx({ backgroundColor: "purple", color: "red" }, ":hover")}`,
+      "Force rerender",
+      {},
+      {
+        onclick: () => {
+          forceRerender().then(() => {
+            console.log("Force rerender")
+          })
+        },
+      },
+    )
   },
 })
