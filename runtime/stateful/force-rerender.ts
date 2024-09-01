@@ -1,4 +1,4 @@
-import { isBrowser } from "../util"
+import { isBrowser, sleepPromise } from "../util"
 import { getInstances } from "../internals"
 import { Children, getDef } from "../defs"
 import { domAppendChildren, domAttributesToJson, domClearChildren, jsonToDom } from "../dom"
@@ -41,6 +41,6 @@ export const forceRerender = async () => {
       }
     })
     // @TODO FIXME SLEEP
-    await new Promise((r) => setTimeout(r, 500))
+    await sleepPromise()
   }
 }
