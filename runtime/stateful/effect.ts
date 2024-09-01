@@ -18,7 +18,7 @@ const getEffectProps = (id: string, attributes) => ({
 
 export const playEffect = (id: string) => {
   if (isBrowser()) {
-    const instances = getInstances()["index.html"]
+    const instances = getInstances()
     // @TODO FIX
     const instance = instances[id]
     // @TODO error logging
@@ -36,7 +36,7 @@ export const playEffect = (id: string) => {
 }
 
 export const replayInitialEffect = () => {
-  const instances = getInstances()["index.html"]
+  const instances = getInstances()
   Object.keys(instances).map((id) => {
     playEffect(id)
   })

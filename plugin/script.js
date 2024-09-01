@@ -12,9 +12,12 @@ const processAssets = (compiler, compilation, instances) => (assets) =>
     transformPropertyName: "minified",
     transform: (content, asset) => {
       const x = lifecycle.onOptimizeAssetStart(content)
-      const y = minifyJs(
-        `${getInternals(instances[asset.replace(".js", ".html").replace("assets/js/", "").replaceAll("/", "\\")])}${x}`,
-      )
+      const instancesPath = asset.replace(".js", ".html").replace("assets/js/", "").replaceAll("/", "\\")
+      // @TODO FIXME
+      const instancesImpl = instances[instancesPath]
+        ? instances[instancesPath][instancesPath]
+        : instances[instancesPath]
+      const y = minifyJs(`${getInternals(instancesImpl)}${x}`)
       return lifecycle.onOptimizeAssetFinished(y)
     },
     logStart: () => {
