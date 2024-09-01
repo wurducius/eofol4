@@ -18,6 +18,7 @@ export const forceRerender = async () => {
         domAppendChildren(update.result, target)
       } else {
         // @TODO FIXME
+        console.log(`EOFOL ERROR: DOM element with id = ${update.id} does not exist.`)
       }
     })
     updated.forEach((update) => {
