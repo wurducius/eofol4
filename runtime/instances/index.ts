@@ -1,6 +1,6 @@
 import { getInstances } from "../internals"
-import { getDef, State } from "../defs"
-import { generateId, isBrowser } from "../util"
+import { Children, getDef, State, StaticElement } from "../defs"
+import { isBrowser } from "../util"
 
 type Instance = { id: string; name: string; state?: any }
 
@@ -17,24 +17,47 @@ export const removeInstance = (id: string) => {
   updateInstance(id, undefined)
 }
 
-const traverseDomToJson = (domElement, result) => {
-  if (domElement.nodeName === "#text") {
+const traverseDomToJson = (domElement: Node, result) => {
+  if (domElement.nodeType === 3) {
     result = domElement.textContent
-  } else {
+  } else if (domElement instanceof Element) {
     result = { type: domElement.tagName, attributes: {}, content: [] }
     // @TODO attributes
-    if (domElement.children && domElement.children.length > 0) {
-      for (let i = 0; i < domElement.children.length; i++) {
-        result.content[i] = traverseDomToJson(domElement.children.item(i), result.content[i])
+    if (domElement.childNodes && domElement.childNodes.length > 0) {
+      for (let i = 0; i < domElement.childNodes.length; i++) {
+        result.content[i] = traverseDomToJson(domElement.childNodes.item(i), result.content[i])
       }
     }
+  } else {
+    console.log(`UNKNOWN DOM NODE TYPE: ${domElement.nodeType}`)
   }
   return result
 }
 
+const htmlCollectionToArray = (x: NodeList) => {
+  const a = []
+  for (let i = 0; i < x.length; i++) {
+    a.push(x[i])
+  }
+  return a
+}
+
 const domToJson = (domElement) => {
-  let result = undefined
-  return traverseDomToJson(domElement, result)
+  const result: StaticElement[] = []
+  for (let i = 0; i < domElement.length; i++) {
+    result[i] = traverseDomToJson(domElement[i], result[i])
+  }
+  return result
+}
+
+const appendChild = (target, child) => {
+  if (child) {
+    if (typeof child === "string") {
+      target.insertAdjacentHTML("beforeend", child)
+    } else {
+      target.appendChild(child)
+    }
+  }
 }
 
 const traverseJsonToDom = (jsonElement, result) => {
@@ -43,7 +66,10 @@ const traverseJsonToDom = (jsonElement, result) => {
     // @TODO attributes
     if (jsonElement.content && Array.isArray(jsonElement.content) && jsonElement.content.length > 0) {
       jsonElement.content.forEach((jsonChild, i) => {
-        result[i] = traverseJsonToDom(jsonElement.content[i], result[i])
+        // @TODO FIXME
+        let nextResult = undefined
+        nextResult = traverseJsonToDom(jsonElement.content[i], nextResult)
+        appendChild(result, nextResult)
       })
     }
   } else {
@@ -53,8 +79,15 @@ const traverseJsonToDom = (jsonElement, result) => {
 }
 
 const jsonToDom = (jsonElement) => {
-  let result = undefined
-  return traverseJsonToDom(jsonElement, result)
+  const result = []
+  if (Array.isArray(jsonElement)) {
+    for (let i = 0; i < jsonElement.length; i++) {
+      result[i] = traverseJsonToDom(jsonElement[i], result[i])
+    }
+  } else {
+    result[0] = traverseJsonToDom(jsonElement, result[0])
+  }
+  return result
 }
 
 const domAttributesToJson = (domAttributes) => {
@@ -66,14 +99,6 @@ const domAttributesToJson = (domAttributes) => {
     }
   }
   return attributes
-}
-
-const setAttributes = (domElement, attributes) => {
-  Object.keys(attributes)
-    .filter((attributeName) => !["id", "name"].includes(attributeName))
-    .forEach((attributeName) => {
-      domElement.setAttribute(attributeName, attributes[attributeName])
-    })
 }
 
 const domClearChildren = (domElement) => {
@@ -88,7 +113,11 @@ const domClearChildren = (domElement) => {
   })
 }
 
-const renderElement = () => {}
+const domAppendChildren = (children, target) => {
+  children.forEach((child) => {
+    appendChild(target, child)
+  })
+}
 
 // @TODO move to stateful
 export const forceRerender = async () => {
@@ -102,54 +131,25 @@ export const forceRerender = async () => {
         if (def) {
           const state = instance.state
           const attributes = domAttributesToJson(target.attributes)
-          const children = domToJson(target.children)
+
+          //   const children = domToJson(target.childNodes)
+          const childrenDom = []
+          for (let i = 0; i < target.childNodes.length; i++) {
+            const item = target.childNodes.item(i)
+            if (item) {
+              childrenDom.push(item)
+            }
+          }
+          // @TODO Fix children prop later after analysis
+          const children: Children = []
+
           const rendered = def.render(state, attributes, children)
 
           const domResult = jsonToDom(rendered)
-          console.log(domResult)
 
-          setAttributes(domResult, attributes)
-
-          const result = [domResult]
-
-          domClearChildren(target)
-
-          if (rendered.content) {
-            rendered.content.forEach((renderedChild) => {
-              let resultChild
-              if (typeof renderedChild === "object") {
-                if (renderedChild.type === "e") {
-                  const childName = renderedChild.attributes["name"]
-                  const childDef = getDef(childName)
-                  const childId = renderedChild.attributes["id"]
-                  const childAttributes = {} // renderedChild.attributes
-                  const childChildren = []
-                  if (childId) {
-                    const childInstance = getInstances()["index.html"][childId]
-                    const childState = childInstance.state
-                    resultChild = childDef.render(childState, childAttributes, childChildren)
-                  } else {
-                    const mountedId = generateId()
-                    // @ts-ignore
-                    const childState = childDef.initialState
-                    getInstances()["index.html"][mountedId] = { id: mountedId, name: childName, state: childState }
-                    const childRendered = childDef.render(childState, childAttributes, childChildren)
-                    resultChild = document.createElement(childRendered.type)
-                  }
-                } else {
-                  resultChild = document.createElement(renderedChild.type)
-                }
-              } else {
-                resultChild = document.createTextNode(renderedChild)
-              }
-              result[0].appendChild(resultChild)
-            })
-          }
           // @TODO handle children tree
-          // @TODO render into div wrapper
-          result.forEach((item) => {
-            target.appendChild(item)
-          })
+          domClearChildren(target)
+          domAppendChildren(domResult, target)
         } else {
           console.log(`EOFOL ERROR: DOM element with id = ${instance.id} does not exist.`)
         }
@@ -157,11 +157,19 @@ export const forceRerender = async () => {
         //@TODO error logging
       }
     })
+    // @TODO FIXME SLEEP
+    await new Promise((r) => setTimeout(r, 500))
   }
 }
 
 // @TODO move to stateful
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
+
+// @TODO move to stateful
+export const getState = (id: string) => {
+  const instance = getInstances()["index.html"][id]
+  return instance?.state
+}
 
 // @TODO move to stateful
 export const getSetState = (id: string) => (nextState: State) => {

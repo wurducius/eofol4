@@ -45,16 +45,19 @@ const prefetchAssets = () => {
 if (isBrowser()) {
   window.onload = () => {
     prefetchAssets()
-    const instances = getInstances()["index.html"]
-    Object.keys(instances).map((id) => {
-      // @TODO FIX
-      const instance = instances[id]
-      // @TODO error logging
-      const def = getDefs()[instance.name]
-      const setState = getSetState(id)
-      if (def && def.effect) {
-        def.effect(instance.state, setState)
-      }
-    })
+    // @TODO FIXME SLEEP
+    setTimeout(() => {
+      const instances = getInstances()["index.html"]
+      Object.keys(instances).map((id) => {
+        // @TODO FIX
+        const instance = instances[id]
+        // @TODO error logging
+        const def = getDefs()[instance.name]
+        const setState = getSetState(id)
+        if (def && def.effect) {
+          def.effect(instance.state, setState)
+        }
+      })
+    }, 100)
   }
 }
