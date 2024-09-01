@@ -39,18 +39,16 @@ const compileEofol = (node, defs, instances) => {
   //  saveInstance(id, instance)
   instances[id] = instance
 
-  const renderedAttributes = getAttributes(node.attributes, id)
+  const attributes = getAttributes(node.attributes, id)
 
-  const rendered = def.render(
-    state,
-    renderedAttributes,
-    // @TODO either remove whitespace from html before eofol compile or trim children manually like this
-    // node.content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0)),
-    // @TODO Fix children prop later after analysis
-    [],
-  )
+  // @TODO either remove whitespace from html before eofol compile or trim children manually like this
+  // node.content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0)),
+  // @TODO Fix children prop later after analysis
+  const children = []
 
-  return renderEofolWrapper(rendered, renderedAttributes)
+  const rendered = def.render({ state, attributes, children })
+
+  return renderEofolWrapper(rendered, attributes)
 }
 
 module.exports = { isEofolTag, compileEofol }

@@ -21,14 +21,12 @@ export type Effect = undefined | Function
 
 export type StaticElement = { type: string; attributes?: Record<string, string> }
 // @TODO typing finish, solve recursion
-export type Render = (
-  // eslint-disable-next-line no-unused-vars
-  state: State,
-  // eslint-disable-next-line no-unused-vars
-  attributes: Attributes,
-  // eslint-disable-next-line no-unused-vars
-  children: Children,
-) => StaticElement & { content?: Array<string | StaticElement> }
+// eslint-disable-next-line no-unused-vars
+export type Render = (props: {
+  state: State
+  attributes: Attributes
+  children: Children
+}) => StaticElement & { content?: Array<string | StaticElement> }
 
 export type EofolDef = { name: string; type: string; render: Render; state?: State; effect?: Effect }
 export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect }

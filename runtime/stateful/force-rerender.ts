@@ -26,7 +26,7 @@ export const forceRerender = async () => {
           // @TODO Fix children prop later after analysis
           const children: Children = []
 
-          const rendered = def.render(state, attributes, children)
+          const rendered = def.render({ state, attributes, children })
 
           const domResult = jsonToDom(rendered)
 
