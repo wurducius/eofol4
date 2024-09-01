@@ -1,6 +1,6 @@
 import { State } from "../defs"
 import { getInstance, saveInstance } from "../instances"
-import { forceRerender } from "./force-rerender"
+import { rerender } from "./render"
 
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
 
@@ -12,5 +12,5 @@ export const getState = (id: string) => {
 export const getSetState = (id: string) => (nextState: State) => {
   const instance = getInstance(id)
   saveInstance(id, { ...instance, state: nextState })
-  forceRerender()
+  rerender(id)
 }
