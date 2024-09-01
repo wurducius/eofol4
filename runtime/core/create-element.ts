@@ -13,6 +13,7 @@ export const createElement = (
     type: tag,
     attributes: attributesImpl,
     content: Array.isArray(content) ? content : [content],
+    properties,
   }
 }
 
