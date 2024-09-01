@@ -6,6 +6,7 @@ const traverseJsonToDom = (jsonElement, result) => {
     let isMounted = undefined
     // @TODO Extract
     if (["e", "eofol"].includes(jsonElement.type)) {
+      // @TODO if already exists do not mount instead update
       const mounted = onComponentMount(jsonElement)
       if (mounted) {
         const { id, result: mountResult } = mounted
