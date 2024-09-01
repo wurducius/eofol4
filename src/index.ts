@@ -7,11 +7,9 @@ import {
   sx,
   sy,
   div,
-  h1,
   defineStateful,
   Attributes,
   Children,
-  createElement,
 } from "../runtime"
 import { createEofolElement } from "../runtime/core/eofol"
 
@@ -36,6 +34,7 @@ registerServiceworker()
 
 export const first = defineStateful("first", {
   // @ts-ignore
+  // eslint-disable-next-line no-unused-vars
   render: (state, attributes: Attributes, children: Children) => {
     return [
       div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${attributes.eofolattribute}`]),
@@ -47,12 +46,13 @@ export const first = defineStateful("first", {
 
 export const firstx = defineStateful("firstx", {
   // @ts-ignore
+  // eslint-disable-next-line no-unused-vars
   render: (state, attributes: Attributes, children: Children) =>
     div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
 })
 
-// @ts-ignore
 export const second = defineStateful("second", {
+  // eslint-disable-next-line no-unused-vars
   render: (state, attributes: Attributes, children: Children) =>
     // @ts-ignore
     state?.onStateChange
