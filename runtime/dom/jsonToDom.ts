@@ -1,12 +1,22 @@
 import { appendChild } from "./children"
+import { getDef } from "../defs"
 
 const traverseJsonToDom = (jsonElement, result) => {
   if (typeof jsonElement === "object") {
-    result = document.createElement(jsonElement.type)
-    if (jsonElement.attributes) {
-      Object.keys(jsonElement.attributes).forEach((attributeName) => {
-        result.setAttribute(attributeName, jsonElement.attributes[attributeName])
-      })
+    // @TODO FIXME
+    if (jsonElement.type === "e") {
+      const name = jsonElement.attributes["name"]
+      const def = getDef(name)
+      const rendered = def.render({ state: {}, attributes: {}, children: [] })
+      // @TODO FIXME
+      result = jsonToDom(rendered)[0]
+    } else {
+      result = document.createElement(jsonElement.type)
+      if (jsonElement.attributes) {
+        Object.keys(jsonElement.attributes).forEach((attributeName) => {
+          result.setAttribute(attributeName, jsonElement.attributes[attributeName])
+        })
+      }
     }
     if (jsonElement.content && Array.isArray(jsonElement.content) && jsonElement.content.length > 0) {
       jsonElement.content.forEach((jsonChild, i) => {
