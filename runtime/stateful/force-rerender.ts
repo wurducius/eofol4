@@ -5,7 +5,7 @@ import { domAppendChildren, domAttributesToJson, domClearChildren, domToJson, js
 
 export const forceRerender = async () => {
   if (isBrowser()) {
-    const instances = getInstances()["index.html"]
+    const instances = getInstances()
     Object.keys(instances).forEach((id) => {
       const instance = instances[id]
       const target = document.getElementById(instance.id)

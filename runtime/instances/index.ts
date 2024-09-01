@@ -3,7 +3,7 @@ import { getInstances } from "../internals"
 type Instance = { id: string; name: string; state?: any }
 
 const updateInstance = (id: string, nextInstance: Instance | undefined) => {
-  const instances = getInstances()["index.html"]
+  const instances = getInstances()
   instances[id] = nextInstance
 }
 
@@ -16,7 +16,7 @@ export const removeInstance = (id: string) => {
 }
 
 export const getInstance = (id: string) => {
-  const instance = getInstances()["index.html"][id]
+  const instance = getInstances()[id]
   if (instance) {
     return instance
   } else {
