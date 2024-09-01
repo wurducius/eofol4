@@ -12,3 +12,11 @@ export const sleepHandler = (handler: Function) => {
 }
 
 export const sleepPromise = () => new Promise((r) => setTimeout(r, SLEEP_INTERVAL_MS))
+
+export const arrayCombinatorForEach = (handler) => (data) => {
+  if (Array.isArray(data)) {
+    data.forEach(handler)
+  } else {
+    handler(data)
+  }
+}

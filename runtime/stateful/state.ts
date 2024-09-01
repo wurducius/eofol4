@@ -1,6 +1,8 @@
 import { State } from "../defs"
 import { getInstance, saveInstance } from "../instances"
-import { forceRerender } from "./force-rerender"
+import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
+import { prune } from "./prune"
+import { updateDom } from "./dom"
 
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
 
@@ -12,5 +14,10 @@ export const getState = (id: string) => {
 export const getSetState = (id: string) => (nextState: State) => {
   const instance = getInstance(id)
   saveInstance(id, { ...instance, state: nextState })
-  forceRerender()
+  const result = onComponentUpdate(id)
+  if (result) {
+    updateDom({ id, result })
+    onComponentUpdated(id)
+  }
+  prune()
 }

@@ -10,6 +10,7 @@ import {
   defineStateful,
   button,
   forceRerender,
+  cx,
 } from "../runtime"
 import { createEofolElement } from "../runtime/core/eofol"
 
@@ -31,6 +32,20 @@ if (isBrowser()) {
 }
 
 registerServiceworker()
+
+const buttonBaseStyle = sx({
+  backgroundColor: "darkmagenta",
+  border: "1px solid purple",
+  color: "white",
+  fontFamily: "inherit",
+  fontSize: "16px",
+  fontWeight: 500,
+  cursor: "pointer",
+  padding: "4px 16px",
+})
+const buttonHoverStyle = sx({ backgroundColor: "purple", color: "red" }, ":hover")
+const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":active")
+const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
 
 export const first = defineStateful("first", {
   // @ts-ignore
@@ -72,16 +87,7 @@ export const third = defineStateful("third", {
   // @ts-ignore
   render: () => {
     return button(
-      `${sx({
-        backgroundColor: "darkmagenta",
-        border: "1px solid purple",
-        color: "white",
-        fontFamily: "inherit",
-        fontSize: "16px",
-        fontWeight: 500,
-        cursor: "pointer",
-        padding: "4px 16px",
-      })} ${sx({ backgroundColor: "purple", color: "red" }, ":hover")}`,
+      cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle),
       "Force rerender",
       {},
       {

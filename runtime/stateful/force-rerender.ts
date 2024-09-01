@@ -1,7 +1,8 @@
 import { isBrowser, sleepPromise } from "../util"
 import { getInstances } from "../internals"
-import { onComponentUnmount, onComponentUnmounted, onComponentUpdate, onComponentUpdated } from "./lifecycle"
-import { domAppendChildren, domClearChildren } from "../dom"
+import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
+import { prune } from "./prune"
+import { updateDom } from "./dom"
 
 export const forceRerender = async () => {
   if (isBrowser()) {
@@ -11,28 +12,12 @@ export const forceRerender = async () => {
     Object.keys(instances).forEach((id) => {
       updated.push({ id, result: onComponentUpdate(id) })
     })
-    updated.forEach((update) => {
-      const target = document.getElementById(update.id)
-      if (target) {
-        domClearChildren(target)
-        domAppendChildren(update.result, target)
-      } else {
-        // @TODO FIXME
-        console.log(`EOFOL ERROR: DOM element with id = ${update.id} does not exist.`)
-      }
-    })
+    updateDom(updated)
     updated.forEach((update) => {
       onComponentUpdated(update.id)
     })
 
-    // @TODO FIXME UNMOUNT
-    Object.keys(instances).forEach((id) => {
-      const element = document.getElementById(id)
-      if (!element) {
-        onComponentUnmount(id)
-        onComponentUnmounted(id)
-      }
-    })
+    prune()
 
     // @TODO FIXME SLEEP
     await sleepPromise()
