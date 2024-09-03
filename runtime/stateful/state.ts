@@ -1,5 +1,5 @@
 import { State } from "../defs"
-import { getInstance, saveInstance } from "../instances"
+import { getInstance, mergeInstance } from "../instances"
 import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
 import { prune } from "./prune"
 import { updateDom } from "./dom"
@@ -12,12 +12,11 @@ export const getState = (id: string) => {
 }
 
 export const getSetState = (id: string) => (nextState: State) => {
-  const instance = getInstance(id)
-  saveInstance(id, { ...instance, state: nextState })
+  mergeInstance(id, { state: nextState })
   const result = onComponentUpdate(id)
   if (result) {
     updateDom({ id, result })
-    onComponentUpdated(id)
   }
+  onComponentUpdated(id)
   prune()
 }

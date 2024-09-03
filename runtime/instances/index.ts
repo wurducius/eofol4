@@ -11,6 +11,12 @@ export const saveInstance = (id: string, nextInstance: Instance) => {
   return saveInstanceImpl(getInstances())(id, nextInstance)
 }
 
+export const mergeInstance = (id: string, nextInstance: Partial<Instance>) => {
+  const instances = getInstances()
+  const prevInstance = instances[id]
+  return saveInstanceImpl(instances)(id, { ...prevInstance, ...nextInstance })
+}
+
 export const removeInstance = (id: string) => {
   const instances = getInstances()
   delete instances[id]
