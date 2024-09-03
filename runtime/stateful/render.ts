@@ -8,7 +8,10 @@ import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
 import { updateDom } from "./dom"
 import { prune } from "./prune"
 
-export const filterChildren = (content) => content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
+export const filterChildren = (
+  content: Array<StaticElement | string | undefined | null | false>,
+): Array<StaticElement | string> =>
+  content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0)) as Array<StaticElement | string>
 
 const createWrapper = (id: string) => {
   const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
