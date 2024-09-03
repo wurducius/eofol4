@@ -28,7 +28,7 @@ export type Render = (props: {
   children: Children
 }) => StaticElement & { content?: Array<string | StaticElement> }
 
-export type EofolDef = { name: string; type: string; render: Render; state?: State; effect?: Effect }
+export type EofolDef = { name: string; type: string; render: Render; initialState?: State; effect?: Effect }
 export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect }
 
 const defRegistry: Record<string, EofolDef> = {}

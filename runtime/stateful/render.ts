@@ -1,8 +1,18 @@
-import { Children, getDef, StaticElement } from "../defs"
-import { domAttributesToJson, domToJson, jsonToDom } from "../dom"
+import { Attributes, Children, EofolDef, getDef, State, StaticElement } from "../defs"
+import { domAppendChildren, domAttributesToJson, domToJson, jsonToDom } from "../dom"
 import { generateId } from "../util"
 import { getInitialState } from "./state"
-import { getInstance, saveInstance } from "../instances"
+import { getInstance, saveStatefulInstance } from "../instances"
+import { Compiler } from "../constants"
+
+const createWrapper = (id: string) => {
+  const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
+  renderedResult.setAttribute("id", id)
+  return renderedResult
+}
+
+export const renderElement = (def: EofolDef, state: State, attributes: Attributes, children: Children) =>
+  def.render({ state, attributes, children })
 
 export const rerender = (id: string) => {
   const instance = getInstance(id)
@@ -12,16 +22,8 @@ export const rerender = (id: string) => {
     if (def) {
       const state = instance.state
       const attributes = domAttributesToJson(target.attributes)
-
-      const childrenDom = []
-      for (let i = 0; i < target.childNodes.length; i++) {
-        const item = target.childNodes.item(i)
-        if (item) {
-          childrenDom.push(item)
-        }
-      }
       const children: Children = domToJson(target.childNodes)
-      const rendered = def.render({ state, attributes, children })
+      const rendered = renderElement(def, state, attributes, children)
       return jsonToDom(rendered)
     } else {
       console.log(`EOFOL ERROR: Definitipn with name = ${instance.name} does not exist.`)
@@ -39,21 +41,14 @@ export const mount = (jsonElement: StaticElement) => {
     if (def) {
       const id = generateId()
       const attributesImpl = { ...attributes, id, name }
-      const rendered = def.render({ state: {}, attributes: attributesImpl ?? {}, children: [] })
-      const renderedDom = jsonToDom(rendered)
-      const renderedResult = document.createElement("div")
-      renderedResult.setAttribute("id", id)
-      for (let i = 0; i < renderedDom.length; i++) {
-        renderedResult.appendChild(renderedDom[i])
-      }
-      // @ts-ignore
       const state = getInitialState(def.initialState)
-      const instance = { id, name }
-      if (state) {
-        // @ts-ignore
-        instance.state = state
-      }
-      saveInstance(id, instance)
+      saveStatefulInstance(id, name, state)
+      // @TODO TYPING jsonElement.content
+      // @ts-ignore
+      const rendered = renderElement(def, state, attributesImpl, jsonElement.content)
+      const renderedDom = jsonToDom(rendered)
+      const renderedResult = createWrapper(id)
+      domAppendChildren(renderedDom, renderedResult)
       return { id, result: renderedResult }
     } else {
       console.log(`EOFOL ERROR: Definitipn with name = ${name} does not exist.`)

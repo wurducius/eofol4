@@ -1,12 +1,11 @@
-const { COMPILER_EOFOL_TAGS, COMPILER_STATEFUL_WRAPPER_TAG } = require("./constants")
 const { logEofolTagHasNoName, logDefNotFound } = require("./logger")
 const { findDef } = require("./internals")
-const { generateId, getInitialState } = require("../../dist/runtime")
+const { generateId, getInitialState, renderElement, Compiler } = require("../../dist/runtime")
 
-const isEofolTag = (tag) => COMPILER_EOFOL_TAGS.includes(tag)
+const isEofolTag = (tag) => Compiler.COMPILER_EOFOL_TAGS.includes(tag)
 
 const renderEofolWrapper = (content, attributes) => ({
-  type: COMPILER_STATEFUL_WRAPPER_TAG,
+  type: Compiler.COMPILER_STATEFUL_WRAPPER_TAG,
   attributes,
   content: Array.isArray(content) ? content : [content],
 })
@@ -32,20 +31,16 @@ const compileEofol = (node, defs, instances) => {
   }
 
   const id = generateId()
-
+  const attributes = getAttributes(node.attributes, id)
   const state = getInitialState(def.initialState)
-
   const instance = { id, name }
   if (state) {
     instance.state = state
   }
-  //  saveInstance(id, instance)
+  //  save instance manually because we are using instances from passed arg
   instances[id] = instance
-
-  const attributes = getAttributes(node.attributes, id)
   const children = node.content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
-
-  const rendered = def.render({ state, attributes, children })
+  const rendered = renderElement(def, state, attributes, children)
 
   return renderEofolWrapper(rendered, attributes)
 }
