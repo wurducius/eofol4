@@ -1,5 +1,6 @@
 import { domAppendChildren, domClearChildren } from "../dom"
 import { arrayCombinatorForEach } from "../util"
+import { Compiler } from "../constants"
 
 const updateDomImpl = (update: { id: string; result: any }) => {
   const target = document.getElementById(update.id)
@@ -13,3 +14,5 @@ const updateDomImpl = (update: { id: string; result: any }) => {
 }
 
 export const updateDom = arrayCombinatorForEach(updateDomImpl)
+
+export const isEofolTag = (tag: string) => Compiler.COMPILER_EOFOL_TAGS.includes(tag)

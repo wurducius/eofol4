@@ -5,6 +5,8 @@ import { getInitialState } from "./state"
 import { getInstance, saveStatefulInstance } from "../instances"
 import { Compiler } from "../constants"
 
+export const filterChildren = (content) => content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
+
 const createWrapper = (id: string) => {
   const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
   renderedResult.setAttribute("id", id)
@@ -45,7 +47,8 @@ export const mount = (jsonElement: StaticElement) => {
       saveStatefulInstance(id, name, state)
       // @TODO TYPING jsonElement.content
       // @ts-ignore
-      const rendered = renderElement(def, state, attributesImpl, jsonElement.content)
+      const children = filterChildren(jsonElement.content)
+      const rendered = renderElement(def, state, attributesImpl, children)
       const renderedDom = jsonToDom(rendered)
       const renderedResult = createWrapper(id)
       domAppendChildren(renderedDom, renderedResult)
