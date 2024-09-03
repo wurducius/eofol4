@@ -15,7 +15,7 @@ const {
 const { cancelPromise, setPromise } = require("../webpack/singleton")
 const precompile = require("./impl/precompile")
 
-const COMPILER_SLEEP_INTERVAL_MS = 2000
+const COMPILER_SLEEP_INTERVAL_MS = 1000
 
 const sleepInterval = () => sleep(COMPILER_SLEEP_INTERVAL_MS)
 
@@ -43,17 +43,16 @@ const listOfNotExistingItems = []
 
 const SERVE_URL = `${PROTOCOL}://${HOST}:${PORT}`
 
+const VERBOSE_DEVELOPMENT_SERVER = false
+
 const recompile = async () => {
   cancelPromise()
   setPromise(async () => {
     console.log(primary("Recompiling..."))
     precompile()
     build(true)
-    return await sleepInterval().then(() => {
-      console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
-    })
+    console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
   })
-  cancelPromise()
 }
 
 const handleChange = async () => {
@@ -64,18 +63,21 @@ const handleRemove = async () => {
   await recompile()
 }
 
-build(false)
-
-// @TODO do not sleep instead fix async promise handling in build
-sleepInterval().then(() => {
-  console.log(primary("Starting the development server..."))
-
+const startHotReload = () => {
   const wp = new Watchpack(watchpackOptions)
 
+  if (VERBOSE_DEVELOPMENT_SERVER) {
+    console.log(primary("Starting the development server..."))
+  }
+
   const handleClose = () => {
-    console.log(primary("\nShutting down development server..."))
+    if (VERBOSE_DEVELOPMENT_SERVER) {
+      console.log(primary("\nShutting down development server..."))
+    }
     wp.close()
-    console.log(primary("Development server shut down."))
+    if (VERBOSE_DEVELOPMENT_SERVER) {
+      console.log(primary("Development server shut down."))
+    }
     process.exit(0)
   }
 
@@ -87,11 +89,15 @@ sleepInterval().then(() => {
     files: listOfFiles,
     directories: listOfDirectories,
     missing: listOfNotExistingItems,
-    startTime: Date.now() - 10000,
+    startTime: Date.now(),
   })
 
   wp.on("change", handleChange)
   wp.on("remove", handleRemove)
 
   serve()
-})
+}
+
+console.log(primary("Eofol4 start"))
+build(false)
+sleepInterval().then(() => startHotReload())

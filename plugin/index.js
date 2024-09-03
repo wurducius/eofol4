@@ -1,7 +1,6 @@
 const { pluginName } = require("./config")
 const lifecycle = require("./lifecycle")
 const processViews = require("./view")
-const { info } = require("./util")
 const optimizeAssets = require("./optimize")
 
 let instances = {}
@@ -20,11 +19,6 @@ const onInitCompilation = (compiler) => (compilation) => {
 const onBuildStarted = (compilation) => {
   instances = {}
   lifecycle.onCompilationStart()
-}
-
-// eslint-disable-next-line no-unused-vars
-const onDevStarted = (compilation) => {
-  info("Eofol4 start")
 }
 
 const onCompilationFinished = (compiler) => (compilation) => {
@@ -46,7 +40,6 @@ const onAfterCompile = (compiler) => (compilation) => {
 class Eofol4CompilerWebpackPlugin {
   apply(compiler) {
     compiler.hooks.run.tap(pluginName, onBuildStarted)
-    compiler.hooks.watchRun.tap(pluginName, onDevStarted)
     compiler.hooks.compilation.tap(pluginName, onCompilationFinished(compiler))
     compiler.hooks.thisCompilation.tap(pluginName, onInitCompilation(compiler))
     compiler.hooks.afterCompile.tap(pluginName, onAfterCompile(compiler))

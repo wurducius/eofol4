@@ -3,6 +3,7 @@ const { PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const { setProgress, resetProgress } = require("./progress")
 const { info, addAsset } = require("./util")
 const processAssets = require("./script")
+const { primary } = require("../util")
 
 const optimizeAssets = (compiler, compilation, instances) => (assets) => {
   // Touch assets/js/dependencies.js in case no views are importing external dependencies
@@ -19,7 +20,7 @@ const optimizeAssets = (compiler, compilation, instances) => (assets) => {
     .reduce((acc, next) => ({ count: acc.count + 1, size: acc.size + next }), { count: 0, size: 0 })
   if (PROGRESS_OPTIMIZE_ASSETS) {
     setProgress(resetProgress(assetSize.size, assetSize.count))
-    info("Optimizing assets...")
+    info(primary("Optimizing assets..."))
   }
   const result = processAssets(compiler, compilation, instances)(assets)
   return lifecycle.onOptimizeAssetsFinished(result)
