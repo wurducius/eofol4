@@ -1,4 +1,4 @@
-const { readDir, isDirectory, resolve, parse, isHtml, read, exists } = require("../util")
+const { primary, readDir, isDirectory, resolve, parse, isHtml, read, exists } = require("../util")
 const { PATH_STATIC, PATH_PAGES, PATH_TEMPLATES, PATH_SRC, PATH_EOFOL_NODE } = require("../config")
 const { resetProgress, incrementProgress, showProgress, setProgress, getProgress } = require("./progress")
 const { getFileSizes, addAsset, injectServiceWorker, info } = require("./util")
@@ -31,7 +31,7 @@ const processViews = (compiler, compilation, instances) => {
     ),
   )
 
-  info("Compiling assets...")
+  info(primary("Compiling assets..."))
 
   const {
     staticList: preprocessedStaticList,

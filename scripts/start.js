@@ -89,7 +89,7 @@ const startHotReload = () => {
     files: listOfFiles,
     directories: listOfDirectories,
     missing: listOfNotExistingItems,
-    startTime: Date.now() - 10000,
+    startTime: Date.now(),
   })
 
   wp.on("change", handleChange)
@@ -98,6 +98,6 @@ const startHotReload = () => {
   serve()
 }
 
+console.log(primary("Eofol4 start"))
 build(false)
-
 sleepInterval().then(() => startHotReload())
