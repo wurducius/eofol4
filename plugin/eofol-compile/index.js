@@ -9,6 +9,7 @@ const {
   filterChildren,
   logDefNotFound,
   logEofolTagHasNoName,
+  getAttributes,
 } = require("../../dist/runtime")
 
 // @TODO REFACTOR use runtime createWrapper together with json2html
@@ -17,14 +18,6 @@ const renderEofolWrapper = (content, attributes) => ({
   attributes,
   content: Array.isArray(content) ? content : [content],
 })
-
-const getAttributes = (attributes, id) => {
-  const filteredAttributes = { ...attributes }
-  delete filteredAttributes["name"]
-  const renderedAttributes = { ...filteredAttributes }
-  renderedAttributes["id"] = id
-  return renderedAttributes
-}
 
 const compileEofol = (node, defs, instances) => {
   const name = node.attributes?.name
@@ -39,7 +32,7 @@ const compileEofol = (node, defs, instances) => {
   }
 
   const id = generateId()
-  const attributes = getAttributes(node.attributes, id)
+  const attributes = getAttributes(node.attributes, id, name)
   const state = getInitialState(def.initialState)
   saveStatefulInstanceImpl(instances)(id, name, attributes, state)
   const children = filterChildren(node.content)

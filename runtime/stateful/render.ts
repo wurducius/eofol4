@@ -8,6 +8,7 @@ import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
 import { updateDom } from "./dom"
 import { prune } from "./prune"
 import { logDefHasNoName, logDefNotFound, logElementNotFound } from "../logger"
+import { getAttributes } from "./attributes"
 
 export const filterChildren = (
   content: Array<StaticElement | string | undefined | null | false>,
@@ -49,7 +50,7 @@ export const mount = (jsonElement: StaticElement) => {
     const def = getDef(name)
     if (def) {
       const id = generateId()
-      const attributesImpl = { ...attributes, id, name }
+      const attributesImpl = getAttributes(attributes, id, name)
       const state = getInitialState(def.initialState)
       saveStatefulInstance(id, name, attributesImpl, state)
       // @TODO TYPING jsonElement.content
