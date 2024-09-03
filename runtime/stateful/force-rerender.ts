@@ -1,10 +1,10 @@
-import { isBrowser, sleepPromise } from "../util"
+import { isBrowser } from "../util"
 import { getInstances } from "../internals"
 import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
 import { prune } from "./prune"
 import { updateDom } from "./dom"
 
-export const forceRerender = async () => {
+export const forceRerender = () => {
   if (isBrowser()) {
     const instances = getInstances()
 
@@ -20,6 +20,6 @@ export const forceRerender = async () => {
     prune()
 
     // @TODO FIXME SLEEP
-    await sleepPromise()
+    // await sleepPromise()
   }
 }

@@ -84,7 +84,6 @@ export const second = defineStateful("second", {
 })
 
 export const third = defineStateful("third", {
-  // @ts-ignore
   render: () => {
     return button(
       cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle),
@@ -92,9 +91,8 @@ export const third = defineStateful("third", {
       {},
       {
         onclick: () => {
-          forceRerender().then(() => {
-            console.log("Force rerender")
-          })
+          forceRerender()
+          console.log("Force rerender")
         },
       },
     )
