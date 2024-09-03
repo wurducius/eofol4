@@ -5,6 +5,7 @@ export * from "./types"
 
 export * from "./breakpoint"
 export * from "./core"
+export * from "./data-container"
 export * from "./defs"
 export * from "./fetch"
 export * from "./instances"
