@@ -28,8 +28,18 @@ export type Render = (props: {
   children: Children
 }) => StaticElement & { content?: Array<string | StaticElement> }
 
-export type EofolDef = { name: string; type: string; render: Render; initialState?: State; effect?: Effect }
-export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect }
+// eslint-disable-next-line no-unused-vars
+export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => boolean
+
+export type EofolDef = {
+  name: string
+  type: string
+  render: Render
+  initialState?: State
+  effect?: Effect
+  shouldUpdate?: ShouldUpdate
+}
+export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect; shouldUpdate?: ShouldUpdate }
 
 const defRegistry: Record<string, EofolDef> = {}
 
