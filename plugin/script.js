@@ -7,8 +7,8 @@ const { PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const { incrementProgress, showProgress, setProgress, getProgress } = require("./progress")
 const { isJs, parse } = require("../util")
 
-const processAssets = (compiler, compilation, instances) => (assets) =>
-  transformAssets({
+const processAssets = (compiler, compilation, instances) => async (assets) =>
+  await transformAssets({
     transformPropertyName: "minified",
     transform: (content, asset) => {
       const x = lifecycle.onOptimizeAssetStart(content)

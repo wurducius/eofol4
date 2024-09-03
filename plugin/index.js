@@ -11,7 +11,9 @@ const onInitCompilation = (compiler) => (compilation) => {
       name: pluginName,
       stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
     },
-    () => processViews(compiler, compilation, instances),
+    async () => {
+      return await processViews(compiler, compilation, instances)
+    },
   )
 }
 
