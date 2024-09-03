@@ -39,7 +39,7 @@ const compileEofol = (node, defs, instances) => {
   const id = generateId()
   const attributes = getAttributes(node.attributes, id)
   const state = getInitialState(def.initialState)
-  saveStatefulInstanceImpl(instances)(id, name, state)
+  saveStatefulInstanceImpl(instances)(id, name, attributes, state)
   const children = filterChildren(node.content)
   const rendered = renderElement(def, state, attributes, children)
 

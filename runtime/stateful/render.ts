@@ -47,7 +47,7 @@ export const mount = (jsonElement: StaticElement) => {
       const id = generateId()
       const attributesImpl = { ...attributes, id, name }
       const state = getInitialState(def.initialState)
-      saveStatefulInstance(id, name, state)
+      saveStatefulInstance(id, name, attributesImpl, state)
       // @TODO TYPING jsonElement.content
       // @ts-ignore
       const children = filterChildren(jsonElement.content)
