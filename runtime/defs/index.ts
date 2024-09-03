@@ -41,12 +41,13 @@ export type EofolDef = {
 }
 export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect; shouldUpdate?: ShouldUpdate }
 
-const defRegistry: Record<string, EofolDef> = {}
+export type DefRegistry = Record<string, EofolDef>
+
+const defRegistry: DefRegistry = {}
 
 export const getDefs = () => defRegistry
 
-// @TODO Fix passed type please, do not pass array instead use object
-export const getDefImpl = (defs: EofolDef[]) => (name: string) => defs.find((def) => def.name === name)
+export const getDefImpl = (defs: DefRegistry) => (name: string) => defs[name]
 
 export const getDef = (name: string) => getDefs()[name]
 
