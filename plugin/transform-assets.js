@@ -18,7 +18,7 @@ const transformAssets =
       logStart()
     }
 
-    Object.keys(assets)
+    const nextAssets = Object.keys(assets)
       .filter((assetName) => conditional === undefined || conditional(assets[assetName].info ?? {}, assetName))
       .map((assetName) => {
         if (logStartedAsset) {
@@ -45,6 +45,7 @@ const transformAssets =
     if (logFinished) {
       logFinished()
     }
+    return nextAssets
   }
 
 module.exports = transformAssets

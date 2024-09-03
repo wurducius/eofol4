@@ -8,7 +8,7 @@ const processStaticAssets = require("./static")
 const { processHtml } = require("./process")
 const { pushVIEW } = require("../config/internal")
 
-const processViews = (compiler, compilation, instances) => {
+const processViews = async (compiler, compilation, instances) => {
   const processStaticAssetsImpl = processStaticAssets(compilation, instances)
 
   const staticList = readDir(PATH_STATIC, { recursive: true }).filter(
@@ -42,7 +42,7 @@ const processViews = (compiler, compilation, instances) => {
   const staticFiles = processStaticAssetsImpl(PATH_STATIC, preprocessedStaticList)
   const pages = processStaticAssetsImpl(PATH_PAGES, preprocessedPageList)
 
-  const templates = Promise.all(
+  const templates = await Promise.all(
     preprocessedTemplateList.map((templateName) => {
       const parsed = parse(templateName)
       return jsonToHtml(
@@ -68,25 +68,25 @@ const processViews = (compiler, compilation, instances) => {
     const createPages = nodeScript.createPages
     const addAssetImpl = addAsset(compilation)
     if (createPages) {
-      createPagesPromise = Promise.all(createPages()).then((created) =>
-        Promise.all(
-          created.map(async (createdPage) => {
-            pushVIEW(createdPage.name, !createdPage.script)
-            const processedCreatedHtml = await processHtml(instances)(createdPage.name, createdPage.content, {})
-            const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
-            addAssetImpl(createdPage.name, processedCreatedHtml.content, { processed: true })
-            if (createdPage.script) {
-              addAssetImpl(createdPage.scriptName, processedCreatedScript, { processed: true })
-            }
-          }),
-        ),
+      const createdPagesFirstPromise = await Promise.all(createPages())
+      createPagesPromise = await Promise.all(
+        createdPagesFirstPromise.map(async (createdPage) => {
+          pushVIEW(createdPage.name, !createdPage.script)
+          const processedCreatedHtml = await processHtml(instances)(createdPage.name, createdPage.content, {})
+          const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
+          addAssetImpl(createdPage.name, processedCreatedHtml.content, { processed: true })
+          if (createdPage.script) {
+            addAssetImpl(createdPage.scriptName, processedCreatedScript, { processed: true })
+          }
+          return processedCreatedHtml
+        }),
       )
     }
 
     // @TODO move somewhere else generateAssets
     const createAssets = nodeScript.createAssets
     if (createAssets) {
-      createAssetsPromise = Promise.all(createAssets()).then((createdAssets) =>
+      createAssetsPromise = await Promise.all(createAssets()).then((createdAssets) =>
         createdAssets.map((createdAsset) => {
           addAssetImpl(createdAsset.name, createdAsset.content, {})
         }),
@@ -96,11 +96,11 @@ const processViews = (compiler, compilation, instances) => {
 
   injectServiceWorker(compilation)
 
-  return Promise.all([staticFiles, pages, templates, createPagesPromise, createAssetsPromise].filter(Boolean)).then(
-    (files) => {
-      return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
-    },
-  )
+  return await Promise.all(
+    [staticFiles, pages, templates, createPagesPromise, createAssetsPromise].filter(Boolean),
+  ).then((files) => {
+    return lifecycle.onCompileAssetsFinished({ staticList: files[0], pageList: files[1], templateList: files[2] })
+  })
 }
 
 module.exports = processViews
