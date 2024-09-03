@@ -1,7 +1,7 @@
 import { getInstances } from "../internals"
-import { State } from "../defs"
+import { Attributes, State } from "../defs"
 
-export type Instance = { id: string; name: string; state?: any }
+export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
 
 const saveInstanceImpl = (instances: Record<string, Instance>) => (id: string, nextInstance: Instance) => {
   instances[id] = nextInstance
@@ -27,14 +27,14 @@ export const getInstance = (id: string) => {
 }
 
 export const saveStatefulInstanceImpl =
-  (instances: Record<string, Instance>) => (id: string, name: string, state: State) => {
-    const instance: Instance = { id, name }
+  (instances: Record<string, Instance>) => (id: string, name: string, attributes: Attributes, state: State) => {
+    const instance: Instance = { id, name, attributes }
     if (state) {
       instance.state = state
     }
     saveInstanceImpl(instances)(id, instance)
   }
 
-export const saveStatefulInstance = (id: string, name: string, state: State) => {
-  saveStatefulInstanceImpl(getInstances())(id, name, state)
+export const saveStatefulInstance = (id: string, name: string, attributes: Attributes, state: State) => {
+  saveStatefulInstanceImpl(getInstances())(id, name, attributes, state)
 }

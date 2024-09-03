@@ -1,4 +1,5 @@
 import { EofolComponentType } from "../constants"
+import { logDefAlreadyExists } from "../logger"
 
 type Multi<T> = T | T[] | undefined
 
@@ -8,7 +9,7 @@ export type EofolNode = Multi<undefined | string>
 export type Attributes = Record<string, string>
 
 // @TODO Children typing
-export type Children = StaticElement[]
+export type Children = Array<StaticElement | string>
 
 // @TODO State typing
 export type State = Object | undefined
@@ -61,9 +62,7 @@ const getRegistryDef = (componentName: string, componentType: string, componentP
 
 const addDef = (componentName: string, componentType: string, componentProps: EofolComponentProps) => {
   if (defRegistry[componentName]) {
-    console.log(
-      `EOFOL ERROR: Cannot define component with name = ${componentName} because a component with that name is already defined.`,
-    )
+    logDefAlreadyExists(componentName)
   } else {
     const def = getRegistryDef(componentName, componentType, componentProps)
     defRegistry[componentName] = def

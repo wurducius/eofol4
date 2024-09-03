@@ -1,4 +1,5 @@
 import { StaticElement } from "../defs"
+import { logUnknownDomElement } from "../logger"
 
 const traverseDomToJson = (domElement: Node, result) => {
   if (domElement.nodeType === 3) {
@@ -19,7 +20,7 @@ const traverseDomToJson = (domElement: Node, result) => {
       }
     }
   } else {
-    console.log(`UNKNOWN DOM NODE TYPE: ${domElement.nodeType}`)
+    logUnknownDomElement(domElement.nodeType.toString())
   }
   return result
 }

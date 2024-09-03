@@ -1,3 +1,4 @@
+export * from "./attributes"
 export * from "./dom"
 export * from "./effect"
 export * from "./force-rerender"
