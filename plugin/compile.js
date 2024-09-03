@@ -7,9 +7,9 @@ const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runti
 const importDefs = (scriptPath) => {
   if (exists(scriptPath)) {
     const ViewExport = require(scriptPath)
-    return Object.keys(ViewExport).map((viewExport) => ViewExport[viewExport])
+    return Object.keys(ViewExport).reduce((acc, next) => ({ ...acc, [next]: ViewExport[next] }), {})
   } else {
-    return []
+    return {}
   }
 }
 

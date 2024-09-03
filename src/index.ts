@@ -11,6 +11,7 @@ import {
   forceRerender,
   cx,
   createEofolElement,
+  dataContainer,
 } from "../runtime"
 
 const injectBreakpoint = () => {
@@ -96,4 +97,10 @@ export const third = defineStateful("third", {
       },
     )
   },
+})
+
+export const weather = dataContainer("weather", {
+  // @ts-ignore
+  render: (props) => div(undefined, `Latitude = ${props.state?.data.latitude}°`),
+  url: "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m",
 })
