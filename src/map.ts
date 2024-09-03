@@ -1,7 +1,5 @@
-import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement } from "./util"
-import { capitalize, registerServiceworker } from "../runtime"
-import { getEnv } from "../runtime/internals"
+import { capitalize, registerServiceworker, getEnv } from "../runtime"
 
 const maplistContent = (getEnv()?.views.map(({ path }) => path) ?? [])
   .map(
@@ -10,6 +8,6 @@ const maplistContent = (getEnv()?.views.map(({ path }) => path) ?? [])
   )
   .join("")
 
-injectElement("map-list", maplistContent, Boolean(hexToCSSFilter))
+injectElement("map-list", maplistContent, true)
 
 registerServiceworker()

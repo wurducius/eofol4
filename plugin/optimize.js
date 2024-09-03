@@ -1,10 +1,17 @@
 const lifecycle = require("./lifecycle")
 const { PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const { setProgress, resetProgress } = require("./progress")
-const { info } = require("./util")
+const { info, addAsset } = require("./util")
 const processAssets = require("./script")
 
 const optimizeAssets = (compiler, compilation, instances) => (assets) => {
+  // Touch assets/js/dependencies.js in case no views are importing external dependencies
+  // @TODO Move somewhere else i guess
+  const dependenciesScriptName = "/assets/js/dependencies.js"
+  if (!compilation.assets[dependenciesScriptName]) {
+    addAsset(compilation)(dependenciesScriptName, "", { processed: true })
+  }
+
   const assetsToOptimize = Object.keys(assets).filter((asset) => asset.endsWith(".js"))
   const preprocessedAssetsToOptimize = lifecycle.onOptimizeAssetsStart(assetsToOptimize)
   const assetSize = preprocessedAssetsToOptimize

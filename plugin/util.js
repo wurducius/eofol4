@@ -1,6 +1,6 @@
 const { VERBOSE, VERBOSE_INFO, SERVICE_WORKER_PAGES_PLACEHOLDER } = require("./config")
 const { prettySize, stat, resolve, read, sep } = require("../util")
-const { VIEWS } = require("../config/internal")
+const { getVIEWS } = require("../config/internal")
 const { PATH_SERVICE_WORKER_SCRIPT } = require("../config")
 
 const log = console.log
@@ -54,6 +54,7 @@ const addAsset = (compilation) => (name, content, info) => {
 }
 
 const injectServiceWorker = (compilation) => {
+  const VIEWS = getVIEWS()
   const serviceWorkerContent = read(PATH_SERVICE_WORKER_SCRIPT)
     .toString()
     .replace(SERVICE_WORKER_PAGES_PLACEHOLDER, VIEWS.map(({ path }) => `"${path.replaceAll(sep, "/")}"`).join(", "))

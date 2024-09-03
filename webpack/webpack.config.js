@@ -1,15 +1,22 @@
 const EofolPlugin = require("../plugin")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const { resolve, parse, exists, sep } = require("../util")
-const { PATH_SRC, PATH_BUILD, MODE, ANALYZE } = require("../config")
-const { VIEWS } = require("../config/internal")
+const { DIRNAME_ASSETS, DIRNAME_JS, PATH_SRC, PATH_BUILD, MODE, ANALYZE } = require("../config")
+const { getVIEWS } = require("../config/internal")
 
 const getWebpackConfig = () => {
-  // @TODO handle also .js scripts
+  const VIEWS = getVIEWS()
   const entry = VIEWS.reduce((acc, next) => {
     const parsed = parse(next.path)
-    const viewPath = resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`)
-    if (exists(viewPath)) {
+    let viewPath = undefined
+    const viewPathTs = resolve(PATH_SRC, parsed.dir, `${parsed.name}.ts`)
+    const viewPathJs = resolve(PATH_SRC, parsed.dir, `${parsed.name}.js`)
+    if (exists(viewPathTs)) {
+      viewPath = viewPathTs
+    } else if (exists(viewPathJs)) {
+      viewPath = viewPathJs
+    }
+    if (viewPath) {
       return { ...acc, [[parsed.dir.replace(sep, "/"), parsed.name].filter(Boolean).join("/")]: viewPath }
     } else {
       return acc
@@ -20,7 +27,7 @@ const getWebpackConfig = () => {
     mode: MODE ?? "development",
     entry,
     output: {
-      filename: "assets/js/[name].js",
+      filename: `${DIRNAME_ASSETS}/${DIRNAME_JS}/[name].js`,
       path: PATH_BUILD,
     },
     module: {

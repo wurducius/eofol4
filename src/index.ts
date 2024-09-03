@@ -1,4 +1,3 @@
-import { hexToCSSFilter } from "hex-to-css-filter"
 import { injectElement, randomString } from "./util"
 import {
   getBreakpoint,
@@ -11,8 +10,8 @@ import {
   button,
   forceRerender,
   cx,
+  createEofolElement,
 } from "../runtime"
-import { createEofolElement } from "../runtime/core/eofol"
 
 const injectBreakpoint = () => {
   const breakpoint = getBreakpoint()
@@ -20,7 +19,7 @@ const injectBreakpoint = () => {
 }
 
 injectElement("script", "Script injected and working!", true)
-injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
+// injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
 injectBreakpoint()
 if (isBrowser()) {
   document.getElementById("sx")?.setAttribute("class", sx({ color: "fuchsia" }))
