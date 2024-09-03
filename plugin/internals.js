@@ -1,7 +1,8 @@
 const { BASE_URL } = require("../config")
-const { VIEWS } = require("../config/internal")
+const { getVIEWS } = require("../config/internal")
 
 const getInternals = (instances) => {
+  const VIEWS = getVIEWS()
   const env = { BASE_URL: BASE_URL, views: VIEWS }
   const instancesImpl = instances ?? {}
   const vdom = {}
