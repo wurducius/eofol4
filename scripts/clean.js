@@ -1,3 +1,3 @@
-const { clean } = require("./impl")
+const clean = require("./impl/clean")
 
 clean()

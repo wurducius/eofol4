@@ -1,10 +1,14 @@
 import { getInstances } from "../internals"
+import { State } from "../defs"
 
-type Instance = { id: string; name: string; state?: any }
+export type Instance = { id: string; name: string; state?: any }
+
+const saveInstanceImpl = (instances: Record<string, Instance>) => (id: string, nextInstance: Instance) => {
+  instances[id] = nextInstance
+}
 
 export const saveInstance = (id: string, nextInstance: Instance) => {
-  const instances = getInstances()
-  instances[id] = nextInstance
+  return saveInstanceImpl(getInstances())(id, nextInstance)
 }
 
 export const removeInstance = (id: string) => {
@@ -14,4 +18,17 @@ export const removeInstance = (id: string) => {
 
 export const getInstance = (id: string) => {
   return getInstances()[id]
+}
+
+export const saveStatefulInstanceImpl =
+  (instances: Record<string, Instance>) => (id: string, name: string, state: State) => {
+    const instance: Instance = { id, name }
+    if (state) {
+      instance.state = state
+    }
+    saveInstanceImpl(instances)(id, instance)
+  }
+
+export const saveStatefulInstance = (id: string, name: string, state: State) => {
+  saveStatefulInstanceImpl(getInstances())(id, name, state)
 }

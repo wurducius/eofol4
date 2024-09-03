@@ -21,3 +21,11 @@ export const EofolComponentType = {
   Flat: "flat",
   Virtual: "virtual",
 }
+
+const COMPILER_EOFOL_TAG_DEFAULT = "e"
+
+export const Compiler = {
+  COMPILER_EOFOL_TAG_DEFAULT,
+  COMPILER_EOFOL_TAGS: [COMPILER_EOFOL_TAG_DEFAULT, "eofol"],
+  COMPILER_STATEFUL_WRAPPER_TAG: "div",
+}
