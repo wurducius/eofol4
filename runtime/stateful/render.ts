@@ -1,9 +1,12 @@
 import { Attributes, Children, EofolDef, getDef, State, StaticElement } from "../defs"
 import { domAppendChildren, domAttributesToJson, domToJson, jsonToDom } from "../dom"
-import { generateId } from "../util"
+import { arrayCombinatorForEach, generateId } from "../util"
 import { getInitialState } from "./state"
 import { getInstance, saveStatefulInstance } from "../instances"
 import { Compiler } from "../constants"
+import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
+import { updateDom } from "./dom"
+import { prune } from "./prune"
 
 export const filterChildren = (content) => content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
 
@@ -59,4 +62,16 @@ export const mount = (jsonElement: StaticElement) => {
   } else {
     console.log("EOFOL ERROR: Custom component has no name.")
   }
+}
+
+export const updateComponents = (ids: string | string[]) => {
+  const updated: { id: string; result: any }[] = []
+  arrayCombinatorForEach((id: string) => {
+    updated.push({ id, result: onComponentUpdate(id) })
+  })(ids)
+  updateDom(updated)
+  updated.forEach((update) => {
+    onComponentUpdated(update.id)
+  })
+  prune()
 }
