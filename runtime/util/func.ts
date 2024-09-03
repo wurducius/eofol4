@@ -11,12 +11,13 @@ export const sleepHandler = (handler: Function) => {
   }, SLEEP_INTERVAL_MS)
 }
 
-export const sleepPromise = () => new Promise((r) => setTimeout(r, SLEEP_INTERVAL_MS))
-
-export const arrayCombinatorForEach = (handler) => (data) => {
-  if (Array.isArray(data)) {
-    data.forEach(handler)
-  } else {
-    handler(data)
+// eslint-disable-next-line no-unused-vars
+export function arrayCombinatorForEach<T>(handler: (t: T) => any) {
+  return function (data: T | T[]) {
+    if (Array.isArray(data)) {
+      data.forEach(handler)
+    } else {
+      handler(data)
+    }
   }
 }

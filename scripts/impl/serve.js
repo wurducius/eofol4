@@ -28,7 +28,7 @@ const serveOptions = {
 const serve = () => {
   ;(async () => {
     const LiveServer = await import("eofol-live-server").then((f) => f.default)
-    console.log(success(`Serving Eofol3 app now at ${SERVE_URL}.`))
+    console.log(success(`Serving Eofol4 app now at ${SERVE_URL}.`))
     LiveServer.start(serveOptions)
   })().catch(console.error)
 }
