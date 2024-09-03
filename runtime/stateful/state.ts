@@ -1,8 +1,6 @@
 import { State } from "../defs"
-import { getInstance, saveInstance } from "../instances"
-import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
-import { prune } from "./prune"
-import { updateDom } from "./dom"
+import { getInstance, mergeInstance } from "../instances"
+import { updateComponents } from "./render"
 
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
 
@@ -12,12 +10,6 @@ export const getState = (id: string) => {
 }
 
 export const getSetState = (id: string) => (nextState: State) => {
-  const instance = getInstance(id)
-  saveInstance(id, { ...instance, state: nextState })
-  const result = onComponentUpdate(id)
-  if (result) {
-    updateDom({ id, result })
-    onComponentUpdated(id)
-  }
-  prune()
+  mergeInstance(id, { state: nextState })
+  updateComponents(id)
 }

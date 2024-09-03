@@ -1,9 +1,14 @@
 import { Attributes, Children, EofolDef, getDef, State, StaticElement } from "../defs"
 import { domAppendChildren, domAttributesToJson, domToJson, jsonToDom } from "../dom"
-import { generateId } from "../util"
+import { arrayCombinatorForEach, generateId } from "../util"
 import { getInitialState } from "./state"
 import { getInstance, saveStatefulInstance } from "../instances"
 import { Compiler } from "../constants"
+import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
+import { updateDom } from "./dom"
+import { prune } from "./prune"
+
+export const filterChildren = (content) => content?.filter((x) => typeof x !== "string" || !(x.trim().length === 0))
 
 const createWrapper = (id: string) => {
   const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
@@ -45,7 +50,8 @@ export const mount = (jsonElement: StaticElement) => {
       saveStatefulInstance(id, name, state)
       // @TODO TYPING jsonElement.content
       // @ts-ignore
-      const rendered = renderElement(def, state, attributesImpl, jsonElement.content)
+      const children = filterChildren(jsonElement.content)
+      const rendered = renderElement(def, state, attributesImpl, children)
       const renderedDom = jsonToDom(rendered)
       const renderedResult = createWrapper(id)
       domAppendChildren(renderedDom, renderedResult)
@@ -56,4 +62,16 @@ export const mount = (jsonElement: StaticElement) => {
   } else {
     console.log("EOFOL ERROR: Custom component has no name.")
   }
+}
+
+export const updateComponents = (ids: string | string[]) => {
+  const updated: { id: string; result: any }[] = []
+  arrayCombinatorForEach((id: string) => {
+    updated.push({ id, result: onComponentUpdate(id) })
+  })(ids)
+  updateDom(updated)
+  updated.forEach((update) => {
+    onComponentUpdated(update.id)
+  })
+  prune()
 }
