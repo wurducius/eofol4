@@ -7,6 +7,7 @@ import { Compiler } from "../constants"
 import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
 import { updateDom } from "./dom"
 import { prune } from "./prune"
+import { logDefHasNoName, logDefNotFound, logElementNotFound } from "../logger"
 
 export const filterChildren = (
   content: Array<StaticElement | string | undefined | null | false>,
@@ -34,10 +35,10 @@ export const rerender = (id: string) => {
       const rendered = renderElement(def, state, attributes, children)
       return jsonToDom(rendered)
     } else {
-      console.log(`EOFOL ERROR: Definitipn with name = ${instance.name} does not exist.`)
+      logDefNotFound(instance.name)
     }
   } else {
-    console.log(`EOFOL ERROR: DOM element with id = ${instance.id} does not exist.`)
+    logElementNotFound(instance.id)
   }
 }
 
@@ -60,10 +61,10 @@ export const mount = (jsonElement: StaticElement) => {
       domAppendChildren(renderedDom, renderedResult)
       return { id, result: renderedResult }
     } else {
-      console.log(`EOFOL ERROR: Definitipn with name = ${name} does not exist.`)
+      logDefNotFound(name)
     }
   } else {
-    console.log("EOFOL ERROR: Custom component has no name.")
+    logDefHasNoName()
   }
 }
 

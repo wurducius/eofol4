@@ -1,6 +1,7 @@
 import { domAppendChildren, domClearChildren } from "../dom"
 import { arrayCombinatorForEach } from "../util"
 import { Compiler } from "../constants"
+import { logElementNotFound } from "../logger"
 
 const updateDomImpl = (update: { id: string; result: any }) => {
   if (update && update.result) {
@@ -9,8 +10,7 @@ const updateDomImpl = (update: { id: string; result: any }) => {
       domClearChildren(target)
       domAppendChildren(update.result, target)
     } else {
-      // @TODO FIXME
-      console.log(`EOFOL ERROR: DOM element with id = ${update.id} does not exist.`)
+      logElementNotFound(update.id)
     }
   }
 }

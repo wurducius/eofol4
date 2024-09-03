@@ -1,4 +1,3 @@
-const { logEofolTagHasNoName, logDefNotFound } = require("./logger")
 const {
   generateId,
   getInitialState,
@@ -8,8 +7,11 @@ const {
   getDefImpl,
   isEofolTag,
   filterChildren,
+  logDefNotFound,
+  logEofolTagHasNoName,
 } = require("../../dist/runtime")
 
+// @TODO REFACTOR use runtime createWrapper together with json2html
 const renderEofolWrapper = (content, attributes) => ({
   type: Compiler.COMPILER_STATEFUL_WRAPPER_TAG,
   attributes,
