@@ -53,12 +53,12 @@ const traverseJsonToDom = (jsonElement, result, parent, childIndex) => {
     wireProperties(jsonElement, result)
 
     if (jsonElement.content && Array.isArray(jsonElement.content) && jsonElement.content.length > 0) {
-      jsonElement.content.forEach((jsonChild, i) => {
+      for (let i = 0; i < jsonElement.content.length; i++) {
         // @TODO FIXME
         let nextResult = undefined
         nextResult = traverseJsonToDom(jsonElement.content[i], nextResult, jsonElement, i)
         appendChild(result, nextResult)
-      })
+      }
     }
     if (isMounted) {
       onComponentMounted(isMounted)
