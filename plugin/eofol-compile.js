@@ -1,4 +1,4 @@
-const { renderEofolWrapper, isEofolTag, mountImpl } = require("../../dist/runtime")
+const { renderEofolWrapper, isEofolTag, mountImpl } = require("../dist/runtime")
 
 const compileEofol = (node, defs, instances) => {
   const mounted = mountImpl(node, instances, defs)
