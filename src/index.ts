@@ -50,7 +50,6 @@ const buttonBaseStyle = sx({
 const buttonHoverStyle = sx({ backgroundColor: "purple", color: "red" }, ":hover")
 const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":active")
 const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
-
 const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle)
 
 export const first = defineStateful("first", {
