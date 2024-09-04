@@ -12,6 +12,10 @@ import {
   cx,
   createEofolElement,
   dataContainer,
+  createStore,
+  createProjection,
+  selector,
+  setStore,
 } from "../runtime"
 
 const injectBreakpoint = () => {
@@ -111,4 +115,41 @@ export const weather = dataContainer("weather", {
   // @ts-ignore
   render: (props) => div(undefined, `Latitude = ${props.state?.data.latitude}°`),
   url: "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m",
+})
+
+const STORE1 = "store1"
+const STORE2 = "store2"
+createStore(STORE1, { data: 1 })
+createProjection(STORE2, STORE1, (state) => ({ data: state.data }))
+
+export const subscribed = defineStateful("subscribed", {
+  render: () => {
+    const stored = selector(STORE1)
+    return div(undefined, `Subscribed${stored.data ? ` -> ${stored.data}` : ""}`)
+  },
+})
+
+export const projection = defineStateful("projection", {
+  render: () => {
+    const stored = selector(STORE2)
+    return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
+  },
+})
+
+export const storeSetter = defineStateful("storeSetter", {
+  render: () =>
+    button(
+      cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle),
+      "Set store",
+      {},
+      // @TODO bind onclick handler at compile time OR rehydrate
+      {
+        onclick:
+          isBrowser() &&
+          (() => {
+            console.log("Set store!")
+            setStore(STORE1, { data: 2 })
+          }),
+      },
+    ),
 })
