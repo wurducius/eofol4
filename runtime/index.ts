@@ -18,6 +18,7 @@ export * from "./search-params"
 export * from "./service-worker"
 export * from "./stateful"
 export * from "./storage"
+export * from "./store"
 export * from "./styles"
 export * from "./util"
 
