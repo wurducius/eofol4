@@ -1,21 +1,21 @@
 import { injectElement, randomString } from "./util"
 import {
+  button,
+  createEofolElement,
+  createProjection,
+  createStore,
+  cx,
+  dataContainer,
+  defineStateful,
+  div,
+  forceRerender,
   getBreakpoint,
   isBrowser,
   registerServiceworker,
-  sx,
-  sy,
-  div,
-  defineStateful,
-  button,
-  forceRerender,
-  cx,
-  createEofolElement,
-  dataContainer,
-  createStore,
-  createProjection,
   selector,
   setStore,
+  sx,
+  sy,
 } from "../runtime"
 
 const injectBreakpoint = () => {
@@ -51,16 +51,16 @@ const buttonHoverStyle = sx({ backgroundColor: "purple", color: "red" }, ":hover
 const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":active")
 const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
 
+const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle)
+
 export const first = defineStateful("first", {
   // @ts-ignore
-  render: (props) => {
-    return [
-      div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
-      "Output array !!!",
-      randomString(),
-      // ...props.children,
-    ]
-  },
+  render: (props) => [
+    div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
+    "Output array !!!",
+    randomString(),
+    // ...props.children,
+  ],
 })
 
 export const firstx = defineStateful("firstx", {
@@ -69,9 +69,7 @@ export const firstx = defineStateful("firstx", {
 
 export const firstxx = defineStateful("firstxx", {
   // @ts-ignore
-  render: (props) => {
-    return ["Firstxx", ...props.children]
-  },
+  render: (props) => ["Firstxx", ...props.children],
 })
 
 export const second = defineStateful("second", {
@@ -95,20 +93,21 @@ export const second = defineStateful("second", {
   },
 })
 
+const onForceRerender = () => {
+  forceRerender()
+  console.log("Force rerender")
+}
+
 export const third = defineStateful("third", {
-  render: () => {
-    return button(
-      cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle),
+  render: () =>
+    button(
+      buttonStyle,
       "Force rerender",
       {},
       {
-        onclick: () => {
-          forceRerender()
-          console.log("Force rerender")
-        },
+        onclick: onForceRerender,
       },
-    )
-  },
+    ),
 })
 
 export const weather = dataContainer("weather", {
@@ -136,20 +135,12 @@ export const projection = defineStateful("projection", {
   },
 })
 
+const onSetStore = () => {
+  console.log("Set store!")
+  setStore(STORE1, { data: 2 })
+}
+
+// @TODO bind onclick handler at compile time OR rehydrate
 export const storeSetter = defineStateful("storeSetter", {
-  render: () =>
-    button(
-      cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle),
-      "Set store",
-      {},
-      // @TODO bind onclick handler at compile time OR rehydrate
-      {
-        onclick:
-          isBrowser() &&
-          (() => {
-            console.log("Set store!")
-            setStore(STORE1, { data: 2 })
-          }),
-      },
-    ),
+  render: () => button(buttonStyle, "Set store", {}, { onclick: isBrowser() && onSetStore }),
 })
