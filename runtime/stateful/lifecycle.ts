@@ -10,12 +10,13 @@ import { shouldUpdate } from "./should-update"
 //             A3 - Render
 //             A4 - Mounted
 
-export const onConstruct = () => {
+// eslint-disable-next-line no-unused-vars
+export const onConstruct = (props) => {
   return {}
 }
 
-export const getDerivedStateFromProps = () => {
-  return {}
+export const getDerivedStateFromProps = (props) => {
+  return props.state
 }
 
 export const onComponentMount = (jsonElement: StaticElement) => {

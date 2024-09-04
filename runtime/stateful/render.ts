@@ -1,15 +1,30 @@
 import { Attributes, Children, DefRegistry, EofolDef, getDef, getDefImpl, getDefs, State, StaticElement } from "../defs"
-import { domAppendChildren, domAttributesToJson, domToJson, jsonToDom } from "../dom"
+import { domAttributesToJson, domToJson, jsonToDom, domAppendChildren } from "../dom"
 import { arrayCombinatorForEach, generateId } from "../util"
 import { getInitialState } from "./state"
 import { getInstance, Instance, saveStatefulInstanceImpl } from "../instances"
 import { Compiler } from "../constants"
-import { onComponentUpdate, onComponentUpdated } from "./lifecycle"
+import { getDerivedStateFromProps, onComponentUpdate, onComponentUpdated, onConstruct } from "./lifecycle"
 import { updateDom } from "./dom"
 import { prune } from "./prune"
 import { logDefNotFound, logElementNotFound, logDefHasNoName } from "../logger"
 import { getAttributes } from "./attributes"
 import { getInstances } from "../internals"
+
+export const renderEofolWrapper = (
+  content: StaticElement | string | Array<StaticElement | string>,
+  attributes: Attributes,
+) => ({
+  type: Compiler.COMPILER_STATEFUL_WRAPPER_TAG,
+  attributes,
+  content: Array.isArray(content) ? content : [content],
+})
+
+const createWrapper = (id: string) => {
+  const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
+  renderedResult.setAttribute("id", id)
+  return renderedResult
+}
 
 export const filterChildren = (
   content: undefined | Array<StaticElement | string | undefined | null | false>,
@@ -21,12 +36,6 @@ export const filterChildren = (
       ? (content.filter((x) => typeof x !== "string" || !(x.trim().length === 0)) as Array<StaticElement | string>)
       : []
   }
-}
-
-const createWrapper = (id: string) => {
-  const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
-  renderedResult.setAttribute("id", id)
-  return renderedResult
 }
 
 export const renderElement = (def: EofolDef, state: State, attributes: Attributes, children: Children) =>
@@ -50,9 +59,12 @@ export const mountImpl = (
   const id = generateId()
   const attributes = getAttributes(node.attributes, id, name)
   const state = getInitialState(def.initialState)
-  saveStatefulInstanceImpl(instances)(id, name, attributes, state)
   const children = filterChildren(node.content)
-  return { result: renderElement(def, state, attributes, children), attributes }
+  // @TODO handle constructor
+  const constructed = onConstruct({ attributes, def })
+  const derivedState = getDerivedStateFromProps({ attributes, def, state, ...constructed })
+  saveStatefulInstanceImpl(instances)(id, name, attributes, derivedState)
+  return { result: renderElement(def, derivedState, attributes, children), attributes }
 }
 
 export const rerender = (id: string) => {
@@ -64,7 +76,8 @@ export const rerender = (id: string) => {
       const state = instance.state
       const attributes = domAttributesToJson(target.attributes)
       const children: Children = domToJson(target.childNodes)
-      const rendered = renderElement(def, state, attributes, children)
+      const derivedState = getDerivedStateFromProps({ attributes, def, state })
+      const rendered = renderElement(def, derivedState, attributes, children)
       return jsonToDom(rendered)
     } else {
       logDefNotFound(instance.name)
