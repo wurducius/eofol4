@@ -24,6 +24,8 @@ import {
   sx,
   sy,
   getTheme,
+  createSlice,
+  dispatch,
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
@@ -215,3 +217,17 @@ export const links = defineStateful("links", {
       link({ href: "./generated.html", content: "Generated page" }),
     ]),
 })
+
+createSlice("store3", {
+  state: { data: 0 },
+  actions: { increment: (state) => ({ data: state.data + 1 }) },
+  middleware: {
+    logger: (state) => {
+      console.log(`Slice API -> State: ${JSON.stringify(state)}`)
+    },
+  },
+})
+
+dispatch("store3")({ type: "increment" })
+dispatch("store3")({ type: "increment" })
+dispatch("store3")({ type: "increment" })
