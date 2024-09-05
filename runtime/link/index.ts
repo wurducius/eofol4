@@ -1,6 +1,6 @@
 import { a } from "../core"
 import { Classname, StaticElement } from "../types"
-import { cx, isBrowser } from "../util"
+import { isBrowser } from "../util"
 import { pushAsset } from "../internals"
 
 export const link = ({
@@ -26,5 +26,5 @@ export const link = ({
   if (download) {
     attributes.download = download
   }
-  return a(cx(classname), content, attributes)
+  return a(classname, content, attributes)
 }

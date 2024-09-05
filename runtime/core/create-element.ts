@@ -1,15 +1,16 @@
 import { Classname, EofolNode } from "../types"
+import { cx } from "../util"
 
 export const createElement = (
   tag: string,
-  style?: Classname | Classname[],
+  style?: Classname,
   content?: EofolNode,
   attributes?: any,
   properties?: any,
 ) => {
   const attributesImpl = { ...properties, ...attributes }
   if (style) {
-    attributesImpl.class = style
+    attributesImpl.class = cx(style)
   }
   return {
     type: tag,
@@ -19,5 +20,5 @@ export const createElement = (
   }
 }
 
-export const f = (tag: string) => (style?: string | undefined, content?: any, attributes?: any, properties?: any) =>
+export const f = (tag: string) => (style?: Classname, content?: any, attributes?: any, properties?: any) =>
   createElement(tag, style, content, attributes, properties)
