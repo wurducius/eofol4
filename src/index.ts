@@ -26,6 +26,8 @@ import {
   getTheme,
   createSlice,
   dispatch,
+  h3,
+  h4,
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
@@ -218,16 +220,53 @@ export const links = defineStateful("links", {
     ]),
 })
 
-createSlice("store3", {
+const Counter = "store3"
+const CounterAction = {
+  increment: "increment",
+  reset: "reset",
+}
+
+createSlice(Counter, {
   state: { data: 0 },
-  actions: { increment: (state) => ({ data: state.data + 1 }) },
+  actions: {
+    [CounterAction.increment]: (state) => ({ data: state.data + 1 }),
+    [CounterAction.reset]: () => ({ data: 0 }),
+  },
   middleware: {
-    logger: (state) => {
-      console.log(`Slice API -> State: ${JSON.stringify(state)}`)
+    logger: {
+      before: (props) => {
+        console.log(`Slice API -> Counter before action: ${props.state.data}`)
+        return props
+      },
+      after: (props) => {
+        console.log(`Slice API -> Counter after action: ${props.state.data}`)
+        return props
+      },
     },
   },
 })
 
-dispatch("store3")({ type: "increment" })
-dispatch("store3")({ type: "increment" })
-dispatch("store3")({ type: "increment" })
+const handleIncrement = () => {
+  dispatch(Counter)(CounterAction.increment)
+}
+
+const handleReset = () => {
+  dispatch(Counter)(CounterAction.reset)
+}
+
+export const counter = defineStateful("counter", {
+  render: () =>
+    div("col", [
+      h3(undefined, "Slice API"),
+      h4(undefined, `Count = ${selector(Counter).data}`),
+      div("row", [
+        button(undefined, "+", undefined, {
+          onclick: isBrowser() && handleIncrement,
+        }),
+        button(undefined, "Reset", undefined, {
+          onclick: isBrowser() && handleReset,
+        }),
+      ]),
+    ]),
+  subscribe: Counter,
+})

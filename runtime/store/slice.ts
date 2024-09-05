@@ -8,7 +8,9 @@ export type Payload = any
 export type Action = (state: State, payload: Payload) => State
 
 // eslint-disable-next-line no-unused-vars
-export type Middleware = (payload: Payload) => State
+export type MiddlewareAction = (state: State, payload: Payload) => { state: State; payload: Payload }
+
+export type Middleware = { before?: MiddlewareAction; after?: MiddlewareAction }
 
 export type Slice = {
   state: State
@@ -23,15 +25,52 @@ export const createSlice = (name: string, sliceData: Slice) => {
   slices[name] = sliceData
 }
 
-export const dispatch = (name: string) => (props: { type: string; payload?: Payload }) => {
+export const dispatch = (name: string) => (type: string, payload?: Payload) => {
   const storeState = selector(name)
   const slice = slices[name]
-  const action = slice.actions[props.type]
-  const resultState = action(storeState, props.payload)
-  const mergedState = mergeDeep(storeState, resultState)
+
+  let beforeProps = { state: storeState, payload, type }
   if (slice.middleware) {
     // @ts-ignore
-    Object.keys(slice.middleware).reduce((acc, next) => slice.middleware[next](acc), mergedState)
+    beforeProps = Object.keys(slice.middleware).reduce(
+      // @ts-ignore
+      (acc, next) => {
+        // @ts-ignore
+        const thisMiddleware = slice.middleware[next]
+        if (thisMiddleware.before) {
+          // @ts-ignore
+          return thisMiddleware.before(acc)
+        }
+        return acc
+      },
+      { state: storeState, payload, type },
+    )
   }
-  setStore(name, mergedState)
+
+  let mergedState = beforeProps.state
+  if (beforeProps.type) {
+    const action = slice.actions[beforeProps.type]
+    const resultState = action(beforeProps.state, beforeProps.payload)
+    mergedState = mergeDeep(beforeProps.state, resultState)
+  }
+
+  let afterProps = { state: mergedState, payload: beforeProps.payload, type: beforeProps.type }
+  if (slice.middleware) {
+    // @ts-ignore
+    afterProps = Object.keys(slice.middleware).reduce(
+      // @ts-ignore
+      (acc, next) => {
+        // @ts-ignore
+        const thisMiddleware = slice.middleware[next]
+        if (thisMiddleware.after) {
+          // @ts-ignore
+          return thisMiddleware.after(acc)
+        }
+        return acc
+      },
+      afterProps,
+    )
+  }
+
+  setStore(name, afterProps.state)
 }
