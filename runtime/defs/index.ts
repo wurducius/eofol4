@@ -18,6 +18,7 @@ const getRegistryDef = (componentName: string, componentType: string, componentP
   initialState: componentProps.initialState,
   effect: componentProps.effect,
   classname: cx(componentProps.classname),
+  subscribe: componentProps.subscribe,
 })
 
 const addDef = (componentName: string, componentType: string, componentProps: EofolComponentProps) => {

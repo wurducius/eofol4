@@ -1,6 +1,8 @@
-import { generateId } from "../util"
-import { forceRerender } from "../stateful"
+import { arrayCombinatorForEach, generateId } from "../util"
+import { forceRerender, updateComponents } from "../stateful"
 import { Store, StoreState } from "../types"
+import { getDefs } from "../defs"
+import { getInstances } from "../internals"
 
 const globalStore: Record<string, Store> = {}
 
@@ -27,6 +29,26 @@ const getStore = (id: string) => {
 
 export const selector = getStore
 
+const updateSubscribed = (id: string) => {
+  const namesUpdated: string[] = []
+  const defs = getDefs()
+  Object.keys(defs).forEach((defName) => {
+    arrayCombinatorForEach((subscribe) => {
+      if (subscribe === id) {
+        namesUpdated.push(defName)
+      }
+    })(defs[defName].subscribe)
+  }, [])
+  const updated: string[] = []
+  const instances = getInstances()
+  Object.keys(instances).forEach((instanceName) => {
+    if (namesUpdated.includes(instances[instanceName].name)) {
+      updated.push(instanceName)
+    }
+  })
+  updateComponents(updated)
+}
+
 const setStoreImpl = (stored: Store, id: string, nextState: StoreState) => {
   if (!stored) {
     console.log(`Eofol error: Store with id = "${id}" does not exist.`)
@@ -36,22 +58,21 @@ const setStoreImpl = (stored: Store, id: string, nextState: StoreState) => {
 
   stored.projections?.forEach(({ id: projectionName, projection }) => {
     setStoreImpl(globalStore[projectionName], projectionName, projection(stored.state))
+    updateSubscribed(projectionName)
   })
 }
 
 export const setStore = (id: string, nextState: StoreState) => {
   const stored = globalStore[id]
   setStoreImpl(stored, id, nextState)
-  // @TODO update subscribed components
-  forceRerender()
+  updateSubscribed(id)
 }
 
 export const mergeStore = (id: string, nextState: StoreState) => {
   const stored = globalStore[id]
   // @TODO merge deep
   setStoreImpl(stored, id, { ...stored.state, ...nextState })
-  // @TODO update subscribed components
-  forceRerender()
+  updateSubscribed(id)
 }
 
 export const createProjection = (

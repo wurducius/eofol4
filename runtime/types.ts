@@ -48,6 +48,7 @@ export type EofolDef = {
   initialState?: State
   effect?: Effect
   shouldUpdate?: ShouldUpdate
+  subscribe?: string | string[]
 }
 
 export type EofolComponentProps = {
@@ -56,6 +57,7 @@ export type EofolComponentProps = {
   effect?: Effect
   shouldUpdate?: ShouldUpdate
   classname?: string
+  subscribe?: string | string[]
 }
 
 export type DefRegistry = Record<string, EofolDef>
