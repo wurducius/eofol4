@@ -116,7 +116,7 @@ const onForceRerender = () => {
 }
 
 export const third = defineStateful("third", {
-  render: () =>
+  render: () => [
     button(
       buttonStyle,
       "Force rerender",
@@ -125,6 +125,7 @@ export const third = defineStateful("third", {
         onclick: onForceRerender,
       },
     ),
+  ],
 })
 
 export const weather = dataContainer("weather", {

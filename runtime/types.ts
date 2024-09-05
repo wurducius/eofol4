@@ -29,9 +29,17 @@ export type Effect = undefined | EffectSingle | EffectSingle[]
 export type StaticElement = { type: string; attributes?: Record<string, string> }
 // @TODO typing finish, solve recursion
 // eslint-disable-next-line no-unused-vars
-export type Render = (props: Props) => StaticElement & {
-  content?: Array<string | StaticElement | undefined | null | false> | string | StaticElement | undefined | null | false
-}
+export type Render = (props: Props) =>
+  | StaticElement[]
+  | (StaticElement & {
+      content?:
+        | Array<string | StaticElement | undefined | null | false>
+        | string
+        | StaticElement
+        | undefined
+        | null
+        | false
+    })
 
 export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
 
