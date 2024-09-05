@@ -1,7 +1,9 @@
+import { Classname, EofolNode } from "../types"
+
 export const createElement = (
   tag: string,
-  style?: string | undefined,
-  content?: any,
+  style?: Classname | Classname[],
+  content?: EofolNode,
   attributes?: any,
   properties?: any,
 ) => {
@@ -12,7 +14,7 @@ export const createElement = (
   return {
     type: tag,
     attributes: attributesImpl,
-    content: Array.isArray(content) ? content : [content],
+    content: (Array.isArray(content) ? content : [content]).filter(Boolean),
     properties,
   }
 }

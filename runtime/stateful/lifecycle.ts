@@ -1,8 +1,8 @@
 import { playEffect } from "./effect"
 import { mount, rerender } from "./render"
-import { StaticElement } from "../defs"
 import { removeInstance } from "../instances"
 import { shouldUpdate } from "./should-update"
+import { StaticElement } from "../types"
 
 // =========  (A) MOUNT    =========
 //             A1 - Constructor
@@ -42,7 +42,8 @@ export const onComponentUpdate = (id: string) => {
   return rerender(id)
 }
 
-export const onBeforeUpdate = () => {}
+// eslint-disable-next-line no-unused-vars
+export const onBeforeUpdate = (id: string) => {}
 
 export const onComponentUpdated = (id: string) => {
   playEffect(id)

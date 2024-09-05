@@ -1,4 +1,4 @@
-type SearchParams = Record<string, string>
+import { SearchParams } from "../types"
 
 export const paramsToObject = (entries: any) => {
   const result = {}

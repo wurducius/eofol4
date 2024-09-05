@@ -1,5 +1,5 @@
-import { StaticElement } from "../defs"
 import { logUnknownDomElement } from "../logger"
+import { StaticElement } from "../types"
 
 const traverseDomToJson = (domElement: Node, result) => {
   if (domElement.nodeType === 3) {

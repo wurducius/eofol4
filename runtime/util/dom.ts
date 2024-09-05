@@ -1,5 +1,4 @@
-import { Attributes } from "../defs"
-import { Classname } from "../types"
+import { Attributes, Classname } from "../types"
 
 export const ax = (base: Attributes, conditional: Record<string, any>) =>
   Object.keys(conditional).reduce(

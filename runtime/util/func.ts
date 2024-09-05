@@ -3,14 +3,6 @@ export const pipe = (...fns: Function[]) => fns.reduce(_pipe)
 
 export const id = (x: any) => x
 
-const SLEEP_INTERVAL_MS = 100
-
-export const sleepHandler = (handler: Function) => {
-  setTimeout(() => {
-    handler()
-  }, SLEEP_INTERVAL_MS)
-}
-
 // eslint-disable-next-line no-unused-vars
 export function arrayCombinatorForEach<T>(handler: (t: T) => any) {
   return function (data: T | T[]) {

@@ -1,6 +1,7 @@
-import { defineStateful, Render } from "../defs"
+import { defineStateful } from "../defs"
 import { div } from "../core"
 import { fetchGeneral } from "../fetch"
+import { Render } from "../types"
 
 export const dataContainer = (name: string, def: { render: Render; url: string }) => {
   return defineStateful(name, {

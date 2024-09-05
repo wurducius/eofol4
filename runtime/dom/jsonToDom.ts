@@ -1,5 +1,12 @@
 import { appendChild } from "./children"
-import { isEofolTag, onComponentMount, onComponentMounted, onComponentUpdate, onComponentUpdated } from "../stateful"
+import {
+  isEofolTag,
+  onBeforeUpdate,
+  onComponentMount,
+  onComponentMounted,
+  onComponentUpdate,
+  onComponentUpdated,
+} from "../stateful"
 import { getInstance } from "../instances"
 
 const wireAttributes = (jsonElement, result) => {
@@ -32,6 +39,7 @@ const traverseJsonToDom = (jsonElement, result, parent, childIndex) => {
     if (isEofolTag(jsonElement.type)) {
       if (isAlreadyMounted(parent, childIndex)) {
         const id = parent.content[childIndex].attributes.id
+        onBeforeUpdate(id)
         const updated = onComponentUpdate(id)
         if (updated) {
           isUpdated = id

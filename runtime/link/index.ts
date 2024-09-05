@@ -1,6 +1,5 @@
 import { a } from "../core"
-import { StaticElement } from "../defs"
-import { Classname } from "../types"
+import { Classname, StaticElement } from "../types"
 import { cx } from "../util"
 
 // @TODO register prefetch asset

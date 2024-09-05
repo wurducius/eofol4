@@ -32,5 +32,5 @@ export const image = ({
     width: getDimension(width),
     onerror: `this.onerror = null; this.src = '${fallback ?? defaultFallback}';`,
   }
-  return img(cx(classname), "", attributes)
+  return img(cx(classname), undefined, attributes)
 }
