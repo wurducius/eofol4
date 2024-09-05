@@ -84,7 +84,12 @@ export const first = defineStateful("first", {
 })
 
 export const firstx = defineStateful("firstx", {
-  render: () => div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
+  // @ts-ignore
+  render: (props) =>
+    div(sx({ color: "red" }), [
+      "Dynamically rendered and mounted stateful component working!",
+      `Dynamic attribute = ${props.attributes.dynamicAttribute}`,
+    ]),
 })
 
 export const firstxx = defineStateful("firstxx", {
@@ -98,7 +103,7 @@ export const second = defineStateful("second", {
     props.state?.onStateChange
       ? div(sx({ color: "green" }), [
           "Stateful component state and effect working!",
-          createEofolElement("firstx"),
+          createEofolElement("firstx", undefined, undefined, { dynamicAttribute: "Working!" }),
           createEofolElement("firstxx", undefined, ["Nested child"]),
           createEofolElement("third"),
         ])
