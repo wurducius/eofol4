@@ -76,3 +76,26 @@ export type SxStyleObject = CSSObject
 export type HttpMethod = "GET" | "POST" | "PUT" | "HEAD" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH"
 
 export type SearchParams = Record<string, string>
+
+export const Breakpoints = {
+  xs: "xs",
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+  xl: "xl",
+  xxl: "xxl",
+}
+
+export type Breakpoint =
+  | typeof Breakpoints.xs
+  | typeof Breakpoints.sm
+  | typeof Breakpoints.md
+  | typeof Breakpoints.lg
+  | typeof Breakpoints.xl
+  | typeof Breakpoints.xxl
+
+export type StoreState = any
+
+export type StoreProjection = { id: string; projection: Function }
+
+export type Store = { id: string; state: StoreState; projections?: StoreProjection[] }
