@@ -1,7 +1,7 @@
 import { EofolComponentType } from "./constants"
 import type * as CSSType from "csstype"
 
-export type EofolElement = StaticElement | string | undefined | false | null
+export type EofolElement = string | StaticElement | undefined | false | null
 export type EofolNode = EofolElement | EofolElement[]
 
 type ClassnameSingle = string | boolean | undefined | null
@@ -23,24 +23,18 @@ export type Props = { state: State; setState: SetState; attributes: Attributes; 
 // eslint-disable-next-line no-unused-vars
 export type EffectSingle = ((props: Props) => (props: Props) => void) | ((props: Props) => void)
 
-// @TODO Effect typing
-// export type Effect = Multi<Function>
 export type Effect = undefined | EffectSingle | EffectSingle[]
 
-export type StaticElement = { type: string; attributes?: Record<string, string> }
-// @TODO typing finish, solve recursion
+export type StaticElementContent = string | StaticElement | Array<string | StaticElement>
+
+export type StaticElement = {
+  type: string
+  attributes?: Record<string, string>
+  content: StaticElementContent
+}
+
 // eslint-disable-next-line no-unused-vars
-export type Render = (props: Props) =>
-  | StaticElement[]
-  | (StaticElement & {
-      content?:
-        | Array<string | StaticElement | undefined | null | false>
-        | string
-        | StaticElement
-        | undefined
-        | null
-        | false
-    })
+export type Render = (props: Props) => StaticElementContent
 
 export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
 

@@ -2,7 +2,7 @@ import { playEffect } from "./effect"
 import { mount, rerender } from "./render"
 import { removeInstance } from "../instances"
 import { shouldUpdate } from "./should-update"
-import { StaticElement } from "../types"
+import { DefGeneral, Props, StaticElement } from "../types"
 
 // =========  (A) MOUNT    =========
 //             A1 - Constructor
@@ -11,11 +11,9 @@ import { StaticElement } from "../types"
 //             A4 - Mounted
 
 // eslint-disable-next-line no-unused-vars
-export const onConstruct = (props) => {
-  return {}
-}
+export const onConstruct = (def: DefGeneral, props: Props) => {}
 
-export const getDerivedStateFromProps = (props) => {
+export const getDerivedStateFromProps = (def: DefGeneral, props: Props) => {
   return props.state
 }
 

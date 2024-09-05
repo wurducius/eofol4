@@ -1,10 +1,10 @@
-import { Classname, EofolNode } from "../types"
+import { Classname, StaticElementContent } from "../types"
 import { cx } from "../util"
 
 export const createElement = (
   tag: string,
   style?: Classname,
-  content?: EofolNode,
+  content?: StaticElementContent,
   attributes?: any,
   properties?: any,
 ) => {
@@ -16,7 +16,7 @@ export const createElement = (
     type: tag,
     attributes: attributesImpl,
     content: (Array.isArray(content) ? content : [content]).filter(Boolean),
-    properties,
+    // properties,
   }
 }
 
