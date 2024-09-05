@@ -15,7 +15,7 @@ const {
 const { cancelPromise, setPromise } = require("../webpack/singleton")
 const precompile = require("./impl/precompile")
 
-const COMPILER_SLEEP_INTERVAL_MS = 750
+const COMPILER_SLEEP_INTERVAL_MS = 1000
 
 const sleepInterval = () => sleep(COMPILER_SLEEP_INTERVAL_MS)
 

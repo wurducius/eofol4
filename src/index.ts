@@ -10,7 +10,9 @@ import {
   div,
   forceRerender,
   getBreakpoint,
+  image,
   isBrowser,
+  link,
   registerServiceworker,
   selector,
   setStore,
@@ -58,8 +60,6 @@ export const first = defineStateful("first", {
     div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
     "Output array !!!",
     randomString(),
-    //  image({ src: "./assets/media/icons/phi.svgx", alt: "Test Image API", height: 100, width: 100 }),
-    //  link({ href: "https://eofol.com/eofol4/sldfjdripf", content: "Test Link API" }),
     // ...props.children,
   ],
 })
@@ -144,4 +144,22 @@ const onSetStore = () => {
 // @TODO bind onclick handler at compile time OR rehydrate
 export const storeSetter = defineStateful("storeSetter", {
   render: () => button(buttonStyle, "Set store", {}, { onclick: isBrowser() && onSetStore }),
+})
+
+export const example = defineStateful("example", {
+  render: () =>
+    div(sx({ display: "flex", flexDirection: "column", alignItems: "center" }), [
+      image({
+        src: "./assets/media/icons/phi.svg",
+        alt: "Test Image API",
+        height: 100,
+        width: 100,
+        classname: sx({ backgroundColor: "green" }),
+      }),
+      link({
+        href: "https://eofol.com/eofol4/sldfjdripf",
+        content: "Test Link API",
+        classname: sx({ color: "pink !important;" }),
+      }),
+    ]),
 })

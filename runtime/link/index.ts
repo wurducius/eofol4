@@ -1,14 +1,7 @@
 import { a } from "../core"
 import { StaticElement } from "../defs"
-
-/*
-const linkBaseStyle = sx({})
-const linkHoverStyle = sx({}, ":hover")
-const linkActiveStyle = sx({}, ":active")
-const linkFocusStyle = sx({}, ":focus")
-const linkVisitedStyle = sx({}, ":visited")
-const linkStyle = cx(linkBaseStyle, linkHoverStyle, linkActiveStyle, linkFocusStyle, linkVisitedStyle)
-*/
+import { Classname } from "../types"
+import { cx } from "../util"
 
 // @TODO register prefetch asset
 export const link = ({
@@ -16,11 +9,13 @@ export const link = ({
   content,
   isExternal,
   download,
+  classname,
 }: {
   href: string
   content: string | StaticElement
   isExternal?: boolean
   download?: string
+  classname?: Classname
 }) => {
   const attributes: Record<string, string> = { href }
   if (isExternal) {
@@ -29,5 +24,5 @@ export const link = ({
   if (download) {
     attributes.download = download
   }
-  return a(undefined, content, attributes)
+  return a(cx(classname), content, attributes)
 }

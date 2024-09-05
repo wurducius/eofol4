@@ -1,5 +1,7 @@
 import { img } from "../core"
 import { defaultFallback } from "./default-fallback"
+import { cx } from "../util"
+import { Classname } from "../types"
 
 type Dimension = string | number | undefined
 
@@ -14,12 +16,14 @@ export const image = ({
   height,
   width,
   fallback,
+  classname,
 }: {
   src: string
   alt: string
   height: Dimension
   width: Dimension
   fallback?: string
+  classname?: Classname
 }) => {
   const attributes = {
     src,
@@ -28,5 +32,5 @@ export const image = ({
     width: getDimension(width),
     onerror: `this.onerror = null; this.src = '${fallback ?? defaultFallback}';`,
   }
-  return img(undefined, "", attributes)
+  return img(cx(classname), "", attributes)
 }
