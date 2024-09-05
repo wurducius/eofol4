@@ -54,6 +54,7 @@ export type DefRegistry = Record<string, EofolDef>
 
 type CSSObject = CSSType.Properties
 
+export type VIEWType = { path: string; isStatic?: boolean }
 // ==================     FUNC     ==================
 
 // eslint-disable-next-line no-unused-vars

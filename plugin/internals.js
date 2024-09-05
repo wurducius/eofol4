@@ -7,15 +7,7 @@ const getInternals = (instances) => {
   const env = { BASE_URL: BASE_URL, views: VIEWS }
   const instancesImpl = instances ?? {}
   const vdom = {}
-  const storedAssets = getAssets()
-  console.log(typeof storedAssets, storedAssets)
-  const assets = {
-    pages: storedAssets.pages.map(({ path }) => path),
-    scripts: [],
-    // scripts: VIEWS.filter(({ isStatic }) => !isStatic).map(({ path }) => path),
-    images: [],
-    other: [],
-  }
+  const assets = getAssets()
   const internals = { instances: instancesImpl, vdom, env, assets }
   return `var internals = ${JSON.stringify(internals)};\n`
 }
