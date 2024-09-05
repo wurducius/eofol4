@@ -1,3 +1,4 @@
+import { EofolComponentType } from "./constants"
 import type * as CSSType from "csstype"
 
 export type EofolElement = StaticElement | string | undefined | false | null
@@ -48,7 +49,7 @@ export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => 
 
 export type DefStateful = {
   name: string
-  type: string
+  type: StatefulType
   render: Render
   classname?: Classname
   initialState?: State
@@ -59,19 +60,19 @@ export type DefStateful = {
 
 export type DefFlat = {
   name: string
-  type: string
+  type: FlatType
   render: Render
   classname?: Classname
 }
 
 export type DefVirtual = {
   name: string
-  type: string
+  type: VirtualType
   render?: Render
 }
 
 export type EofolComponentProps = {
-  render: Render
+  render?: Render
   initialState?: State
   effect?: Effect
   shouldUpdate?: ShouldUpdate
@@ -86,6 +87,12 @@ export type DefRegistry = Record<string, DefGeneral>
 type CSSObject = CSSType.Properties
 
 export type VIEWType = { path: string; isStatic?: boolean }
+
+export type StatefulType = typeof EofolComponentType.Stateful
+export type FlatType = typeof EofolComponentType.Flat
+export type VirtualType = typeof EofolComponentType.Virtual
+
+export type ComponentType = StatefulType | FlatType | VirtualType
 
 // ==================           ==================
 

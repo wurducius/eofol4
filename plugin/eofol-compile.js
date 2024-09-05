@@ -1,10 +1,10 @@
-const { renderEofolWrapper, isEofolTag, mountImpl } = require("../dist/runtime")
+const { renderWrapperStatic, isEofolTag, mountImpl } = require("../dist/runtime")
 
 const compileEofol = (node, defs, instances) => {
   const mounted = mountImpl(node, instances, defs)
   if (mounted) {
-    const { result, attributes } = mounted
-    return renderEofolWrapper(result, attributes)
+    const { result, attributes, wrap } = mounted
+    return wrap ? renderWrapperStatic(result, attributes) : result
   }
 }
 

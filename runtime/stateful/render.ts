@@ -19,7 +19,7 @@ import { getInstances } from "../internals"
 import { Attributes, Children, DefRegistry, DefStateful, State, StaticElement, Instance, SetState } from "../types"
 import { typeStateful } from "./type-stateful"
 
-export const renderEofolWrapper = (
+export const renderWrapperStatic = (
   content: StaticElement | string | Array<StaticElement | string>,
   attributes: Attributes,
 ) => ({
@@ -28,7 +28,7 @@ export const renderEofolWrapper = (
   content: Array.isArray(content) ? content : [content],
 })
 
-const createWrapper = (id: string) => {
+const renderWrapperDynamic = (id: string) => {
   const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
   renderedResult.setAttribute("id", id)
   return renderedResult
@@ -52,7 +52,11 @@ export const renderElement = (
   setState: SetState,
   attributes: Attributes,
   children: Children,
-) => def.render({ state, setState, attributes, children })
+) => {
+  if (def.render) {
+    return def.render({ state, setState, attributes, children })
+  }
+}
 
 export const mountImpl = (
   node: StaticElement & { content?: Array<StaticElement | string> },
@@ -82,17 +86,26 @@ export const mountImpl = (
   const derivedState = getDerivedStateFromProps({ attributes, def, state, ...constructed })
   const setState = getSetState(id)
   saveStatefulInstanceImpl(instances)(id, name, attributes, derivedState)
-  return { result: renderElement(def, derivedState, setState, attributes, children), attributes }
+  return {
+    wrap: true,
+    result: renderElement(def, derivedState, setState, attributes, children),
+    attributes,
+  }
 }
 
 export const mount = (jsonElement: StaticElement) => {
   const mounted = mountImpl(jsonElement, getInstances(), getDefs())
   if (mounted) {
-    const { result, attributes } = mounted
+    const { result, attributes, wrap } = mounted
     const { id } = attributes
     const renderedDom = jsonToDom(result)
-    const renderedResult = createWrapper(id)
-    domAppendChildren(renderedDom, renderedResult)
+    let renderedResult
+    if (wrap) {
+      renderedResult = renderWrapperDynamic(id)
+      domAppendChildren(renderedDom, renderedResult)
+    } else {
+      renderedResult = renderedDom
+    }
     return { id, result: renderedResult }
   }
 }
