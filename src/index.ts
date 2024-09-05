@@ -112,8 +112,8 @@ export const second = defineStateful("second", {
 })
 
 const onForceRerender = () => {
-  forceRerender()
   console.log("Force rerender")
+  forceRerender()
 }
 
 export const fourth = defineFlat("fourth", { render: () => div(undefined, "Flat example") })
