@@ -48,6 +48,7 @@ const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, but
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
 export const first = defineStateful("first", {
+  classname: sx({ color: "fuchsia" }),
   // @ts-ignore
   render: (props) => {
     injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)

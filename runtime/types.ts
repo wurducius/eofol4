@@ -44,11 +44,19 @@ export type EofolDef = {
   name: string
   type: string
   render: Render
+  classname?: Classname
   initialState?: State
   effect?: Effect
   shouldUpdate?: ShouldUpdate
 }
-export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect; shouldUpdate?: ShouldUpdate }
+
+export type EofolComponentProps = {
+  render: Render
+  initialState?: State
+  effect?: Effect
+  shouldUpdate?: ShouldUpdate
+  classname?: string
+}
 
 export type DefRegistry = Record<string, EofolDef>
 
