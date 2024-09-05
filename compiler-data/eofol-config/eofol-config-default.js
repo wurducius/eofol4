@@ -7,4 +7,11 @@ module.exports = {
     VERBOSE: false,
   },
   plugins: {},
+  breakpoints: [
+    { name: "xs", maxWidth: 600 },
+    { name: "sm", maxWidth: 900 },
+    { name: "md", maxWidth: 1200 },
+    { name: "lg", maxWidth: 1536 },
+    { name: "xl", maxWidth: undefined },
+  ],
 }

@@ -1,11 +1,3 @@
-const breakpoints = [
-  { name: "xs", maxWidth: 600 },
-  { name: "sm", maxWidth: 900 },
-  { name: "md", maxWidth: 1200 },
-  { name: "lg", maxWidth: 1536 },
-  { name: "xl", maxWidth: undefined },
-]
-
 const color = {
   primary: { base: "#26d9d9", dark: "#1b9898", light: "#67e4e4" },
   secondary: { base: "#86B1FF", dark: "#5186F8", light: "#86B1FF" },
@@ -48,6 +40,6 @@ const zIndex = {}
 
 const config = {}
 
-const theme = { breakpoints, color, typography, spacing, size, borderRadius, zIndex, config }
+const theme = { color, typography, spacing, size, borderRadius, zIndex, config }
 
 export default theme

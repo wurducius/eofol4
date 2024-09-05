@@ -2,7 +2,7 @@ import { isBrowser } from "../util"
 import { VIEWType } from "../types"
 
 const emptyInternals = {
-  env: { views: [], BASE_URL: "./" },
+  env: { views: [], BASE_URL: "./", config: {} as Record<string, any> },
   instances: {} as Record<string, any>,
   vdom: {},
   assets: { pages: [], images: {} as Record<string, string[]>, other: [] },
@@ -10,7 +10,7 @@ const emptyInternals = {
 
 // @TODO finish typing instances & vdom
 type Internals = {
-  env: { views: VIEWType[]; BASE_URL: string }
+  env: { views: VIEWType[]; BASE_URL: string; config: Record<string, any> }
   instances: Record<string, any>
   vdom: any
   assets: { pages: string[]; images: Record<string, string[]>; other: string[] }
