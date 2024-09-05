@@ -19,7 +19,7 @@ import { getInstances } from "../internals"
 import { Attributes, Children, DefRegistry, DefStateful, State, StaticElement, Instance, SetState } from "../types"
 import { typeStateful } from "./type-stateful"
 
-export const renderEofolWrapper = (
+export const renderWrapperStatic = (
   content: StaticElement | string | Array<StaticElement | string>,
   attributes: Attributes,
 ) => ({
@@ -28,14 +28,14 @@ export const renderEofolWrapper = (
   content: Array.isArray(content) ? content : [content],
 })
 
-const createWrapper = (id: string) => {
+const renderWrapperDynamic = (id: string) => {
   const renderedResult = document.createElement(Compiler.COMPILER_STATEFUL_WRAPPER_TAG)
   renderedResult.setAttribute("id", id)
   return renderedResult
 }
 
 export const filterChildren = (
-  content: undefined | Array<StaticElement | string | undefined | null | false>,
+  content: undefined | string | StaticElement | Array<StaticElement | string | undefined | null | false>,
 ): Array<StaticElement | string> => {
   if (!content) {
     return []
@@ -52,13 +52,13 @@ export const renderElement = (
   setState: SetState,
   attributes: Attributes,
   children: Children,
-) => def.render({ state, setState, attributes, children })
-
-export const mountImpl = (
-  node: StaticElement & { content?: Array<StaticElement | string> },
-  instances: Record<string, Instance>,
-  defs: DefRegistry,
 ) => {
+  if (def.render) {
+    return def.render({ state, setState, attributes, children })
+  }
+}
+
+export const mountImpl = (node: StaticElement, instances: Record<string, Instance>, defs: DefRegistry) => {
   const name = node.attributes?.name
   if (!name) {
     logDefHasNoName()
@@ -75,49 +75,58 @@ export const mountImpl = (
     // @ts-ignore
     attributes.class = def.classname
   }
-  const state = getInitialState(def.initialState)
   const children = filterChildren(node.content)
   // @TODO handle constructor
-  const constructed = onConstruct({ attributes, def })
-  const derivedState = getDerivedStateFromProps({ attributes, def, state, ...constructed })
+  const state = getInitialState(def.initialState)
   const setState = getSetState(id)
+  onConstruct(def, { attributes, state, setState })
+  const derivedState = getDerivedStateFromProps(def, { attributes, state, setState })
   saveStatefulInstanceImpl(instances)(id, name, attributes, derivedState)
-  return { result: renderElement(def, derivedState, setState, attributes, children), attributes }
+  return {
+    wrap: true,
+    result: renderElement(def, derivedState, setState, attributes, children),
+    attributes,
+  }
 }
 
 export const mount = (jsonElement: StaticElement) => {
   const mounted = mountImpl(jsonElement, getInstances(), getDefs())
   if (mounted) {
-    const { result, attributes } = mounted
+    const { result, attributes, wrap } = mounted
     const { id } = attributes
-    const renderedDom = jsonToDom(result)
-    const renderedResult = createWrapper(id)
-    domAppendChildren(renderedDom, renderedResult)
+    const renderedDom = jsonToDom(result).filter(Boolean)
+    let renderedResult
+    if (wrap) {
+      renderedResult = renderWrapperDynamic(id)
+      domAppendChildren(renderedDom, renderedResult)
+    } else {
+      renderedResult = renderedDom
+    }
     return { id, result: renderedResult }
   }
 }
 
 export const rerender = (id: string) => {
   const instance = getInstance(id)
-  const target = document.getElementById(instance.id)
-  if (target) {
-    const def = typeStateful(getDef(instance.name))
-    if (def) {
-      const state = instance.state
+  const def = typeStateful(getDef(instance.name))
+  if (def) {
+    const target = document.getElementById(instance.id)
+    if (target) {
       const attributes = domAttributesToJson(target.attributes)
       if (def.classname) {
         // @ts-ignore
         attributes.class = def.classname
       }
-      const derivedState = getDerivedStateFromProps({ attributes, def, state })
+      const state = instance.state
       const setState = getSetState(id)
+      const derivedState = getDerivedStateFromProps(def, { attributes, state, setState })
       const rendered = renderElement(def, derivedState, setState, attributes, undefined)
       return jsonToDom(rendered)
     } else {
-      logDefNotFound(instance.name)
+      logElementNotFound(instance.id)
     }
   } else {
-    logElementNotFound(instance.id)
+    logDefNotFound(instance.name)
   }
 }
 

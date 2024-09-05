@@ -5,9 +5,10 @@ import {
   createProjection,
   createSelector,
   createStore,
-  cx,
   dataContainer,
+  defineFlat,
   defineStateful,
+  defineVirtual,
   div,
   forceRerender,
   getBreakpoint,
@@ -45,7 +46,7 @@ const buttonBaseStyle = sx({
 const buttonHoverStyle = sx({ backgroundColor: "purple", color: "red" }, ":hover")
 const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":active")
 const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
-const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle)
+const buttonStyle = [buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle]
 
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
@@ -115,6 +116,19 @@ const onForceRerender = () => {
   console.log("Force rerender")
 }
 
+export const fourth = defineFlat("fourth", { render: () => div(undefined, "Flat example") })
+
+export const hook = defineVirtual("hook", {
+  effect: () => {
+    console.log("Hook example!")
+  },
+})
+
+export const fragment = defineVirtual("fragment", {
+  // @ts-ignore
+  render: () => "Fragment example",
+})
+
 export const third = defineStateful("third", {
   render: () => [
     button(
@@ -125,6 +139,9 @@ export const third = defineStateful("third", {
         onclick: onForceRerender,
       },
     ),
+    createEofolElement("fourth"),
+    createEofolElement("hook"),
+    createEofolElement("fragment"),
   ],
 })
 

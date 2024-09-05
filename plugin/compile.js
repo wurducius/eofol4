@@ -28,6 +28,9 @@ const traverseTree = (node, result, defs, instances) => {
   } else {
     result = node
   }
+  if (result.content) {
+    result.content = result.content.filter(Boolean)
+  }
   return result
 }
 

@@ -6,4 +6,10 @@ export const ax = (base: Attributes, conditional: Record<string, any>) =>
     base,
   )
 
-export const cx = (...classnames: Classname[]) => classnames.filter(Boolean).join(" ")
+export const cx = (...classnames: Classname[]) => {
+  if (classnames && classnames[0] && Array.isArray(classnames[0])) {
+    return classnames[0].filter(Boolean).join(" ")
+  } else {
+    return classnames.filter(Boolean).join(" ")
+  }
+}

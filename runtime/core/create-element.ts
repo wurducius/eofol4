@@ -1,23 +1,24 @@
-import { Classname, EofolNode } from "../types"
+import { Classname, StaticElementContent } from "../types"
+import { cx } from "../util"
 
 export const createElement = (
   tag: string,
-  style?: Classname | Classname[],
-  content?: EofolNode,
+  style?: Classname,
+  content?: StaticElementContent,
   attributes?: any,
   properties?: any,
 ) => {
   const attributesImpl = { ...properties, ...attributes }
   if (style) {
-    attributesImpl.class = style
+    attributesImpl.class = cx(style)
   }
   return {
     type: tag,
     attributes: attributesImpl,
     content: (Array.isArray(content) ? content : [content]).filter(Boolean),
-    properties,
+    // properties,
   }
 }
 
-export const f = (tag: string) => (style?: string | undefined, content?: any, attributes?: any, properties?: any) =>
+export const f = (tag: string) => (style?: Classname, content?: any, attributes?: any, properties?: any) =>
   createElement(tag, style, content, attributes, properties)

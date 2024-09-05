@@ -1,6 +1,7 @@
+import { EofolComponentType } from "./constants"
 import type * as CSSType from "csstype"
 
-export type EofolElement = StaticElement | string | undefined | false | null
+export type EofolElement = string | StaticElement | undefined | false | null
 export type EofolNode = EofolElement | EofolElement[]
 
 type ClassnameSingle = string | boolean | undefined | null
@@ -22,24 +23,18 @@ export type Props = { state: State; setState: SetState; attributes: Attributes; 
 // eslint-disable-next-line no-unused-vars
 export type EffectSingle = ((props: Props) => (props: Props) => void) | ((props: Props) => void)
 
-// @TODO Effect typing
-// export type Effect = Multi<Function>
 export type Effect = undefined | EffectSingle | EffectSingle[]
 
-export type StaticElement = { type: string; attributes?: Record<string, string> }
-// @TODO typing finish, solve recursion
+export type StaticElementContent = string | StaticElement | Array<string | StaticElement>
+
+export type StaticElement = {
+  type: string
+  attributes?: Record<string, string>
+  content: StaticElementContent
+}
+
 // eslint-disable-next-line no-unused-vars
-export type Render = (props: Props) =>
-  | StaticElement[]
-  | (StaticElement & {
-      content?:
-        | Array<string | StaticElement | undefined | null | false>
-        | string
-        | StaticElement
-        | undefined
-        | null
-        | false
-    })
+export type Render = (props: Props) => StaticElementContent
 
 export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
 
@@ -48,7 +43,7 @@ export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => 
 
 export type DefStateful = {
   name: string
-  type: string
+  type: StatefulType
   render: Render
   classname?: Classname
   initialState?: State
@@ -59,19 +54,19 @@ export type DefStateful = {
 
 export type DefFlat = {
   name: string
-  type: string
+  type: FlatType
   render: Render
   classname?: Classname
 }
 
 export type DefVirtual = {
   name: string
-  type: string
+  type: VirtualType
   render?: Render
 }
 
 export type EofolComponentProps = {
-  render: Render
+  render?: Render
   initialState?: State
   effect?: Effect
   shouldUpdate?: ShouldUpdate
@@ -86,6 +81,12 @@ export type DefRegistry = Record<string, DefGeneral>
 type CSSObject = CSSType.Properties
 
 export type VIEWType = { path: string; isStatic?: boolean }
+
+export type StatefulType = typeof EofolComponentType.Stateful
+export type FlatType = typeof EofolComponentType.Flat
+export type VirtualType = typeof EofolComponentType.Virtual
+
+export type ComponentType = StatefulType | FlatType | VirtualType
 
 // ==================           ==================
 
