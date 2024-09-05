@@ -42,7 +42,6 @@ const PATH_EOFOL_CONFIG_DEFAULT = resolve(PATH_COMPILER_DATA, "eofol-config", "e
 const PATH_METADATA_DEFAULT = resolve(PATH_COMPILER_DATA, "metadata", "metadata-default.js")
 const PATH_SERVICE_WORKER_SCRIPT = resolve(PATH_COMPILER_DATA, "service-worker", "service-worker.js")
 const PATH_BASE_STYLES = resolve(PATH_COMPILER_DATA, "styles", "base.css")
-const PATH_THEMED_STYLES = resolve(PATH_COMPILER_DATA, "styles", "themed.css")
 
 module.exports = {
   PATH_CWD,
@@ -66,5 +65,4 @@ module.exports = {
   PATH_METADATA_DEFAULT,
   PATH_SERVICE_WORKER_SCRIPT,
   PATH_BASE_STYLES,
-  PATH_THEMED_STYLES,
 }

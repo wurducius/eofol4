@@ -1,6 +1,7 @@
 import themeDefault from "./theme-default"
 import themeSrc from "../../src/theme"
 import { mergeDeep } from "../util"
+import { compileThemeStyles } from "./compile-styles"
 
 // @TODO typing
 export type Theme = any
@@ -15,6 +16,7 @@ export const getTheme = () => {
 
 export const setTheme = (themeName: string) => {
   theme = themeName
+  compileThemeStyles(themes[themeName])
 }
 
 export const addTheme = (themeName: string, themeData: Theme) => {

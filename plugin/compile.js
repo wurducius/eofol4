@@ -1,6 +1,6 @@
 const { htmlToJson, jsonToHtml } = require("../compiler")
 const { read, resolve, exists, parse } = require("../util")
-const { PATH_BASE_STYLES, PATH_THEMED_STYLES, PATH_DIST, PATH_PAGES } = require("../config")
+const { PATH_BASE_STYLES, PATH_DIST, PATH_PAGES } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
 const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runtime"))
 const { setCURRENT_VIEW } = require("../dist/runtime")
@@ -40,9 +40,6 @@ const compileTree = (tree, result, defs, instances) => traverseTree(tree, result
 
 const baseStyles = read(PATH_BASE_STYLES).toString()
 
-// @TODO temporary workaround
-const themedStyle = read(PATH_THEMED_STYLES).toString()
-
 const compile = async (content, filename, instances) => {
   clearCompileCache()
   setCURRENT_VIEW(`./${filename.replace(sep, "/").replace("\\", "/")}`)
@@ -59,7 +56,7 @@ const compile = async (content, filename, instances) => {
   if (exists(viewStylesPath)) {
     viewStyles = read(viewStylesPath).toString()
   }
-  head.content.push({ type: "style", content: [baseStyles, themedStyle, viewStyles, getCompileCache()] })
+  head.content.push({ type: "style", content: [baseStyles, viewStyles, getCompileCache()] })
   return await jsonToHtml(compiled, true)
 }
 
