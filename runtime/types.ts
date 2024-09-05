@@ -15,18 +15,23 @@ export type Children =
   | null
 
 // @TODO State typing
-export type State = Object | undefined
+export type State = any | undefined
 // @TODO SetState typing
 export type SetState = Function
 
+export type Props = { state: State; setState: SetState; attributes: Attributes; children?: Children }
+
+// eslint-disable-next-line no-unused-vars
+export type EffectSingle = ((props: Props) => (props: Props) => void) | ((props: Props) => void)
+
 // @TODO Effect typing
 // export type Effect = Multi<Function>
-export type Effect = undefined | Function
+export type Effect = undefined | EffectSingle | EffectSingle[]
 
 export type StaticElement = { type: string; attributes?: Record<string, string> }
 // @TODO typing finish, solve recursion
 // eslint-disable-next-line no-unused-vars
-export type Render = (props: { state: State; attributes: Attributes; children: Children }) => StaticElement & {
+export type Render = (props: Props) => StaticElement & {
   content?: Array<string | StaticElement | undefined | null | false> | string | StaticElement | undefined | null | false
 }
 

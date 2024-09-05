@@ -3,15 +3,18 @@ import { getDef } from "../defs"
 import { getSetState, getState } from "./state"
 import { isBrowser } from "../util"
 import { getInstance } from "../instances"
-import { Effect } from "../types"
+import { Attributes, EffectSingle, Props } from "../types"
 
-const playEffectImpl = (effect: Effect, props) => {
+const playEffectImpl = (effect: EffectSingle, props: Props) => {
   if (effect) {
-    effect(props)
+    const cleanup = effect(props)
+    if (cleanup) {
+      cleanup(props)
+    }
   }
 }
 
-const getEffectProps = (id: string, attributes) => ({
+const getEffectProps = (id: string, attributes: Attributes) => ({
   state: getState(id),
   setState: getSetState(id),
   // @TODO FIXME add attributes to instances

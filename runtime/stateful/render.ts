@@ -1,7 +1,7 @@
 import { getDef, getDefImpl, getDefs } from "../defs"
 import { domAttributesToJson, jsonToDom, domAppendChildren } from "../dom"
 import { arrayCombinatorForEach, generateId } from "../util"
-import { getInitialState } from "./state"
+import { getInitialState, getSetState } from "./state"
 import { getInstance, saveStatefulInstanceImpl } from "../instances"
 import { Compiler } from "../constants"
 import {
@@ -16,7 +16,7 @@ import { prune } from "./prune"
 import { logDefNotFound, logElementNotFound, logDefHasNoName } from "../logger"
 import { getAttributes } from "./attributes"
 import { getInstances } from "../internals"
-import { Attributes, Children, DefRegistry, EofolDef, State, StaticElement, Instance } from "../types"
+import { Attributes, Children, DefRegistry, EofolDef, State, StaticElement, Instance, SetState } from "../types"
 
 export const renderEofolWrapper = (
   content: StaticElement | string | Array<StaticElement | string>,
@@ -45,8 +45,13 @@ export const filterChildren = (
   }
 }
 
-export const renderElement = (def: EofolDef, state: State, attributes: Attributes, children: Children) =>
-  def.render({ state, attributes, children })
+export const renderElement = (
+  def: EofolDef,
+  state: State,
+  setState: SetState,
+  attributes: Attributes,
+  children: Children,
+) => def.render({ state, setState, attributes, children })
 
 export const mountImpl = (
   node: StaticElement & { content?: Array<StaticElement | string> },
@@ -70,8 +75,9 @@ export const mountImpl = (
   // @TODO handle constructor
   const constructed = onConstruct({ attributes, def })
   const derivedState = getDerivedStateFromProps({ attributes, def, state, ...constructed })
+  const setState = getSetState(id)
   saveStatefulInstanceImpl(instances)(id, name, attributes, derivedState)
-  return { result: renderElement(def, derivedState, attributes, children), attributes }
+  return { result: renderElement(def, derivedState, setState, attributes, children), attributes }
 }
 
 export const rerender = (id: string) => {
@@ -83,7 +89,8 @@ export const rerender = (id: string) => {
       const state = instance.state
       const attributes = domAttributesToJson(target.attributes)
       const derivedState = getDerivedStateFromProps({ attributes, def, state })
-      const rendered = renderElement(def, derivedState, attributes, undefined)
+      const setState = getSetState(id)
+      const rendered = renderElement(def, derivedState, setState, attributes, undefined)
       return jsonToDom(rendered)
     } else {
       logDefNotFound(instance.name)

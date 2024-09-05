@@ -67,6 +67,14 @@ export const first = defineStateful("first", {
       ...(Array.isArray(props.children) ? props.children : [props.children]),
     ].filter(Boolean)
   },
+  effect: [
+    () => {
+      console.log("Array effect!")
+      return () => {
+        console.log("Effect cleanup!")
+      }
+    },
+  ],
 })
 
 export const firstx = defineStateful("firstx", {
@@ -75,7 +83,7 @@ export const firstx = defineStateful("firstx", {
 
 export const firstxx = defineStateful("firstxx", {
   // @ts-ignore
-  render: (props) => ["Firstxx", ...props.children],
+  render: (props) => ["Firstxx", ...(Array.isArray(props.children) ? props.children : [props.children])],
 })
 
 export const second = defineStateful("second", {
