@@ -51,6 +51,7 @@ export const first = defineStateful("first", {
   // @ts-ignore
   render: (props) => {
     injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
+    // @ts-ignore
     return [
       getBreakpointView({
         xs: () => div(sx({ color: "peachpuff" }), "xs"),
@@ -63,7 +64,7 @@ export const first = defineStateful("first", {
       div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
       "Output array !!!",
       randomString(),
-      // ...props.children,
+      ...(Array.isArray(props.children) ? props.children : [props.children]),
     ].filter(Boolean)
   },
 })

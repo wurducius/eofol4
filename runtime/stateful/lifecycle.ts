@@ -42,7 +42,8 @@ export const onComponentUpdate = (id: string) => {
   return rerender(id)
 }
 
-export const onBeforeUpdate = () => {}
+// eslint-disable-next-line no-unused-vars
+export const onBeforeUpdate = (id: string) => {}
 
 export const onComponentUpdated = (id: string) => {
   playEffect(id)

@@ -1,10 +1,16 @@
 import { getDef, getDefImpl, getDefs } from "../defs"
-import { domAttributesToJson, domToJson, jsonToDom, domAppendChildren } from "../dom"
+import { domAttributesToJson, jsonToDom, domAppendChildren } from "../dom"
 import { arrayCombinatorForEach, generateId } from "../util"
 import { getInitialState } from "./state"
 import { getInstance, saveStatefulInstanceImpl } from "../instances"
 import { Compiler } from "../constants"
-import { getDerivedStateFromProps, onComponentUpdate, onComponentUpdated, onConstruct } from "./lifecycle"
+import {
+  getDerivedStateFromProps,
+  onBeforeUpdate,
+  onComponentUpdate,
+  onComponentUpdated,
+  onConstruct,
+} from "./lifecycle"
 import { updateDom } from "./dom"
 import { prune } from "./prune"
 import { logDefNotFound, logElementNotFound, logDefHasNoName } from "../logger"
@@ -76,9 +82,8 @@ export const rerender = (id: string) => {
     if (def) {
       const state = instance.state
       const attributes = domAttributesToJson(target.attributes)
-      const children: Children = domToJson(target.childNodes)
       const derivedState = getDerivedStateFromProps({ attributes, def, state })
-      const rendered = renderElement(def, derivedState, attributes, children)
+      const rendered = renderElement(def, derivedState, attributes, undefined)
       return jsonToDom(rendered)
     } else {
       logDefNotFound(instance.name)
@@ -103,6 +108,7 @@ export const mount = (jsonElement: StaticElement) => {
 export const updateComponents = (ids: string | string[]) => {
   const updated: { id: string; result: any }[] = []
   arrayCombinatorForEach((id: string) => {
+    onBeforeUpdate(id)
     updated.push({ id, result: onComponentUpdate(id) })
   })(ids)
   updateDom(updated)
