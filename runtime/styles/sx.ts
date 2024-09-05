@@ -13,7 +13,7 @@ export const clearCompileCache = () => {
 const cache: string[] = []
 
 const injectStyle = (hash: string, styleContent: string, prefix?: string, skipCompileCache?: boolean) => {
-  const style = (prefix || ".") + hash + styleContent
+  const style = (prefix === undefined ? "." : prefix) + hash + styleContent
   if (isBrowser()) {
     document.styleSheets.item(0)?.insertRule(style)
   } else if (!skipCompileCache) {

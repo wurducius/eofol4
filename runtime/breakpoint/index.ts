@@ -1,11 +1,11 @@
 import { Breakpoint, Render } from "../types"
 import { getEnv } from "../internals"
-import { isBrowser } from "../util"
 
-const configBreakpoints = isBrowser() ? getEnv().config.breakpoints : []
+// @TODO include breakpoints into env.config or such at compile time
+const configBreakpoints = getEnv().config.breakpoints
 const BREAKPOINT: Record<string, number> = {}
 
-configBreakpoints.forEach((b) => {
+configBreakpoints?.forEach((b) => {
   BREAKPOINT[b.name] = b.maxWidth
 })
 

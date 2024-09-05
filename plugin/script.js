@@ -7,6 +7,8 @@ const { PROGRESS_OPTIMIZE_ASSETS } = require("./config")
 const { incrementProgress, showProgress, setProgress, getProgress } = require("./progress")
 const { isJs, parse } = require("../util")
 
+const isInternalAsset = (asset) => asset === "assets/js/runtime.js" || asset === "assets/js/dependencies.js"
+
 const processAssets = (compiler, compilation, instances) => async (assets) =>
   await transformAssets({
     transformPropertyName: "minified",
@@ -17,7 +19,7 @@ const processAssets = (compiler, compilation, instances) => async (assets) =>
       const instancesImpl = instances[instancesPath]
         ? instances[instancesPath][instancesPath]
         : instances[instancesPath]
-      const y = minifyJs(`${getInternals(instancesImpl)}${x}`)
+      const y = minifyJs(isInternalAsset(asset) ? x : `${getInternals(instancesImpl)}${x}`)
       return lifecycle.onOptimizeAssetFinished(y)
     },
     logStart: () => {

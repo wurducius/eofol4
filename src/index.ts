@@ -35,22 +35,9 @@ if (isBrowser()) {
 
 registerServiceworker()
 
-const buttonBaseStyle = sx({
-  backgroundColor: "darkmagenta",
-  border: "1px solid purple",
-  color: "white",
-  fontFamily: "inherit",
-  fontSize: "16px",
-  fontWeight: 500,
-  cursor: "pointer",
-  padding: "4px 16px",
-})
-const buttonHoverStyle = sx({ backgroundColor: "purple", color: "red" }, ":hover")
-const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":active")
-const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
-const buttonStyle = [buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle]
-
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
+
+const breakpointStyle = sx({ color: "peachpuff" })
 
 export const first = defineStateful("first", {
   classname: sx({ color: "fuchsia" }),
@@ -60,12 +47,12 @@ export const first = defineStateful("first", {
     // @ts-ignore
     return [
       getBreakpointView({
-        xs: () => div(sx({ color: "peachpuff" }), "xs"),
-        sm: () => div(sx({ color: "peachpuff" }), "sm"),
-        md: () => div(sx({ color: "peachpuff" }), "md"),
-        lg: () => div(sx({ color: "peachpuff" }), "lg"),
-        xl: () => div(sx({ color: "peachpuff" }), "xl"),
-        xxl: () => div(sx({ color: "peachpuff" }), "xxl"),
+        xs: () => div(breakpointStyle, "xs"),
+        sm: () => div(breakpointStyle, "sm"),
+        md: () => div(breakpointStyle, "md"),
+        lg: () => div(breakpointStyle, "lg"),
+        xl: () => div(breakpointStyle, "xl"),
+        xxl: () => div(breakpointStyle, "xxl"),
       }),
       div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
       "Output array !!!",
@@ -84,7 +71,12 @@ export const first = defineStateful("first", {
 })
 
 export const firstx = defineStateful("firstx", {
-  render: () => div(sx({ color: "red" }), ["Dynamically rendered and mounted stateful component working!"]),
+  // @ts-ignore
+  render: (props) =>
+    div(sx({ color: "red" }), [
+      "Dynamically rendered and mounted stateful component working!",
+      `Dynamic attribute = ${props.attributes.dynamicAttribute}`,
+    ]),
 })
 
 export const firstxx = defineStateful("firstxx", {
@@ -98,7 +90,7 @@ export const second = defineStateful("second", {
     props.state?.onStateChange
       ? div(sx({ color: "green" }), [
           "Stateful component state and effect working!",
-          createEofolElement("firstx"),
+          createEofolElement("firstx", undefined, undefined, { dynamicAttribute: "Working!" }),
           createEofolElement("firstxx", undefined, ["Nested child"]),
           createEofolElement("third"),
         ])
@@ -134,7 +126,7 @@ export const fragment = defineVirtual("fragment", {
 export const third = defineStateful("third", {
   render: () => [
     button(
-      buttonStyle,
+      undefined,
       "Force rerender",
       {},
       {
@@ -155,7 +147,7 @@ export const weather = dataContainer("weather", {
 
 const STORE1 = "store1"
 const STORE2 = "store2"
-createStore(STORE1, { data: 1 })
+createStore(STORE1, { data: "Store state not changed." })
 createProjection(STORE2, STORE1, (state) => ({ data: state.data }))
 const selector2 = createSelector(STORE1, (state: State) => ({ data: state.data }))
 
@@ -185,12 +177,12 @@ export const createdSelector = defineStateful("createdSelector", {
 
 const onSetStore = () => {
   console.log("Set store!")
-  setStore(STORE1, { data: 2 })
+  setStore(STORE1, { data: "Store state changed!" })
 }
 
 // @TODO bind onclick handler at compile time OR rehydrate
 export const storeSetter = defineStateful("storeSetter", {
-  render: () => button(buttonStyle, "Set store", {}, { onclick: isBrowser() && onSetStore }),
+  render: () => button(undefined, "Set store", {}, { onclick: isBrowser() && onSetStore }),
 })
 
 export const example = defineStateful("example", {
