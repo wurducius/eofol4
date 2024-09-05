@@ -1,11 +1,6 @@
 import { generateId } from "../util"
 import { forceRerender } from "../stateful"
-
-type StoreState = any
-
-type StoreProjection = { id: string; projection: Function }
-
-type Store = { id: string; state: StoreState; projections?: StoreProjection[] }
+import { Store, StoreState } from "../types"
 
 const globalStore: Record<string, Store> = {}
 

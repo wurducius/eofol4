@@ -1,8 +1,8 @@
 import { a } from "../core"
 import { Classname, StaticElement } from "../types"
-import { cx } from "../util"
+import { cx, isBrowser } from "../util"
+import { pushVIEW } from "../internals"
 
-// @TODO register prefetch asset
 export const link = ({
   href,
   content,
@@ -16,6 +16,9 @@ export const link = ({
   download?: string
   classname?: Classname
 }) => {
+  if (!isExternal && !isBrowser()) {
+    pushVIEW(href, true)
+  }
   const attributes: Record<string, string> = { href }
   if (isExternal) {
     attributes.target = "_blank"

@@ -1,22 +1,5 @@
 import { BREAKPOINT } from "../constants"
-import { Render } from "../types"
-
-const Breakpoints = {
-  xs: "xs",
-  sm: "sm",
-  md: "md",
-  lg: "lg",
-  xl: "xl",
-  xxl: "xxl",
-}
-
-export type Breakpoint =
-  | typeof Breakpoints.xs
-  | typeof Breakpoints.sm
-  | typeof Breakpoints.md
-  | typeof Breakpoints.lg
-  | typeof Breakpoints.xl
-  | typeof Breakpoints.xxl
+import { Breakpoint, Render } from "../types"
 
 const mediaQuery = (maxWidth: number | undefined, minWidth: number | undefined) =>
   window.matchMedia(
