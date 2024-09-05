@@ -36,6 +36,12 @@ a {
   flex-direction: column;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .m-t-md {
   margin-top: 16px;
 }

@@ -45,7 +45,7 @@ export const compileThemeStyles = (theme: Theme) => {
 
   syy("button", {
     backgroundColor: "darkmagenta",
-    border: "1px solid purple",
+    border: "1px solid black",
     color: "white",
     fontFamily: "inherit",
     fontSize: "16px",
