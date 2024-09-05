@@ -58,6 +58,8 @@ export const first = defineStateful("first", {
     div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
     "Output array !!!",
     randomString(),
+    //  image({ src: "./assets/media/icons/phi.svgx", alt: "Test Image API", height: 100, width: 100 }),
+    //  link({ href: "https://eofol.com/eofol4/sldfjdripf", content: "Test Link API" }),
     // ...props.children,
   ],
 })

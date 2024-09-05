@@ -1,12 +1,32 @@
 import { img } from "../core"
-import { sx } from "../styles"
-import { cx } from "../util"
+import { defaultFallback } from "./default-fallback"
 
-const imageBaseStyle = sx({})
-const imageStyle = cx(imageBaseStyle)
+type Dimension = string | number | undefined
+
+const getDimension = (dimension: Dimension) => (typeof dimension === "number" ? `${dimension}px` : dimension)
 
 // @TODO register prefetch asset
-export const image = (src: string, alt: string, height: string, width: string) => {
-  const attributes = { src, alt, height, width }
-  return img(imageStyle, undefined, attributes)
+// @TODO add onerror, placeholder image, onclick fullscreen, loading
+// @TODO load onerror defaultFallback from assets/media/images/...
+export const image = ({
+  src,
+  alt,
+  height,
+  width,
+  fallback,
+}: {
+  src: string
+  alt: string
+  height: Dimension
+  width: Dimension
+  fallback?: string
+}) => {
+  const attributes = {
+    src,
+    alt,
+    height: getDimension(height),
+    width: getDimension(width),
+    onerror: `this.onerror = null; this.src = '${fallback ?? defaultFallback}';`,
+  }
+  return img(undefined, "", attributes)
 }
