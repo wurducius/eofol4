@@ -6,17 +6,22 @@ export const prefetchAssets = () => {
 
   assets.pages.forEach((asset) => {
     queue.push(asset)
-  })
-
-  assets.images.forEach((image: string) => {
-    queue.push(image)
+    const images = assets.images[asset]
+    images?.forEach((image: string) => {
+      queue.push(image)
+    })
   })
 
   assets.other.forEach((other: string) => {
     queue.push(other)
   })
 
-  Promise.all(queue.map((asset) => fetch(asset))).then(() => {
+  Promise.all(
+    queue.map((asset) => {
+      console.log(`Prefetch API -> Prefetching asset: ${asset}`)
+      return fetch(asset)
+    }),
+  ).then(() => {
     console.log("Prefetch API -> All assets fetched.")
   })
 }

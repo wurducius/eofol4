@@ -208,6 +208,7 @@ export const links = defineStateful("links", {
   render: () =>
     div("col", [
       link({ href: "./index2.html", content: "Second page" }),
+      link({ href: "./level/second/index.html", content: "Second level page" }),
       link({ href: "./map.html", content: "Map" }),
       link({ href: "./generated.html", content: "Generated page" }),
     ]),

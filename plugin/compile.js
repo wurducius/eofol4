@@ -3,6 +3,8 @@ const { read, resolve, exists, parse } = require("../util")
 const { PATH_BASE_STYLES, PATH_THEMED_STYLES, PATH_DIST, PATH_PAGES } = require("../config")
 const { isEofolTag, compileEofol } = require("./eofol-compile")
 const { clearCompileCache, getCompileCache } = require(resolve(PATH_DIST, "runtime"))
+const { setCURRENT_VIEW } = require("../dist/runtime")
+const { sep } = require("../util/fs")
 
 const importDefs = (scriptPath) => {
   if (exists(scriptPath)) {
@@ -43,6 +45,7 @@ const themedStyle = read(PATH_THEMED_STYLES).toString()
 
 const compile = async (content, filename, instances) => {
   clearCompileCache()
+  setCURRENT_VIEW(`./${filename.replace(sep, "/").replace("\\", "/")}`)
   const parsed = parse(filename)
   const defs = importDefs(resolve(PATH_DIST, "src", parsed.dir, `${parsed.name}.js`))
   const json = await htmlToJson(content, false)

@@ -1,13 +1,12 @@
 import { img } from "../core"
 import { Classname } from "../types"
+import { isBrowser } from "../util"
+import { pushAsset } from "../internals"
 
 type Dimension = string | number | undefined
 
 const getDimension = (dimension: Dimension) => (typeof dimension === "number" ? `${dimension}px` : dimension)
 
-// @TODO register prefetch asset
-// @TODO add onerror, placeholder image, onclick fullscreen, loading
-// @TODO load onerror defaultFallback from assets/media/images/...
 export const image = ({
   src,
   alt,
@@ -15,6 +14,7 @@ export const image = ({
   width,
   fallback,
   classname,
+  isExternal,
 }: {
   src: string
   alt: string
@@ -22,7 +22,11 @@ export const image = ({
   width: Dimension
   fallback?: string
   classname?: Classname
+  isExternal?: boolean
 }) => {
+  if (!isExternal && !isBrowser()) {
+    pushAsset(src, "images")
+  }
   const attributes = {
     src,
     alt,
