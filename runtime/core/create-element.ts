@@ -14,7 +14,7 @@ export const createElement = (
   return {
     type: tag,
     attributes: attributesImpl,
-    content: Array.isArray(content) ? content : [content],
+    content: (Array.isArray(content) ? content : [content]).filter(Boolean),
     properties,
   }
 }
