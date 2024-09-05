@@ -1,7 +1,7 @@
 import { a } from "../core"
 import { Classname, StaticElement } from "../types"
 import { cx, isBrowser } from "../util"
-import { pushVIEW } from "../internals"
+import { pushAsset } from "../internals"
 
 export const link = ({
   href,
@@ -17,7 +17,7 @@ export const link = ({
   classname?: Classname
 }) => {
   if (!isExternal && !isBrowser()) {
-    pushVIEW(href, true)
+    pushAsset(href, "pages")
   }
   const attributes: Record<string, string> = { href }
   if (isExternal) {

@@ -1,20 +1,19 @@
 import { isBrowser } from "../util"
+import { VIEWType } from "../types"
 
 const emptyInternals = {
   env: { views: [], BASE_URL: "./" },
   instances: {} as Record<string, any>,
   vdom: {},
-  assets: { pages: [], scripts: [], images: [], other: [] },
+  assets: { pages: [], images: [], other: [] },
 }
-
-type AssetList = { path: string; isStatic?: boolean }[]
 
 // @TODO finish typing instances & vdom
 type Internals = {
-  env: { views: { path: string; isStatic?: boolean }[]; BASE_URL: string }
+  env: { views: VIEWType[]; BASE_URL: string }
   instances: Record<string, any>
   vdom: any
-  assets: { pages: AssetList; scripts: AssetList; images: AssetList; other: AssetList }
+  assets: { pages: string[]; images: string[]; other: string[] }
 }
 
 // @ts-ignore
@@ -37,11 +36,17 @@ export const getAssets = () => getInternals().assets
 const getVIEWPath = (path: string) => path.replaceAll("\\", "/")
 
 export const pushVIEW = (viewName: string, isStatic?: boolean) => {
-  const VIEWS = getAssets().pages
+  const VIEWS = getEnv().views
   const nextViewPath = getVIEWPath(viewName)
   const saved = VIEWS.find((VIEW) => VIEW.path === nextViewPath)
   if (!saved) {
     VIEWS.push({ path: nextViewPath, isStatic })
-    console.log(getAssets())
+  }
+}
+
+export const pushAsset = (viewName: string, assetType: "pages" | "images" | "other") => {
+  const list = getAssets()[assetType]
+  if (!list.includes(viewName)) {
+    list.push(viewName)
   }
 }

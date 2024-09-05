@@ -44,16 +44,27 @@ export type EofolDef = {
   name: string
   type: string
   render: Render
+  classname?: Classname
   initialState?: State
   effect?: Effect
   shouldUpdate?: ShouldUpdate
+  subscribe?: string | string[]
 }
-export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect; shouldUpdate?: ShouldUpdate }
+
+export type EofolComponentProps = {
+  render: Render
+  initialState?: State
+  effect?: Effect
+  shouldUpdate?: ShouldUpdate
+  classname?: string
+  subscribe?: string | string[]
+}
 
 export type DefRegistry = Record<string, EofolDef>
 
 type CSSObject = CSSType.Properties
 
+export type VIEWType = { path: string; isStatic?: boolean }
 // ==================     FUNC     ==================
 
 // eslint-disable-next-line no-unused-vars

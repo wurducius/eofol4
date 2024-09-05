@@ -1,6 +1,7 @@
 import { EofolComponentType } from "../constants"
 import { logDefAlreadyExists } from "../logger"
 import { DefRegistry, EofolComponentProps } from "../types"
+import { cx } from "../util"
 
 const defRegistry: DefRegistry = {}
 
@@ -16,6 +17,8 @@ const getRegistryDef = (componentName: string, componentType: string, componentP
   render: componentProps.render,
   initialState: componentProps.initialState,
   effect: componentProps.effect,
+  classname: cx(componentProps.classname),
+  subscribe: componentProps.subscribe,
 })
 
 const addDef = (componentName: string, componentType: string, componentProps: EofolComponentProps) => {

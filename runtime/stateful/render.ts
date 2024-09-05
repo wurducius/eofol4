@@ -70,6 +70,10 @@ export const mountImpl = (
   }
   const id = generateId()
   const attributes = getAttributes(node.attributes, id, name)
+  if (def.classname) {
+    // @ts-ignore
+    attributes.class = def.classname
+  }
   const state = getInitialState(def.initialState)
   const children = filterChildren(node.content)
   // @TODO handle constructor
@@ -78,26 +82,6 @@ export const mountImpl = (
   const setState = getSetState(id)
   saveStatefulInstanceImpl(instances)(id, name, attributes, derivedState)
   return { result: renderElement(def, derivedState, setState, attributes, children), attributes }
-}
-
-export const rerender = (id: string) => {
-  const instance = getInstance(id)
-  const target = document.getElementById(instance.id)
-  if (target) {
-    const def = getDef(instance.name)
-    if (def) {
-      const state = instance.state
-      const attributes = domAttributesToJson(target.attributes)
-      const derivedState = getDerivedStateFromProps({ attributes, def, state })
-      const setState = getSetState(id)
-      const rendered = renderElement(def, derivedState, setState, attributes, undefined)
-      return jsonToDom(rendered)
-    } else {
-      logDefNotFound(instance.name)
-    }
-  } else {
-    logElementNotFound(instance.id)
-  }
 }
 
 export const mount = (jsonElement: StaticElement) => {
@@ -109,6 +93,30 @@ export const mount = (jsonElement: StaticElement) => {
     const renderedResult = createWrapper(id)
     domAppendChildren(renderedDom, renderedResult)
     return { id, result: renderedResult }
+  }
+}
+
+export const rerender = (id: string) => {
+  const instance = getInstance(id)
+  const target = document.getElementById(instance.id)
+  if (target) {
+    const def = getDef(instance.name)
+    if (def) {
+      const state = instance.state
+      const attributes = domAttributesToJson(target.attributes)
+      if (def.classname) {
+        // @ts-ignore
+        attributes.class = def.classname
+      }
+      const derivedState = getDerivedStateFromProps({ attributes, def, state })
+      const setState = getSetState(id)
+      const rendered = renderElement(def, derivedState, setState, attributes, undefined)
+      return jsonToDom(rendered)
+    } else {
+      logDefNotFound(instance.name)
+    }
+  } else {
+    logElementNotFound(instance.id)
   }
 }
 

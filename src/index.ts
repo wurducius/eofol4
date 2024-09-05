@@ -48,6 +48,7 @@ const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, but
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
 export const first = defineStateful("first", {
+  classname: sx({ color: "fuchsia" }),
   // @ts-ignore
   render: (props) => {
     injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
@@ -140,6 +141,7 @@ export const subscribed = defineStateful("subscribed", {
     const stored = selector(STORE1)
     return div(undefined, `Subscribed${stored.data ? ` -> ${stored.data}` : ""}`)
   },
+  subscribe: STORE1,
 })
 
 export const projection = defineStateful("projection", {
@@ -147,6 +149,7 @@ export const projection = defineStateful("projection", {
     const stored = selector(STORE2)
     return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
   },
+  subscribe: STORE2,
 })
 
 const onSetStore = () => {
