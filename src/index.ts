@@ -10,6 +10,7 @@ import {
   div,
   forceRerender,
   getBreakpoint,
+  getBreakpointView,
   image,
   isBrowser,
   link,
@@ -20,21 +21,11 @@ import {
   sy,
 } from "../runtime"
 
-const injectBreakpoint = () => {
-  const breakpoint = getBreakpoint()
-  injectElement("breakpoint", `Breakpoint: ${breakpoint}`, breakpoint !== undefined)
-}
-
 injectElement("script", "Script injected and working!", true)
 // injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
-injectBreakpoint()
 if (isBrowser()) {
   document.getElementById("sx")?.setAttribute("class", sx({ color: "fuchsia" }))
   document.getElementById("sy")?.setAttribute("class", sy("sy-classname-test", { color: "lightgreen" }))
-
-  window.onresize = () => {
-    injectBreakpoint()
-  }
 }
 
 registerServiceworker()
@@ -54,14 +45,27 @@ const buttonActiveStyle = sx({ backgroundColor: "purple", color: "red" }, ":acti
 const buttonFocusStyle = sx({ backgroundColor: "purple", color: "red" }, ":focus")
 const buttonStyle = cx(buttonBaseStyle, buttonHoverStyle, buttonActiveStyle, buttonFocusStyle)
 
+injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
+
 export const first = defineStateful("first", {
   // @ts-ignore
-  render: (props) => [
-    div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
-    "Output array !!!",
-    randomString(),
-    // ...props.children,
-  ],
+  render: (props) => {
+    injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
+    return [
+      getBreakpointView({
+        xs: () => div(sx({ color: "peachpuff" }), "xs"),
+        sm: () => div(sx({ color: "peachpuff" }), "sm"),
+        md: () => div(sx({ color: "peachpuff" }), "md"),
+        lg: () => div(sx({ color: "peachpuff" }), "lg"),
+        xl: () => div(sx({ color: "peachpuff" }), "xl"),
+        xxl: () => div(sx({ color: "peachpuff" }), "xxl"),
+      }),
+      div(sx({ color: "red" }), ["Eofol compiled!!!", `Attribute eofolAttribute = ${props.attributes.eofolattribute}`]),
+      "Output array !!!",
+      randomString(),
+      // ...props.children,
+    ].filter(Boolean)
+  },
 })
 
 export const firstx = defineStateful("firstx", {
