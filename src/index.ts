@@ -169,10 +169,14 @@ export const example = defineStateful("example", {
         width: 100,
         classname: sx({ backgroundColor: "green" }),
       }),
-      link({
-        href: "https://eofol.com/eofol4/sldfjdripf",
-        content: "Test Link API",
-        classname: sx({ color: "pink !important;" }),
-      }),
+    ]),
+})
+
+export const links = defineStateful("links", {
+  render: () =>
+    div("col", [
+      link({ href: "./index2.html", content: "Second page" }),
+      link({ href: "./map.html", content: "Map" }),
+      link({ href: "./generated.html", content: "Generated page" }),
     ]),
 })

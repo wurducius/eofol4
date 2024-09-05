@@ -5,26 +5,12 @@ export const prefetchAssets = () => {
   const assets = getAssets()
   const queue: string[] = []
 
-  assets.pages.forEach((page: string) => {
-    queue.push(page)
+  assets.pages.forEach((asset) => {
+    console.log(asset)
+    queue.push(asset)
   })
 
-  assets.scripts.forEach((script: string) => {
-    const split = script.split("/")
-    const scriptPath = `./assets/js/${split
-      .map((part: string, i: number) => {
-        if (i + 1 < split.length) {
-          return part
-        } else {
-          const innerSplit = part.split(".")
-          return innerSplit
-            .map((innerPart: string, j: number) => (j + 1 < innerSplit.length ? innerPart : "js"))
-            .join(".")
-        }
-      })
-      .join("/")}`
-    queue.push(scriptPath)
-  })
+  // @TODO probably remove scripts attribute?
 
   assets.images.forEach((image: string) => {
     queue.push(image)
@@ -34,7 +20,7 @@ export const prefetchAssets = () => {
     queue.push(other)
   })
 
-  Promise.all(queue.map((asset) => fetch(asset).then(() => {}))).then(() => {
+  Promise.all(queue.map((asset) => fetch(asset))).then(() => {
     console.log("Prefetch API -> All assets fetched.")
   })
 }

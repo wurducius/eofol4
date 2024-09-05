@@ -7,14 +7,6 @@ const VIEWS = collectViews().map((data) => ({ ...data, path: getVIEWPath(data.pa
 
 const getVIEWS = () => VIEWS
 
-const pushVIEW = (viewName, isStatic) => {
-  const nextViewPath = getVIEWPath(viewName)
-  const saved = VIEWS.find((VIEW) => VIEW.path === nextViewPath)
-  if (!saved) {
-    VIEWS.push({ path: nextViewPath, isStatic })
-  }
-}
-
 const BASE_URL = process.env.BASE_URL
 
-module.exports = { getVIEWS, pushVIEW, VIEWS, BASE_URL }
+module.exports = { getVIEWS, VIEWS, BASE_URL }

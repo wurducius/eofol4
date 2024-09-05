@@ -6,7 +6,6 @@ const lifecycle = require("./lifecycle")
 const { jsonToHtml, htmlTemplate, minifyJs } = require("../compiler")
 const processStaticAssets = require("./static")
 const { processHtml } = require("./process")
-const { pushVIEW } = require("../config/internal")
 
 const processViews = async (compiler, compilation, instances) => {
   const processStaticAssetsImpl = processStaticAssets(compilation, instances)
@@ -71,7 +70,7 @@ const processViews = async (compiler, compilation, instances) => {
       const createdPagesFirstPromise = await Promise.all(createPages())
       createPagesPromise = await Promise.all(
         createdPagesFirstPromise.map(async (createdPage) => {
-          pushVIEW(createdPage.name, !createdPage.script)
+          // pushVIEW(createdPage.name, !createdPage.script)
           const processedCreatedHtml = await processHtml(instances)(createdPage.name, createdPage.content, {})
           const processedCreatedScript = createdPage.script ? minifyJs(createdPage.script) : createdPage.script
           addAssetImpl(createdPage.name, processedCreatedHtml.content, { processed: true })
