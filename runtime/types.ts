@@ -3,21 +3,19 @@ import type * as CSSType from "csstype"
 export type EofolElement = StaticElement | string | undefined | false | null
 export type EofolNode = EofolElement | EofolElement[]
 
+type ClassnameSingle = string | boolean | undefined | null
+export type Classname = ClassnameSingle | ClassnameSingle[]
+
 export type Attributes = Record<string, string>
 
-// @TODO Children typing
-export type Children =
-  | Array<StaticElement | string | undefined | false | null>
-  | StaticElement
-  | string
-  | undefined
-  | false
-  | null
+type ChildrenSingle = StaticElement | string | undefined | false | null
+export type Children = ChildrenSingle | ChildrenSingle[]
 
 // @TODO State typing
 export type State = any | undefined
-// @TODO SetState typing
-export type SetState = Function
+
+// eslint-disable-next-line no-unused-vars
+export type SetState = (nextState: State) => void
 
 export type Props = { state: State; setState: SetState; attributes: Attributes; children?: Children }
 
@@ -69,13 +67,6 @@ export type VIEWType = { path: string; isStatic?: boolean }
 
 // eslint-disable-next-line no-unused-vars
 export type Handler<T> = (x: any) => void
-
-// ==================     DOM      ==================
-
-export type Classname = string | boolean | undefined | null | Array<string | boolean | undefined | null>
-
-// @TODO
-// export type Attributes = Object
 
 // ==================      CSS     ==================
 
