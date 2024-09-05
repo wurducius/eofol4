@@ -1,7 +1,5 @@
 import { getInstances } from "../internals"
-import { Attributes, State } from "../defs"
-
-export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
+import { Attributes, Instance, State } from "../types"
 
 const saveInstanceImpl = (instances: Record<string, Instance>) => (id: string, nextInstance: Instance) => {
   instances[id] = nextInstance

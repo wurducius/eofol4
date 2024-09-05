@@ -1,8 +1,9 @@
 import { getInstances } from "../internals"
-import { Effect, getDef } from "../defs"
+import { getDef } from "../defs"
 import { getSetState, getState } from "./state"
 import { isBrowser } from "../util"
 import { getInstance } from "../instances"
+import { Effect } from "../types"
 
 const playEffectImpl = (effect: Effect, props) => {
   if (effect) {

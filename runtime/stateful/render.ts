@@ -1,8 +1,8 @@
-import { Attributes, Children, DefRegistry, EofolDef, getDef, getDefImpl, getDefs, State, StaticElement } from "../defs"
+import { getDef, getDefImpl, getDefs } from "../defs"
 import { domAttributesToJson, domToJson, jsonToDom, domAppendChildren } from "../dom"
 import { arrayCombinatorForEach, generateId } from "../util"
 import { getInitialState } from "./state"
-import { getInstance, Instance, saveStatefulInstanceImpl } from "../instances"
+import { getInstance, saveStatefulInstanceImpl } from "../instances"
 import { Compiler } from "../constants"
 import { getDerivedStateFromProps, onComponentUpdate, onComponentUpdated, onConstruct } from "./lifecycle"
 import { updateDom } from "./dom"
@@ -10,6 +10,7 @@ import { prune } from "./prune"
 import { logDefNotFound, logElementNotFound, logDefHasNoName } from "../logger"
 import { getAttributes } from "./attributes"
 import { getInstances } from "../internals"
+import { Attributes, Children, DefRegistry, EofolDef, State, StaticElement, Instance } from "../types"
 
 export const renderEofolWrapper = (
   content: StaticElement | string | Array<StaticElement | string>,

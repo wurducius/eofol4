@@ -1,48 +1,6 @@
 import { EofolComponentType } from "../constants"
 import { logDefAlreadyExists } from "../logger"
-
-type Multi<T> = T | T[] | undefined
-
-// @TODO EofolNode typing
-export type EofolNode = Multi<undefined | string>
-
-export type Attributes = Record<string, string>
-
-// @TODO Children typing
-export type Children = Array<StaticElement | string>
-
-// @TODO State typing
-export type State = Object | undefined
-// @TODO SetState typing
-export type SetState = Function
-
-// @TODO Effect typing
-// export type Effect = Multi<Function>
-export type Effect = undefined | Function
-
-export type StaticElement = { type: string; attributes?: Record<string, string> }
-// @TODO typing finish, solve recursion
-// eslint-disable-next-line no-unused-vars
-export type Render = (props: {
-  state: State
-  attributes: Attributes
-  children: Children
-}) => StaticElement & { content?: Array<string | StaticElement> }
-
-// eslint-disable-next-line no-unused-vars
-export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => boolean
-
-export type EofolDef = {
-  name: string
-  type: string
-  render: Render
-  initialState?: State
-  effect?: Effect
-  shouldUpdate?: ShouldUpdate
-}
-export type EofolComponentProps = { render: Render; initialState?: State; effect?: Effect; shouldUpdate?: ShouldUpdate }
-
-export type DefRegistry = Record<string, EofolDef>
+import { DefRegistry, EofolComponentProps } from "../types"
 
 const defRegistry: DefRegistry = {}
 

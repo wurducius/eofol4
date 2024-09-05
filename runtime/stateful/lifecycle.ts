@@ -1,8 +1,8 @@
 import { playEffect } from "./effect"
 import { mount, rerender } from "./render"
-import { StaticElement } from "../defs"
 import { removeInstance } from "../instances"
 import { shouldUpdate } from "./should-update"
+import { StaticElement } from "../types"
 
 // =========  (A) MOUNT    =========
 //             A1 - Constructor

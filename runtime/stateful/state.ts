@@ -1,6 +1,6 @@
-import { State } from "../defs"
 import { getInstance, mergeInstance } from "../instances"
 import { updateComponents } from "./render"
+import { State } from "../types"
 
 export const getInitialState = (initialState: State) => (initialState ? { ...initialState } : undefined)
 

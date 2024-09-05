@@ -1,7 +1,9 @@
+import { Classname, EofolNode } from "../types"
+
 export const createElement = (
   tag: string,
-  style?: string | undefined,
-  content?: any,
+  style?: Classname | Classname[],
+  content?: EofolNode,
   attributes?: any,
   properties?: any,
 ) => {
