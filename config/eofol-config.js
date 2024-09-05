@@ -1,5 +1,6 @@
 const { PATH_EOFOL_CONFIG, PATH_EOFOL_CONFIG_DEFAULT } = require("./path")
 const { exists } = require("../util/fs")
+const { mergeDeep } = require("../util")
 
 const getEofolConfig = () => {
   const configDefault = require(PATH_EOFOL_CONFIG_DEFAULT)
@@ -7,7 +8,7 @@ const getEofolConfig = () => {
   if (exists(PATH_EOFOL_CONFIG)) {
     configProject = require(PATH_EOFOL_CONFIG)
   }
-  return { ...configDefault, ...configProject }
+  return mergeDeep(configProject, configDefault)
 }
 
 const eofolConfig = getEofolConfig()

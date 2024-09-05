@@ -19,9 +19,11 @@ import {
   registerServiceworker,
   selector,
   setStore,
+  span,
   State,
   sx,
   sy,
+  getTheme,
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
@@ -192,8 +194,9 @@ export const storeSetter = defineStateful("storeSetter", {
 })
 
 export const example = defineStateful("example", {
-  render: () =>
-    div(sx({ display: "flex", flexDirection: "column", alignItems: "center" }), [
+  render: () => {
+    const theme = getTheme()
+    return div(sx({ display: "flex", flexDirection: "column", alignItems: "center" }), [
       image({
         src: "./assets/media/icons/phi.svg",
         alt: "Test Image API",
@@ -201,13 +204,21 @@ export const example = defineStateful("example", {
         width: 100,
         classname: sx({ backgroundColor: "green" }),
       }),
-    ]),
+      span(
+        sx({
+          color: isBrowser() && theme.color.primary.base,
+        }),
+        "Theme color example",
+      ),
+    ])
+  },
 })
 
 export const links = defineStateful("links", {
   render: () =>
     div("col", [
       link({ href: "./index2.html", content: "Second page" }),
+      link({ href: "./level/second/index.html", content: "Second level page" }),
       link({ href: "./map.html", content: "Map" }),
       link({ href: "./generated.html", content: "Generated page" }),
     ]),

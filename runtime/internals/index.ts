@@ -2,18 +2,18 @@ import { isBrowser } from "../util"
 import { VIEWType } from "../types"
 
 const emptyInternals = {
-  env: { views: [], BASE_URL: "./" },
+  env: { views: [], BASE_URL: "./", config: {} as Record<string, any> },
   instances: {} as Record<string, any>,
   vdom: {},
-  assets: { pages: [], images: [], other: [] },
+  assets: { pages: [], images: {} as Record<string, string[]>, other: [] },
 }
 
 // @TODO finish typing instances & vdom
 type Internals = {
-  env: { views: VIEWType[]; BASE_URL: string }
+  env: { views: VIEWType[]; BASE_URL: string; config: Record<string, any> }
   instances: Record<string, any>
   vdom: any
-  assets: { pages: string[]; images: string[]; other: string[] }
+  assets: { pages: string[]; images: Record<string, string[]>; other: string[] }
 }
 
 // @ts-ignore
@@ -44,9 +44,29 @@ export const pushVIEW = (viewName: string, isStatic?: boolean) => {
   }
 }
 
-export const pushAsset = (viewName: string, assetType: "pages" | "images" | "other") => {
-  const list = getAssets()[assetType]
-  if (!list.includes(viewName)) {
-    list.push(viewName)
+export const pushAsset = (assetName: string, assetType: "pages" | "images" | "other") => {
+  if (assetType === "images") {
+    const list = getAssets().images
+    const currentView = getCURRENT_VIEW()
+    if (!list[currentView]) {
+      list[currentView] = []
+    }
+    const images = list[currentView]
+    if (!images.includes(assetName)) {
+      images.push(assetName)
+    }
+  } else {
+    const list = getAssets()[assetType]
+    if (!list.includes(assetName)) {
+      list.push(assetName)
+    }
   }
+}
+
+export let CURRENT_VIEW: string = ""
+
+export const getCURRENT_VIEW = () => CURRENT_VIEW
+
+export const setCURRENT_VIEW = (currentView: string) => {
+  CURRENT_VIEW = currentView
 }

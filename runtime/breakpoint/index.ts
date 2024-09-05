@@ -1,5 +1,13 @@
-import { BREAKPOINT } from "../constants"
 import { Breakpoint, Render } from "../types"
+import { getEnv } from "../internals"
+import { isBrowser } from "../util"
+
+const configBreakpoints = isBrowser() ? getEnv().config.breakpoints : []
+const BREAKPOINT: Record<string, number> = {}
+
+configBreakpoints.forEach((b) => {
+  BREAKPOINT[b.name] = b.maxWidth
+})
 
 const mediaQuery = (maxWidth: number | undefined, minWidth: number | undefined) =>
   window.matchMedia(
