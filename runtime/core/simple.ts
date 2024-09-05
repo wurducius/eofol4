@@ -39,7 +39,7 @@ export const form = f("form")
 export const select = f("select")
 
 export const style = f("style")
-export const link = f("link")
+export const linkTag = f("link")
 export const script = f("script")
 export const noscript = f("noscript")
 

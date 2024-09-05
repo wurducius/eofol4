@@ -28,6 +28,7 @@ p {
 
 a {
   text-decoration: none;
+  font-family: inherit;
 }
 
 .col {
