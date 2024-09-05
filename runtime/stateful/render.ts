@@ -16,7 +16,8 @@ import { prune } from "./prune"
 import { logDefNotFound, logElementNotFound, logDefHasNoName } from "../logger"
 import { getAttributes } from "./attributes"
 import { getInstances } from "../internals"
-import { Attributes, Children, DefRegistry, EofolDef, State, StaticElement, Instance, SetState } from "../types"
+import { Attributes, Children, DefRegistry, DefStateful, State, StaticElement, Instance, SetState } from "../types"
+import { typeStateful } from "./type-stateful"
 
 export const renderEofolWrapper = (
   content: StaticElement | string | Array<StaticElement | string>,
@@ -46,7 +47,7 @@ export const filterChildren = (
 }
 
 export const renderElement = (
-  def: EofolDef,
+  def: DefStateful,
   state: State,
   setState: SetState,
   attributes: Attributes,
@@ -63,7 +64,7 @@ export const mountImpl = (
     logDefHasNoName()
     return
   }
-  const def = getDefImpl(defs)(name)
+  const def = typeStateful(getDefImpl(defs)(name))
   if (!def) {
     logDefNotFound(name)
     return
@@ -100,7 +101,7 @@ export const rerender = (id: string) => {
   const instance = getInstance(id)
   const target = document.getElementById(instance.id)
   if (target) {
-    const def = getDef(instance.name)
+    const def = typeStateful(getDef(instance.name))
     if (def) {
       const state = instance.state
       const attributes = domAttributesToJson(target.attributes)

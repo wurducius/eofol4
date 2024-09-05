@@ -3,21 +3,19 @@ import type * as CSSType from "csstype"
 export type EofolElement = StaticElement | string | undefined | false | null
 export type EofolNode = EofolElement | EofolElement[]
 
+type ClassnameSingle = string | boolean | undefined | null
+export type Classname = ClassnameSingle | ClassnameSingle[]
+
 export type Attributes = Record<string, string>
 
-// @TODO Children typing
-export type Children =
-  | Array<StaticElement | string | undefined | false | null>
-  | StaticElement
-  | string
-  | undefined
-  | false
-  | null
+type ChildrenSingle = StaticElement | string | undefined | false | null
+export type Children = ChildrenSingle | ChildrenSingle[]
 
 // @TODO State typing
 export type State = any | undefined
-// @TODO SetState typing
-export type SetState = Function
+
+// eslint-disable-next-line no-unused-vars
+export type SetState = (nextState: State) => void
 
 export type Props = { state: State; setState: SetState; attributes: Attributes; children?: Children }
 
@@ -31,16 +29,24 @@ export type Effect = undefined | EffectSingle | EffectSingle[]
 export type StaticElement = { type: string; attributes?: Record<string, string> }
 // @TODO typing finish, solve recursion
 // eslint-disable-next-line no-unused-vars
-export type Render = (props: Props) => StaticElement & {
-  content?: Array<string | StaticElement | undefined | null | false> | string | StaticElement | undefined | null | false
-}
+export type Render = (props: Props) =>
+  | StaticElement[]
+  | (StaticElement & {
+      content?:
+        | Array<string | StaticElement | undefined | null | false>
+        | string
+        | StaticElement
+        | undefined
+        | null
+        | false
+    })
 
 export type Instance = { id: string; name: string; attributes?: Attributes; state?: any }
 
 // eslint-disable-next-line no-unused-vars
 export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => boolean
 
-export type EofolDef = {
+export type DefStateful = {
   name: string
   type: string
   render: Render
@@ -49,6 +55,19 @@ export type EofolDef = {
   effect?: Effect
   shouldUpdate?: ShouldUpdate
   subscribe?: string | string[]
+}
+
+export type DefFlat = {
+  name: string
+  type: string
+  render: Render
+  classname?: Classname
+}
+
+export type DefVirtual = {
+  name: string
+  type: string
+  render?: Render
 }
 
 export type EofolComponentProps = {
@@ -60,29 +79,19 @@ export type EofolComponentProps = {
   subscribe?: string | string[]
 }
 
-export type DefRegistry = Record<string, EofolDef>
+export type DefGeneral = DefStateful | DefFlat | DefVirtual
+
+export type DefRegistry = Record<string, DefGeneral>
 
 type CSSObject = CSSType.Properties
 
 export type VIEWType = { path: string; isStatic?: boolean }
-// ==================     FUNC     ==================
 
-// eslint-disable-next-line no-unused-vars
-export type Handler<T> = (x: any) => void
+// ==================           ==================
 
-// ==================     DOM      ==================
-
-export type Classname = string | boolean | undefined | null | Array<string | boolean | undefined | null>
-
-// @TODO
-// export type Attributes = Object
-
-// ==================      CSS     ==================
-
-// @TODD install css object types
 export type SxStyleObject = CSSObject
 
-// ==================     HTTP      ==================
+// ==================           ==================
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "HEAD" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH"
 
