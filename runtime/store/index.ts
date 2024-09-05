@@ -4,12 +4,11 @@ import { Store, StoreState } from "../types"
 import { getDefs } from "../defs"
 import { getInstances } from "../internals"
 import { logStoreAlreadyExists, logStoreDoesNotExist } from "../logger"
+import { typeStateful } from "../stateful/type-stateful"
 
 const globalStore: Record<string, Store> = {}
 
 const getSelectorId = (projectionSource: string) => `${projectionSource}-${generateId()}`
-
-// @TODO Extract error logging
 
 export const createStore = (id: string, initialState: StoreState) => {
   if (globalStore[id]) {
@@ -34,11 +33,12 @@ const updateSubscribed = (id: string) => {
   const namesUpdated: string[] = []
   const defs = getDefs()
   Object.keys(defs).forEach((defName) => {
+    const def = typeStateful(defs[defName])
     arrayCombinatorForEach((subscribe) => {
       if (subscribe === id) {
         namesUpdated.push(defName)
       }
-    })(defs[defName].subscribe)
+    })(def.subscribe)
   }, [])
   const updated: string[] = []
   const instances = getInstances()

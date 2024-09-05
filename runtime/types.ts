@@ -46,7 +46,7 @@ export type Instance = { id: string; name: string; attributes?: Attributes; stat
 // eslint-disable-next-line no-unused-vars
 export type ShouldUpdate = (props: { state: State; attributes: Attributes }) => boolean
 
-export type EofolDef = {
+export type DefStateful = {
   name: string
   type: string
   render: Render
@@ -55,6 +55,19 @@ export type EofolDef = {
   effect?: Effect
   shouldUpdate?: ShouldUpdate
   subscribe?: string | string[]
+}
+
+export type DefFlat = {
+  name: string
+  type: string
+  render: Render
+  classname?: Classname
+}
+
+export type DefVirtual = {
+  name: string
+  type: string
+  render?: Render
 }
 
 export type EofolComponentProps = {
@@ -66,22 +79,19 @@ export type EofolComponentProps = {
   subscribe?: string | string[]
 }
 
-export type DefRegistry = Record<string, EofolDef>
+export type DefGeneral = DefStateful | DefFlat | DefVirtual
+
+export type DefRegistry = Record<string, DefGeneral>
 
 type CSSObject = CSSType.Properties
 
 export type VIEWType = { path: string; isStatic?: boolean }
-// ==================     FUNC     ==================
 
-// eslint-disable-next-line no-unused-vars
-export type Handler<T> = (x: any) => void
+// ==================           ==================
 
-// ==================      CSS     ==================
-
-// @TODD install css object types
 export type SxStyleObject = CSSObject
 
-// ==================     HTTP      ==================
+// ==================           ==================
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "HEAD" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH"
 

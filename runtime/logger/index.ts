@@ -2,6 +2,8 @@ const COMPILER_LOG_ERROR_MSG_PREFIX = "Eofol error: "
 
 export const logError = (msg: string) => console.log(COMPILER_LOG_ERROR_MSG_PREFIX + msg)
 
+export const logInstanceNotFound = (id: string) => logError(`Instance with id = ${id} does not exist.`)
+
 export const logDefNotFound = (name: string) => logError(`Component definition not found for name = "${name}".`)
 
 export const logTagHasNoName = (tag: string) =>

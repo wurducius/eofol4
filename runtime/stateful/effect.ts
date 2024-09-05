@@ -4,6 +4,8 @@ import { getSetState, getState } from "./state"
 import { isBrowser } from "../util"
 import { getInstance } from "../instances"
 import { Attributes, EffectSingle, Props } from "../types"
+import { logDefNotFound, logInstanceNotFound } from "../logger"
+import { typeStateful } from "./type-stateful"
 
 const playEffectImpl = (effect: EffectSingle, props: Props) => {
   if (effect) {
@@ -17,15 +19,21 @@ const playEffectImpl = (effect: EffectSingle, props: Props) => {
 const getEffectProps = (id: string, attributes: Attributes) => ({
   state: getState(id),
   setState: getSetState(id),
-  // @TODO FIXME add attributes to instances
   attributes,
 })
 
 export const playEffect = (id: string) => {
   if (isBrowser()) {
     const instance = getInstance(id)
-    // @TODO error logging
-    const def = getDef(instance.name)
+    if (!instance) {
+      logInstanceNotFound(id)
+      return
+    }
+    const def = typeStateful(getDef(instance.name))
+    if (!def) {
+      logDefNotFound(instance.name)
+      return
+    }
     if (def.effect) {
       if (Array.isArray(def.effect)) {
         def.effect.forEach((singleEffect) => {
