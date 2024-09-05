@@ -15,3 +15,9 @@ export const logDefAlreadyExists = (name: string) =>
   logError(`Cannot define component with name = "${name}" because a component with that name is already defined.`)
 
 export const logDefHasNoName = () => logError("Custom component has no name.")
+
+// ================   STORE   ================
+
+export const logStoreDoesNotExist = (id: string) => logError(`Eofol error: Store with id = "${id}" does not exist.`)
+
+export const logStoreAlreadyExists = (id: string) => logError(`Eofol error: Store with id = "${id}" already exists.`)

@@ -3,6 +3,7 @@ import {
   button,
   createEofolElement,
   createProjection,
+  createSelector,
   createStore,
   cx,
   dataContainer,
@@ -17,6 +18,7 @@ import {
   registerServiceworker,
   selector,
   setStore,
+  State,
   sx,
   sy,
 } from "../runtime"
@@ -135,6 +137,7 @@ const STORE1 = "store1"
 const STORE2 = "store2"
 createStore(STORE1, { data: 1 })
 createProjection(STORE2, STORE1, (state) => ({ data: state.data }))
+const selector2 = createSelector(STORE1, (state: State) => ({ data: state.data }))
 
 export const subscribed = defineStateful("subscribed", {
   render: () => {
@@ -150,6 +153,14 @@ export const projection = defineStateful("projection", {
     return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
   },
   subscribe: STORE2,
+})
+
+export const createdSelector = defineStateful("createdSelector", {
+  render: () => {
+    const stored = selector2.selector()
+    return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
+  },
+  subscribe: selector2.id,
 })
 
 const onSetStore = () => {

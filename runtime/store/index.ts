@@ -1,8 +1,9 @@
 import { arrayCombinatorForEach, generateId } from "../util"
-import { forceRerender, updateComponents } from "../stateful"
+import { updateComponents } from "../stateful"
 import { Store, StoreState } from "../types"
 import { getDefs } from "../defs"
 import { getInstances } from "../internals"
+import { logStoreAlreadyExists, logStoreDoesNotExist } from "../logger"
 
 const globalStore: Record<string, Store> = {}
 
@@ -12,7 +13,7 @@ const getSelectorId = (projectionSource: string) => `${projectionSource}-${gener
 
 export const createStore = (id: string, initialState: StoreState) => {
   if (globalStore[id]) {
-    console.log(`Eofol error: Store with id = "${id}" already exists.`)
+    logStoreAlreadyExists(id)
     return
   }
   globalStore[id] = { id, state: initialState }
@@ -21,7 +22,7 @@ export const createStore = (id: string, initialState: StoreState) => {
 const getStore = (id: string) => {
   const stored = globalStore[id]
   if (!stored) {
-    console.log(`Eofol error: Store with id = "${id}" does not exist.`)
+    logStoreDoesNotExist(id)
     return
   }
   return stored.state
@@ -51,7 +52,7 @@ const updateSubscribed = (id: string) => {
 
 const setStoreImpl = (stored: Store, id: string, nextState: StoreState) => {
   if (!stored) {
-    console.log(`Eofol error: Store with id = "${id}" does not exist.`)
+    logStoreDoesNotExist(id)
     return
   }
   stored.state = nextState
