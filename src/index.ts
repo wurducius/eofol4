@@ -28,6 +28,10 @@ import {
   dispatch,
   h3,
   h4,
+  input,
+  select,
+  option,
+  p,
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
@@ -270,4 +274,66 @@ export const counter = defineStateful("counter", {
       ]),
     ]),
   subscribe: Counter,
+})
+
+const FormExample = "store4"
+createStore(FormExample, { value: "" })
+
+const onChange =
+  isBrowser() &&
+  ((event) => {
+    const value = event.target.value
+    console.log(`Input.onChange -> ${value}`)
+    setStore(FormExample, { value: value })
+  })
+
+export const inputExample = defineStateful("inputExample", {
+  render: () => {
+    const value = selector(FormExample).value
+    return div(
+      ["col", sx({ alignItems: "center" })],
+      [
+        p(undefined, "Controlled input example"),
+        div(sx({ width: "256px" }), input(sx({ width: "100%" }), undefined, { value }, { onchange: onChange })),
+      ],
+    )
+  },
+  subscribe: FormExample,
+})
+
+const FormExampleSelect = "store5"
+createStore(FormExampleSelect, { value: "" })
+
+const onChangeSelect =
+  isBrowser() &&
+  ((event) => {
+    const value = event.target.value
+    console.log(`Select.onChange -> ${value}`)
+    setStore(FormExampleSelect, { value: value })
+  })
+
+export const selectExample = defineStateful("selectExample", {
+  render: () => {
+    const value = selector(FormExampleSelect).value
+    return div(
+      ["col", sx({ alignItems: "center" })],
+      [
+        p(undefined, "Controlled select example"),
+        div(
+          sx({ width: "256px" }),
+          select(
+            sx({ width: "100%" }),
+            [
+              option(undefined, "First", { value: "1" }),
+              option(undefined, "Second", { value: "2" }),
+              option(undefined, "Third", { value: "3" }),
+            ],
+            { value },
+            { onchange: onChangeSelect },
+          ),
+        ),
+      ],
+    )
+  },
+  subscribe: FormExample,
 })
