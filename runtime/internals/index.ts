@@ -72,3 +72,8 @@ export const getCURRENT_VIEW = () => CURRENT_VIEW
 export const setCURRENT_VIEW = (currentView: string) => {
   CURRENT_VIEW = currentView
 }
+
+export const setBASE_URL = (baseUrl: string) => {
+  const env = getEnv()
+  env.BASE_URL = baseUrl
+}
