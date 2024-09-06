@@ -13,13 +13,13 @@ const generatedMetadata = {
 }
 
 const docsStyles =
-  "html { scroll-behavior: smooth; } body { background-color: #1a202c; font-family: Inter, sans-serif; font-size: 16px; font-weight: 400; color: #edf2f7; url(./assets/media/images/rainbow-mountains-peru.jpg); } .container { margin: 0 auto 0 auto; text-align: center; padding: 32px 32px; } a { color: #30cccc; } a:visited { color: #299393; } a:hover { color: #87e6e6; } a:active { color: #87e6e6; }"
+  "html { scroll-behavior: smooth; } body { background-color: #1a202c; font-family: Inter, sans-serif; font-size: 16px; font-weight: 400; color: #edf2f7; url(./assets/media/images/rainbow-mountains-peru.jpg); } a { color: #30cccc; } a:visited { color: #299393; } a:hover { color: #87e6e6; } a:active { color: #87e6e6; } .multi-column { columns: 2 256px; } .containerx { text-align: center; padding: 32px 32px; }"
 
 const docsMetadata = {
   title: "Eofol4 docs",
 }
 
-const traverseDocs = (data, result, level) => {
+const traverseDocsImpl = (data, result, level) => {
   if (typeof data === "object") {
     result = `${result}<h${level} id="${data.title
       .split("")
@@ -27,7 +27,7 @@ const traverseDocs = (data, result, level) => {
       .join("")
       .replaceAll(" ", "-")}">${data.title}</h${level}>`
     if (data.content && data.content.length > 0) {
-      result = data.content.reduce((acc, next, i) => traverseDocs(data.content[i], acc, level + 1), result)
+      result = data.content.reduce((acc, next, i) => traverseDocsImpl(data.content[i], acc, level + 1), result)
     }
   } else {
     result = `${result}<p>${data}</p>`
@@ -61,9 +61,9 @@ const traverseDocsSummary = (data, result, level, index, numbering) => {
 
 const renderDocs = (data) => {
   let summary = ""
-  summary = `${summary}${traverseDocsSummary(data, summary, 0, 0, "")}`
-  let result = `<div class='container'><div>${summary}</div>`
-  result = `${result}${traverseDocs(data, result, 1)}</div>`
+  summary = traverseDocsSummary(data, summary, 0, 0, "")
+  let result = `<div class='containerx'><div class='multi-column'><h2>Table of contents</h2>${summary}</div>`
+  result = `${traverseDocsImpl(data, result, 1)}</div>`
   return result
 }
 
