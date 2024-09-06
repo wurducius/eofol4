@@ -194,7 +194,7 @@ export const example = defineStateful("example", {
     const theme = getTheme()
     return div(sx({ display: "flex", flexDirection: "column", alignItems: "center" }), [
       image({
-        src: "./assets/media/icons/phi.svg",
+        src: "phi.svg",
         alt: "Test Image API",
         height: 100,
         width: 100,

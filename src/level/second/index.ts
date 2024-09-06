@@ -9,7 +9,7 @@ registerServiceworker("../../")
 export const examplex = defineFlat("examplex", {
   render: () =>
     image({
-      src: "../../assets/media/icons/phi.svg",
+      src: "phi.svg",
       alt: "Test Image API",
       height: 100,
       width: 100,
