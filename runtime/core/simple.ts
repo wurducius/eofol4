@@ -19,6 +19,7 @@ export const sup = f("sup")
 export const button = f("button")
 export const input = f("input")
 export const textarea = f("textarea")
+export const label = f("label")
 
 export const img = f("img")
 
