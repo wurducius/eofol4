@@ -202,7 +202,7 @@ export const example = defineStateful("example", {
       }),
       span(
         sx({
-          color: isBrowser() && theme.color.primary.base,
+          color: isBrowser() && theme.color.secondary.base,
         }),
         "Theme color example",
       ),
@@ -212,11 +212,12 @@ export const example = defineStateful("example", {
 
 export const links = defineStateful("links", {
   render: () =>
-    div("col", [
+    div("col container", [
       link({ href: "./index2.html", content: "Second page" }),
       link({ href: "./level/second/index.html", content: "Second level page" }),
       link({ href: "./map.html", content: "Map" }),
       link({ href: "./generated.html", content: "Generated page" }),
+      link({ href: "./docs.html", content: "Eofol4 docs" }),
     ]),
 })
 

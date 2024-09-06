@@ -51,7 +51,9 @@ const recompile = async () => {
     console.log(primary("Recompiling..."))
     precompile()
     build(true)
-    console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
+    sleepInterval().then(() => {
+      console.log(success(`Recompiled! Serving Eofol4 app now at ${SERVE_URL}.`))
+    })
   })
 }
 

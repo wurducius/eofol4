@@ -15,7 +15,7 @@ export default [
     ignores,
   },
   { files: ["**/*.js"], languageOptions: { sourceType: "script" }, ignores },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } }, ignores },
+  { languageOptions: { globals: { ...globals.browser, ...globals.node, NodeJS: true } }, ignores },
   { ...pluginJs.configs.recommended, ignores },
   { ...tseslint.configs.base, ignores },
 ]

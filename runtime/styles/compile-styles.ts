@@ -17,6 +17,8 @@ export const compileThemeStyles = (theme: Theme) => {
   })
 
   sy("container", {
+    margin: "0 auto 0 auto",
+    textAlign: "center",
     padding: `${theme.spacing.lg}px ${theme.spacing.lg}px`,
   })
 
