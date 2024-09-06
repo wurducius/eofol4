@@ -37,6 +37,7 @@ export const tfoot = f("tfoot")
 export const progress = f("progress")
 export const form = f("form")
 export const select = f("select")
+export const option = f("option")
 
 export const style = f("style")
 export const linkTag = f("link")

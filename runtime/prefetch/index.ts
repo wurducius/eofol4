@@ -1,4 +1,5 @@
 import { getAssets } from "../internals"
+import { relativizePath } from "../relativize-path"
 
 export const prefetchAssets = () => {
   const assets = getAssets()
@@ -18,8 +19,9 @@ export const prefetchAssets = () => {
 
   Promise.all(
     queue.map((asset) => {
-      console.log(`Prefetch API -> Prefetching asset: ${asset}`)
-      return fetch(asset)
+      const path = relativizePath(asset)
+      console.log(`Prefetch API -> Prefetching asset: ${path}`)
+      return fetch(path)
     }),
   ).then(() => {
     console.log("Prefetch API -> All assets fetched.")

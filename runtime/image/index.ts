@@ -24,11 +24,15 @@ export const image = ({
   classname?: Classname
   isExternal?: boolean
 }) => {
+  let srcImpl
   if (!isExternal && !isBrowser()) {
-    pushAsset(src, "images")
+    srcImpl = `./assets/media/${src.endsWith(".svg") ? "icons" : "images"}/${src}`
+    pushAsset(srcImpl, "images")
+  } else {
+    srcImpl = src
   }
   const attributes = {
-    src,
+    src: srcImpl,
     alt,
     height: getDimension(height),
     width: getDimension(width),
