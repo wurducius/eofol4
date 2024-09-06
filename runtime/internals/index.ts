@@ -2,7 +2,7 @@ import { isBrowser } from "../util"
 import { VIEWType } from "../types"
 
 const emptyInternals = {
-  env: { views: [], BASE_URL: "./", config: {} as Record<string, any> },
+  env: { views: [], BASE_URL: "/", config: {} as Record<string, any> },
   instances: {} as Record<string, any>,
   vdom: {},
   assets: { pages: [], images: {} as Record<string, string[]>, other: [] },
@@ -22,6 +22,8 @@ export const getInternals = () => (isBrowser() ? (internals as Internals) : empt
 
 // @ts-ignore
 export const getEnv = () => getInternals().env
+
+export const getConfig = () => getInternals().env.config.env
 
 // @ts-ignore
 export const getInstances = () => getInternals().instances

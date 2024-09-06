@@ -1,9 +1,9 @@
 module.exports = {
   env: {
-    SERVICE_WORKER_REGISTER_AUTOMATICALLY: false,
+    SERVICE_WORKER_REGISTER_AUTOMATICALLY: true,
     TRANSLATIONS_ENABLED: false,
-    PREFETCHING_STRATEGY: "all",
-    ERROR_OVERLAY: false,
+    PREFETCHING_STRATEGY: "link",
+    ERROR_OVERLAY: true,
     VERBOSE: false,
   },
   plugins: {},

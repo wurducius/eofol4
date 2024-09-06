@@ -1,7 +1,7 @@
 import { img } from "../core"
 import { Classname } from "../types"
 import { isBrowser } from "../util"
-import { pushAsset } from "../internals"
+import { getEnv, pushAsset } from "../internals"
 
 type Dimension = string | number | undefined
 
@@ -24,19 +24,20 @@ export const image = ({
   classname?: Classname
   isExternal?: boolean
 }) => {
+  const { BASE_URL } = getEnv()
   let srcImpl
   if (!isExternal && !isBrowser()) {
-    srcImpl = `./assets/media/${src.endsWith(".svg") ? "icons" : "images"}/${src}`
+    srcImpl = `${BASE_URL}assets/media/${src.endsWith(".svg") ? "icons" : "images"}/${src}`
     pushAsset(srcImpl, "images")
   } else {
-    srcImpl = src
+    srcImpl = `${BASE_URL}assets/media/${src.endsWith(".svg") ? "icons" : "images"}/${src}`
   }
   const attributes = {
     src: srcImpl,
     alt,
     height: getDimension(height),
     width: getDimension(width),
-    onerror: `this.onerror = null; this.src = '${fallback ?? "./assets/media/images/default-fallback.png"}';`,
+    onerror: `this.onerror = null; this.src = '${fallback ? `${BASE_URL}${fallback}` : `${BASE_URL}assets/media/images/default-fallback.png`}';`,
   }
   return img(classname, undefined, attributes)
 }

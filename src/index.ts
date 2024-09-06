@@ -16,7 +16,6 @@ import {
   image,
   isBrowser,
   link,
-  registerServiceworker,
   selector,
   setStore,
   span,
@@ -35,13 +34,10 @@ import {
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
-// injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
 if (isBrowser()) {
   document.getElementById("sx")?.setAttribute("class", sx({ color: "fuchsia" }))
   document.getElementById("sy")?.setAttribute("class", sy("sy-classname-test", { color: "lightgreen" }))
 }
-
-registerServiceworker()
 
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
