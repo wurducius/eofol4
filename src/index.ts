@@ -27,11 +27,11 @@ import {
   createSlice,
   dispatch,
   h3,
-  h4,
   input,
   select,
   option,
-  p,
+  h2,
+  label,
 } from "../runtime"
 
 injectElement("script", "Script injected and working!", true)
@@ -262,8 +262,8 @@ const handleReset = () => {
 export const counter = defineStateful("counter", {
   render: () =>
     div("col", [
-      h3(undefined, "Slice API"),
-      h4(undefined, `Count = ${selector(Counter).data}`),
+      h2(undefined, "Slice API"),
+      h3(undefined, `Count = ${selector(Counter).data}`),
       div("row", [
         button(undefined, "+", undefined, {
           onclick: isBrowser() && handleIncrement,
@@ -290,11 +290,14 @@ const onChange =
 export const inputExample = defineStateful("inputExample", {
   render: () => {
     const value = selector(FormExample).value
+    const id = "Controlled input example"
     return div(
       ["col", sx({ alignItems: "center" })],
       [
-        p(undefined, "Controlled input example"),
-        div(sx({ width: "256px" }), input(sx({ width: "100%" }), undefined, { value }, { onchange: onChange })),
+        div(sx({ width: "256px" }), [
+          label(undefined, id, { for: id }),
+          input(sx({ width: "100%" }), undefined, { value, id }, { onchange: onChange }),
+        ]),
       ],
     )
   },
@@ -315,12 +318,12 @@ const onChangeSelect =
 export const selectExample = defineStateful("selectExample", {
   render: () => {
     const value = selector(FormExampleSelect).value
+    const id = "Controlled select example"
     return div(
       ["col", sx({ alignItems: "center" })],
       [
-        p(undefined, "Controlled select example"),
-        div(
-          sx({ width: "256px" }),
+        div(sx({ width: "256px" }), [
+          label(undefined, id, { for: id }),
           select(
             sx({ width: "100%" }),
             [
@@ -328,10 +331,10 @@ export const selectExample = defineStateful("selectExample", {
               option(undefined, "Second", { value: "2" }),
               option(undefined, "Third", { value: "3" }),
             ],
-            { value },
+            { value, id },
             { onchange: onChangeSelect },
           ),
-        ),
+        ]),
       ],
     )
   },
