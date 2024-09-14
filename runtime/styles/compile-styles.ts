@@ -1,9 +1,6 @@
-import { sy } from "./sx"
+import { sy, syy } from "./sx"
 import { Theme } from "./theme"
-import { SxStyleObject } from "../types"
 import { getEnv } from "../internals"
-
-const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "")
 
 export const compileThemeStyles = (theme: Theme) => {
   const breakpoints = getEnv().config.breakpoints
