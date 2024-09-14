@@ -1,7 +1,8 @@
 const { readDir, resolve, stat, spawn, parse } = require("../../util")
-const { PATH_SRC, DIRNAME_DIST, PATH_DIST } = require("../../config")
 const spawnOptions = require("./options")
 const rimraf = require("rimraf")
+const { PATH_DIST, PATH_SRC } = require("../../config/path")
+const { DIRNAME_DIST } = require("../../config/env")
 
 const cleanPaths = [PATH_DIST]
 
