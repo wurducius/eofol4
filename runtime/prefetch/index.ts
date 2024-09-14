@@ -3,7 +3,6 @@ import { relativizePath } from "../relativize-path"
 
 const prefetchAsset = (asset: string) => {
   const path = relativizePath(asset)
-  console.log(path, asset)
   console.log(`Prefetch API -> Prefetching asset: ${path}`)
   return fetch(path)
 }
