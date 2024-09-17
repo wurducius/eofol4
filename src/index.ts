@@ -31,6 +31,8 @@ import {
   option,
   h2,
   label,
+  addTheme,
+  setTheme,
 } from "../runtime"
 
 addTheme("second", { color: {}, typography: {}, spacing: {}, size: {}, borderRadius: {}, zIndex: {}, config: {} })
