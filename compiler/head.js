@@ -1,5 +1,6 @@
 const { read, resolve, parse, exists } = require("../util")
 const { PATH_TEMPLATES, PATH_METADATA_DEFAULT } = require("../config")
+const { relativizePath } = require("../dist/runtime")
 
 const htmlElement = (tagname, content, attributes) => ({
   type: tagname,
@@ -13,9 +14,6 @@ const script = (scriptName) =>
     async: "async",
     defer: "defer",
   })
-
-const relativizePath = (x) => x
-const relativizeFontStyle = (x) => x
 
 const getHead = (data, viewStyles) =>
   htmlElement(
@@ -39,7 +37,7 @@ const getHead = (data, viewStyles) =>
       htmlElement("link", [], { rel: "apple-touch-icon", href: relativizePath(data.appleTouchIcon) }),
       htmlElement("link", [], { rel: "manifest", href: relativizePath(data.manifest) }),
       htmlElement("title", [data.title], {}),
-      htmlElement("style", [relativizeFontStyle(data.fontStyle), data.style, viewStyles].filter(Boolean), {}),
+      htmlElement("style", [relativizePath(data.fontStyle), data.style, viewStyles].filter(Boolean), {}),
     ],
     {},
   )

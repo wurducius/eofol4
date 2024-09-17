@@ -16,7 +16,6 @@ import {
   image,
   isBrowser,
   link,
-  registerServiceworker,
   selector,
   setStore,
   span,
@@ -32,16 +31,27 @@ import {
   option,
   h2,
   label,
+  addTheme,
+  setTheme,
 } from "../runtime"
 
+addTheme("second", {
+  mode: "dark",
+  color: {},
+  typography: {},
+  spacing: {},
+  size: {},
+  borderRadius: {},
+  zIndex: {},
+  config: {},
+})
+setTheme("second")
+
 injectElement("script", "Script injected and working!", true)
-// injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
 if (isBrowser()) {
   document.getElementById("sx")?.setAttribute("class", sx({ color: "fuchsia" }))
   document.getElementById("sy")?.setAttribute("class", sy("sy-classname-test", { color: "lightgreen" }))
 }
-
-registerServiceworker()
 
 injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
@@ -206,7 +216,7 @@ export const example = defineStateful("example", {
       }),
       span(
         sx({
-          color: isBrowser() && theme.color.secondary.base,
+          color: theme.color.secondary.base,
         }),
         "Theme color example",
       ),

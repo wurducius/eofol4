@@ -1,19 +1,16 @@
-import { sy } from "./sx"
+import { sy, syy } from "./sx"
 import { Theme } from "./theme"
-import { SxStyleObject } from "../types"
 import { getEnv } from "../internals"
-
-const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "")
 
 export const compileThemeStyles = (theme: Theme) => {
   const breakpoints = getEnv().config.breakpoints
-
-  syy("body", {
-    backgroundColor: "#1a202c",
-    fontFamily: "Inter, sans-serif",
-    fontSize: "16px",
-    fontWeight: 400,
-    color: "#edf2f7",
+  // @TODO include breakpoints into env.config or such at compile time
+  breakpoints?.forEach((breakpoint: { name: string; maxWidth: number | undefined }) => {
+    if (breakpoint.maxWidth) {
+      sy(`container-${breakpoint.name}`, {
+        maxWidth: `${breakpoint.maxWidth}px`,
+      })
+    }
   })
 
   sy("container", {
@@ -22,13 +19,12 @@ export const compileThemeStyles = (theme: Theme) => {
     padding: `${theme.spacing.lg}px ${theme.spacing.lg}px`,
   })
 
-  // @TODO include breakpoints into env.config or such at compile time
-  breakpoints?.forEach((breakpoint: { name: string; maxWidth: number | undefined }) => {
-    if (breakpoint.maxWidth) {
-      sy(`container-${breakpoint.name}`, {
-        maxWidth: `${breakpoint.maxWidth}px`,
-      })
-    }
+  syy("body", {
+    backgroundColor: "#1a202c",
+    fontFamily: "Inter, sans-serif",
+    fontSize: "16px",
+    fontWeight: 400,
+    color: "#edf2f7",
   })
 
   syy("a", {

@@ -15,6 +15,4 @@ const pushVIEW = (viewName, isStatic) => {
   }
 }
 
-const BASE_URL = process.env.BASE_URL
-
-module.exports = { getVIEWS, pushVIEW, VIEWS, BASE_URL }
+module.exports = { getVIEWS, pushVIEW, VIEWS }

@@ -1,5 +1,5 @@
 import { injectElement } from "./util"
-import { capitalize, registerServiceworker, getEnv } from "../runtime"
+import { capitalize, getEnv } from "../runtime"
 
 const maplistContent = (getEnv()?.views.map(({ path }) => path) ?? [])
   .map(
@@ -9,5 +9,3 @@ const maplistContent = (getEnv()?.views.map(({ path }) => path) ?? [])
   .join("")
 
 injectElement("map-list", maplistContent, true)
-
-registerServiceworker()

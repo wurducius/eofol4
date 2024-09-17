@@ -1,10 +1,7 @@
 import { injectElement } from "../../util"
-import { defineFlat, image, registerServiceworker, sx } from "../../../runtime"
+import { defineFlat, image, sx } from "../../../runtime"
 
 injectElement("script", "Script injected and working!", true)
-// injectElement("module", "External dependency imported and working!", Boolean(hexToCSSFilter))
-
-registerServiceworker("../../")
 
 export const examplex = defineFlat("examplex", {
   render: () =>

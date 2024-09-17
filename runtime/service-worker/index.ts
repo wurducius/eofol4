@@ -1,9 +1,18 @@
 import { isBrowser } from "../util"
 import { SERVICE_WORKER } from "../constants"
+import { getConfig, getEnv } from "../internals"
 
-// @TODO Extract service worker scriot filename to ENV
-export const registerServiceworker = (serviceworkerPath?: string) => {
+export const registerServiceworker = () => {
   if (isBrowser() && "serviceWorker" in navigator) {
-    navigator.serviceWorker.register(`${serviceworkerPath ?? "./"}${SERVICE_WORKER.SCRIPT_FILENAME}`)
+    const { BASE_URL } = getEnv()
+    navigator.serviceWorker.register(`${BASE_URL}${SERVICE_WORKER.SCRIPT_FILENAME}`)
+    console.log("Service worker registered.")
+  }
+}
+
+if (isBrowser()) {
+  const { SERVICE_WORKER_REGISTER_AUTOMATICALLY } = getConfig()
+  if (SERVICE_WORKER_REGISTER_AUTOMATICALLY) {
+    registerServiceworker()
   }
 }

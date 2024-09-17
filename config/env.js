@@ -37,7 +37,7 @@ const IMAGE_PROCESSING_INCLUDE_METADATA = false
 const COMPILATION_VERBOSE = false
 const COMPILATION_SHOW_PROGRESS = true
 
-const BASE_URL = "./"
+const BASE_URL = "/"
 
 const defaultEnv = {
   PORT,
