@@ -14,13 +14,40 @@ export type ColorTheme = {
   typography: string
 }
 
-// @TODO finish typing
-export type TypographyTheme = {}
-export type SpacingTheme = {}
+export type TypographyComponent = { fontFamily?: string; fontWeight?: number; fontSize?: string }
+export type TypographyTheme = {
+  default: TypographyComponent
+  h1?: TypographyComponent
+  h2?: TypographyComponent
+  h3?: TypographyComponent
+  h4?: TypographyComponent
+  h5?: TypographyComponent
+  h6?: TypographyComponent
+  p?: TypographyComponent
+  link?: TypographyComponent
+  button?: TypographyComponent
+}
+
+export type SpacingTheme = {
+  xxxs: string
+  xxs: string
+  xs: string
+  sm: string
+  md: string
+  lg: string
+  xl: string
+  xxl: string
+  xxxl: string
+}
+
 export type SizeTheme = {}
-export type BorderRadiusTheme = {}
+
+export type BorderRadiusTheme = { borderRadius: string }
+
 export type ZIndexTheme = {}
+
 export type ConfigTheme = {}
+
 export type Theme = {
   color: ColorTheme
   typography: TypographyTheme

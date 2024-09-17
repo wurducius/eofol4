@@ -1,22 +1,8 @@
-import { getCompileCache, sy, syy } from "./sx"
+import { sy, syy } from "./sx"
 import { Theme } from "./theme"
 import { getEnv } from "../internals"
 
 export const compileThemeStyles = (theme: Theme) => {
-  syy("body", {
-    backgroundColor: "#1a202c",
-    fontFamily: "Inter, sans-serif",
-    fontSize: "16px",
-    fontWeight: 400,
-    color: "#edf2f7",
-  })
-
-  sy("container", {
-    margin: "0 auto 0 auto",
-    textAlign: "center",
-    padding: `${theme.spacing.lg}px ${theme.spacing.lg}px`,
-  })
-
   const breakpoints = getEnv().config.breakpoints
   // @TODO include breakpoints into env.config or such at compile time
   breakpoints?.forEach((breakpoint: { name: string; maxWidth: number | undefined }) => {
@@ -25,6 +11,20 @@ export const compileThemeStyles = (theme: Theme) => {
         maxWidth: `${breakpoint.maxWidth}px`,
       })
     }
+  })
+
+  sy("container", {
+    margin: "0 auto 0 auto",
+    textAlign: "center",
+    padding: `${theme.spacing.lg}px ${theme.spacing.lg}px`,
+  })
+
+  syy("body", {
+    backgroundColor: "#1a202c",
+    fontFamily: "Inter, sans-serif",
+    fontSize: "16px",
+    fontWeight: 400,
+    color: "#edf2f7",
   })
 
   syy("a", {
@@ -63,6 +63,4 @@ export const compileThemeStyles = (theme: Theme) => {
     backgroundColor: "purple",
     color: "red",
   })
-
-  console.log(getCompileCache())
 }
