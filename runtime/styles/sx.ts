@@ -48,4 +48,4 @@ export const sy = (
   return classname
 }
 
-export const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "", true)
+export const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "", false)
