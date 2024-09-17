@@ -1,17 +1,42 @@
 import themeDefault from "./theme-default"
 import themeSrc from "../../src/theme"
-import { mergeDeep } from "../util"
+import { isBrowser, mergeDeep } from "../util"
 import { compileThemeStyles } from "./compile-styles"
 
-// @TODO typing
-export type Theme = any
+export type ColorComponent = { base: string; dark: string; light: string }
+
+export type ColorTheme = {
+  primary: ColorComponent
+  secondary: ColorComponent
+  bg: ColorComponent
+  link: ColorComponent
+  form: { base: string }
+  typography: string
+}
+
+// @TODO finish typing
+export type TypographyTheme = {}
+export type SpacingTheme = {}
+export type SizeTheme = {}
+export type BorderRadiusTheme = {}
+export type ZIndexTheme = {}
+export type ConfigTheme = {}
+export type Theme = {
+  color: ColorTheme
+  typography: TypographyTheme
+  spacing: SpacingTheme
+  size: SizeTheme
+  borderRadius: BorderRadiusTheme
+  zIndex: ZIndexTheme
+  config: ConfigTheme
+}
 
 const themes: Record<string, Theme> = {}
 
 let theme: string | undefined = undefined
 
 export const getTheme = () => {
-  return mergeDeep(theme ? themes[theme] : {}, themeDefault)
+  return theme ? themes[theme] : themeDefault
 }
 
 export const setTheme = (themeName: string) => {
@@ -19,9 +44,16 @@ export const setTheme = (themeName: string) => {
   compileThemeStyles(themes[themeName])
 }
 
-export const addTheme = (themeName: string, themeData: Theme) => {
-  themes[themeName] = themeData
+export const addTheme = (themeName: string, themeData: any) => {
+  themes[themeName] = mergeDeep(themeData, themeDefault)
 }
 
-addTheme("default", themeSrc)
-setTheme("default")
+export const initTheme = () => {
+  addTheme("default", themeSrc)
+  theme = "default"
+  if (!isBrowser()) {
+    compileThemeStyles(themes["default"])
+  }
+}
+
+initTheme()

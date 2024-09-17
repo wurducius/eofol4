@@ -33,6 +33,9 @@ import {
   label,
 } from "../runtime"
 
+addTheme("second", { color: {}, typography: {}, spacing: {}, size: {}, borderRadius: {}, zIndex: {}, config: {} })
+setTheme("second")
+
 injectElement("script", "Script injected and working!", true)
 if (isBrowser()) {
   document.getElementById("sx")?.setAttribute("class", sx({ color: "fuchsia" }))
@@ -202,7 +205,7 @@ export const example = defineStateful("example", {
       }),
       span(
         sx({
-          color: isBrowser() && theme.color.secondary.base,
+          color: theme.color.secondary.base,
         }),
         "Theme color example",
       ),
