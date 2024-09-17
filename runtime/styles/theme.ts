@@ -3,6 +3,8 @@ import themeSrc from "../../src/theme"
 import { isBrowser, mergeDeep } from "../util"
 import { compileThemeStyles } from "./compile-styles"
 
+export type ModeTheme = "light" | "dark"
+
 export type ColorComponent = { base: string; dark: string; light: string }
 
 export type ColorTheme = {
@@ -49,6 +51,7 @@ export type ZIndexTheme = {}
 export type ConfigTheme = {}
 
 export type Theme = {
+  mode: ModeTheme
   color: ColorTheme
   typography: TypographyTheme
   spacing: SpacingTheme
@@ -72,7 +75,7 @@ export const setTheme = (themeName: string) => {
 }
 
 export const addTheme = (themeName: string, themeData: any) => {
-  themes[themeName] = mergeDeep(themeData, themeDefault)
+  themes[themeName] = mergeDeep(themeDefault, themeData)
 }
 
 export const initTheme = () => {

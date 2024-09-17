@@ -1,3 +1,5 @@
+const mode = "dark"
+
 const color = {}
 
 const typography = {}
@@ -12,6 +14,6 @@ const zIndex = {}
 
 const config = {}
 
-const theme = { color, typography, spacing, size, borderRadius, zIndex, config }
+const theme = { mode, color, typography, spacing, size, borderRadius, zIndex, config }
 
 export default theme

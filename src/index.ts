@@ -35,7 +35,16 @@ import {
   setTheme,
 } from "../runtime"
 
-addTheme("second", { color: {}, typography: {}, spacing: {}, size: {}, borderRadius: {}, zIndex: {}, config: {} })
+addTheme("second", {
+  mode: "dark",
+  color: {},
+  typography: {},
+  spacing: {},
+  size: {},
+  borderRadius: {},
+  zIndex: {},
+  config: {},
+})
 setTheme("second")
 
 injectElement("script", "Script injected and working!", true)
