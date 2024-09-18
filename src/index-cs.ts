@@ -58,7 +58,7 @@ injectElement("breakpoint", `Breakpoint: ${getBreakpoint()}`, true)
 
 const breakpointStyle = sx({ color: "peachpuff" })
 
-export const first = defineStateful("first", {
+export const firstcs = defineStateful("firstcs", {
   classname: sx({ color: "fuchsia" }),
   // @ts-ignore
   render: (props) => {
@@ -91,7 +91,7 @@ export const first = defineStateful("first", {
   ],
 })
 
-export const firstx = defineStateful("firstx", {
+export const firstxcs = defineStateful("firstxcs", {
   // @ts-ignore
   render: (props) =>
     div(sx({ color: "red" }), [
@@ -100,20 +100,20 @@ export const firstx = defineStateful("firstx", {
     ]),
 })
 
-export const firstxx = defineStateful("firstxx", {
+export const firstxxcs = defineStateful("firstxxcs", {
   // @ts-ignore
   render: (props) => ["Firstxx", ...(Array.isArray(props.children) ? props.children : [props.children])],
 })
 
-export const second = defineStateful("second", {
+export const secondcs = defineStateful("secondcs", {
   render: (props) =>
     // @ts-ignore
     props.state?.onStateChange
       ? div(sx({ color: "green" }), [
           "Stateful component state and effect working!",
-          createEofolElement("firstx", undefined, undefined, { dynamicAttribute: "Working!" }),
-          createEofolElement("firstxx", undefined, ["Nested child"]),
-          createEofolElement("third"),
+          createEofolElement("firstxcs", undefined, undefined, { dynamicAttribute: "Working!" }),
+          createEofolElement("firstxxcs", undefined, ["Nested child"]),
+          createEofolElement("thirdcs"),
         ])
       : div(sx({ color: "blue" }), ["Stateful component state and effect not working."]),
   initialState: { onStateChange: false },
@@ -131,20 +131,20 @@ const onForceRerender = () => {
   forceRerender()
 }
 
-export const fourth = defineFlat("fourth", { render: () => div(undefined, "Flat example") })
+export const fourthcs = defineFlat("fourthcs", { render: () => div(undefined, "Flat example") })
 
-export const hook = defineVirtual("hook", {
+export const hookcs = defineVirtual("hookcs", {
   effect: () => {
     console.log("Hook example!")
   },
 })
 
-export const fragment = defineVirtual("fragment", {
+export const fragmentcs = defineVirtual("fragmentcs", {
   // @ts-ignore
   render: () => "Fragment example",
 })
 
-export const third = defineStateful("third", {
+export const thirdcs = defineStateful("thirdcs", {
   render: () => [
     button(
       undefined,
@@ -154,25 +154,25 @@ export const third = defineStateful("third", {
         onclick: onForceRerender,
       },
     ),
-    createEofolElement("fourth"),
-    createEofolElement("hook"),
-    createEofolElement("fragment"),
+    createEofolElement("fourthcs"),
+    createEofolElement("hookcs"),
+    createEofolElement("fragmentcs"),
   ],
 })
 
-export const weather = dataContainer("weather", {
+export const weathercs = dataContainer("weathercs", {
   // @ts-ignore
   render: (props) => div(undefined, `Latitude = ${props.state?.data.latitude}°`),
   url: "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m",
 })
 
-const STORE1 = "store1"
-const STORE2 = "store2"
+const STORE1 = "store1cs"
+const STORE2 = "store2cs"
 createStore(STORE1, { data: "Store state not changed." })
 createProjection(STORE2, STORE1, (state) => ({ data: state.data }))
 const selector2 = createSelector(STORE1, (state: State) => ({ data: state.data }))
 
-export const subscribed = defineStateful("subscribed", {
+export const subscribedcs = defineStateful("subscribedcs", {
   render: () => {
     const stored = selector(STORE1)
     return div(undefined, `Subscribed${stored.data ? ` -> ${stored.data}` : ""}`)
@@ -180,7 +180,7 @@ export const subscribed = defineStateful("subscribed", {
   subscribe: STORE1,
 })
 
-export const projection = defineStateful("projection", {
+export const projectioncs = defineStateful("projectioncs", {
   render: () => {
     const stored = selector(STORE2)
     return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
@@ -188,7 +188,7 @@ export const projection = defineStateful("projection", {
   subscribe: STORE2,
 })
 
-export const createdSelector = defineStateful("createdSelector", {
+export const createdSelectorcs = defineStateful("createdSelectorcs", {
   render: () => {
     const stored = selector2.selector()
     return div(undefined, `Projection${stored.data ? ` -> ${stored.data}` : ""}`)
@@ -202,11 +202,11 @@ const onSetStore = () => {
 }
 
 // @TODO bind onclick handler at compile time OR rehydrate
-export const storeSetter = defineStateful("storeSetter", {
+export const storeSettercs = defineStateful("storeSettercs", {
   render: () => button(undefined, "Set store", {}, { onclick: isBrowser() && onSetStore }),
 })
 
-export const example = defineStateful("example", {
+export const examplecs = defineStateful("examplecs", {
   render: () => {
     const theme = getTheme()
     return div(sx({ display: "flex", flexDirection: "column", alignItems: "center" }), [
@@ -227,7 +227,7 @@ export const example = defineStateful("example", {
   },
 })
 
-export const links = defineStateful("links", {
+export const linkscs = defineStateful("linkscs", {
   render: () =>
     div("col container", [
       link({ href: "./index2.html", content: "Second page" }),
@@ -238,7 +238,7 @@ export const links = defineStateful("links", {
     ]),
 })
 
-const Counter = "store3"
+const Counter = "store3cs"
 const CounterAction = {
   increment: "increment",
   reset: "reset",
@@ -272,7 +272,7 @@ const handleReset = () => {
   dispatch(Counter)(CounterAction.reset)
 }
 
-export const counter = defineStateful("counter", {
+export const countercs = defineStateful("countercs", {
   render: () =>
     div("col", [
       h2(undefined, "Slice API"),
@@ -289,7 +289,7 @@ export const counter = defineStateful("counter", {
   subscribe: Counter,
 })
 
-const FormExample = "store4"
+const FormExample = "store4cs"
 createStore(FormExample, { value: "" })
 
 const onChange =
@@ -300,7 +300,7 @@ const onChange =
     setStore(FormExample, { value: value })
   })
 
-export const inputExample = defineStateful("inputExample", {
+export const inputExamplecs = defineStateful("inputExamplecs", {
   render: () => {
     const value = selector(FormExample).value
     const id = "Controlled input example"
@@ -317,7 +317,7 @@ export const inputExample = defineStateful("inputExample", {
   subscribe: FormExample,
 })
 
-const FormExampleSelect = "store5"
+const FormExampleSelect = "store5cs"
 createStore(FormExampleSelect, { value: "" })
 
 const onChangeSelect =
@@ -328,7 +328,7 @@ const onChangeSelect =
     setStore(FormExampleSelect, { value: value })
   })
 
-export const selectExample = defineStateful("selectExample", {
+export const selectExamplecs = defineStateful("selectExamplecs", {
   render: () => {
     const value = selector(FormExampleSelect).value
     const id = "Controlled select example"

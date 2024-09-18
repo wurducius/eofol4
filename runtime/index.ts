@@ -24,6 +24,7 @@ export * from "./stateful"
 export * from "./storage"
 export * from "./store"
 export * from "./styles"
+export * from "./translation"
 export * from "./util"
 
 init()
