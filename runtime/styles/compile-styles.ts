@@ -1,23 +1,36 @@
-import { sy, syy } from "./sx"
+import { syy } from "./sx"
 import { Theme } from "./theme"
-import { getEnv } from "../internals"
 
+// eslint-disable-next-line no-unused-vars
 export const compileThemeStyles = (theme: Theme) => {
+  /*
   const breakpoints = getEnv().config.breakpoints
   // @TODO include breakpoints into env.config or such at compile time
   breakpoints?.forEach((breakpoint: { name: string; maxWidth: number | undefined }) => {
     if (breakpoint.maxWidth) {
-      sy(`container-${breakpoint.name}`, {
+      syy(`.container-${breakpoint.name}`, {
         maxWidth: `${breakpoint.maxWidth}px`,
       })
     }
   })
-
-  sy("container", {
+  syy(".container", {
     margin: "0 auto 0 auto",
     textAlign: "center",
     padding: `${theme.spacing.lg}px ${theme.spacing.lg}px`,
   })
+   */
+
+  /*
+  syy(".container-md", {
+    maxWidth: "1200px",
+  })
+
+  syy(".container", {
+    margin: "0 auto 0 auto",
+    textAlign: "center",
+    padding: "32px 32px",
+  })
+*/
 
   syy("body", {
     backgroundColor: "#1a202c",

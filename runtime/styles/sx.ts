@@ -35,17 +35,12 @@ export const sx = (styleObj: SxStyleObject, selector?: string, prefix?: string, 
   return hash
 }
 
-export const sy = (
-  classname: string,
-  styleObj: SxStyleObject,
-  selector?: string,
-  prefix?: string,
-  skipCompileCache?: boolean,
-) => {
-  if (!cache.includes(classname)) {
-    injectStyle(classname, getStyleContent(styleObj, selector), prefix, skipCompileCache)
+export const sy = (classname: string, styleObj: SxStyleObject, selector?: string, prefix?: string) => {
+  const style = (prefix === undefined ? "." : prefix) + classname + getStyleContent(styleObj, selector)
+  if (isBrowser()) {
+    document.styleSheets.item(0)?.insertRule(style)
   }
   return classname
 }
 
-export const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "", false)
+export const syy = (styleName: string, styleObj: SxStyleObject) => sy(styleName, styleObj, undefined, "")
