@@ -1,5 +1,5 @@
 const rimraf = require("rimraf")
-const { PATH_BUILD } = require("../../config")
+const { PATH_BUILD } = require("../../config/path")
 
 const cleanPaths = [PATH_BUILD]
 
