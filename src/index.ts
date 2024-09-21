@@ -374,7 +374,6 @@ const onLangSelect =
 export const languageSelect = defineStateful("languageSelect", {
   render: () => {
     const value = selector(TranslationStore).lang
-    console.log(value)
     const id = "Language select"
     return div(
       ["col", sx({ alignItems: "center" })],
