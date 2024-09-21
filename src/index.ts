@@ -34,6 +34,9 @@ import {
   addTheme,
   setTheme,
   t,
+  getCurrentLang,
+  getLangs,
+  setCurrentLang,
 } from "../runtime"
 
 addTheme("second", {
@@ -346,6 +349,36 @@ export const selectExample = defineStateful("selectExample", {
             ],
             { value, id },
             { onchange: onChangeSelect },
+          ),
+        ]),
+      ],
+    )
+  },
+  subscribe: FormExample,
+})
+
+const onLangSelect =
+  isBrowser() &&
+  ((event) => {
+    const value = event.target.value
+    console.log(`Set language -> ${value}`)
+    setCurrentLang(value)
+  })
+
+export const languageSelect = defineStateful("languageSelect", {
+  render: () => {
+    const value = getCurrentLang()
+    const id = "Language select"
+    return div(
+      ["col", sx({ alignItems: "center" })],
+      [
+        div(sx({ width: "256px" }), [
+          label(undefined, id, { for: id }),
+          select(
+            sx({ width: "100%" }),
+            getLangs().map((lang) => option(undefined, lang.title, { value: lang.id })),
+            { value, id },
+            { onchange: onLangSelect },
           ),
         ]),
       ],
