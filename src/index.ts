@@ -34,6 +34,11 @@ import {
   addTheme,
   setTheme,
   t,
+  getCurrentLang,
+  getLangs,
+  setCurrentLang,
+  ax,
+  Lang,
 } from "../runtime"
 
 addTheme("second", {
@@ -77,7 +82,7 @@ export const first = defineStateful("first", {
       "Output array !!!",
       randomString(),
       "Translation: ",
-      t("example", "Example"),
+      t("nested.example", "Example"),
       ...(Array.isArray(props.children) ? props.children : [props.children]),
     ].filter(Boolean)
   },
@@ -353,3 +358,42 @@ export const selectExample = defineStateful("selectExample", {
   },
   subscribe: FormExample,
 })
+
+const TranslationStore = "translation-lang-store"
+createStore(TranslationStore, { lang: getCurrentLang() })
+
+const onLangSelect =
+  isBrowser() &&
+  ((event) => {
+    const value = event.target.value
+    console.log(`Set language -> ${value}`)
+    setStore(TranslationStore, { lang: value })
+    setCurrentLang(value)
+  })
+
+export const languageSelect = defineStateful("languageSelect", {
+  render: () => {
+    const value = selector(TranslationStore).lang
+    const id = "Language select"
+    return div(
+      ["col", sx({ alignItems: "center" })],
+      [
+        div(sx({ width: "256px" }), [
+          label(undefined, id, { for: id }),
+          select(
+            sx({ width: "100%" }),
+            getLangs().map((lang: Lang) =>
+              option(undefined, lang.title, ax({ value: lang.id }, { selected: value === lang.id && "selected" })),
+            ),
+            { value, id },
+            { onchange: onLangSelect },
+          ),
+        ]),
+      ],
+    )
+  },
+  subscribe: TranslationStore,
+})
+
+// @TODO FIXME workaround to refresh event handlers
+forceRerender()
