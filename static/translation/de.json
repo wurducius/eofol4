@@ -1,3 +1,6 @@
 {
-  "example": "Beispiel"
+  "example": "Beispiel",
+  "nested": {
+    "example": "Beispiel"
+  }
 }

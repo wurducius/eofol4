@@ -37,8 +37,8 @@ import {
   getCurrentLang,
   getLangs,
   setCurrentLang,
-  Lang,
   ax,
+  Lang,
 } from "../runtime"
 
 addTheme("second", {
@@ -82,7 +82,7 @@ export const first = defineStateful("first", {
       "Output array !!!",
       randomString(),
       "Translation: ",
-      t("example", "Example"),
+      t("nested.example", "Example"),
       ...(Array.isArray(props.children) ? props.children : [props.children]),
     ].filter(Boolean)
   },
@@ -394,3 +394,6 @@ export const languageSelect = defineStateful("languageSelect", {
   },
   subscribe: TranslationStore,
 })
+
+// @TODO FIXME workaround to refresh event handlers
+forceRerender()
