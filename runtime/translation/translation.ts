@@ -3,7 +3,8 @@ import { isBrowser } from "../util"
 import { forceRerender } from "../stateful"
 import { fetchGeneral } from "../fetch"
 import { DEFAULT_LANG, LANGS } from "./languages"
-import { Translation } from "./types"
+import { Translation, TranslationStorage } from "./types"
+import { loadLocalStorage, saveLocalStorage } from "../storage"
 
 const env = getEnv()
 const BASE_URL = env.BASE_URL
@@ -30,15 +31,19 @@ else {
 }
  */
 
+const TRANSLATION_LOCAL_STORAGE = "_eofol_translation_storage"
+
 const defaultLang = TRANSLATION_DEFAULT_LANGUAGE
 
-let currentLang = defaultLang
+const translationStorage = loadLocalStorage(TRANSLATION_LOCAL_STORAGE) as TranslationStorage | undefined
 
 let translation: Translation = {}
 
 let langs = TRANSLATION_LANGUAGES.map((lang: string) => LANGS.find((langCodelist) => langCodelist.id === lang)).filter(
   Boolean,
 )
+
+let currentLang = defaultLang
 
 let isCustomLang = currentLang && currentLang !== defaultLang
 
@@ -64,11 +69,18 @@ const updateTranslation = () => {
     : forceRerender()
 }
 
+if (translationStorage && translationStorage.lang) {
+  currentLang = translationStorage.lang
+  setIsCustomLang()
+  updateTranslation()
+}
+
 export const getLangs = () => langs
 
 export const setCurrentLang = (lang: string) => {
   currentLang = lang
   setIsCustomLang()
+  saveLocalStorage({ lang }, TRANSLATION_LOCAL_STORAGE)
   updateTranslation()
 }
 
