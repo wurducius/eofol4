@@ -53,6 +53,27 @@ a {
   margin: 0 auto 0 auto;
 }
 
+button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+input {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+textarea {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+select {
+  font-family: inherit;
+  font-size: 16px;
+}
+
 body::-webkit-scrollbar {
   width: 16px;
 }
