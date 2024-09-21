@@ -3,6 +3,8 @@ import { isBrowser } from "../util"
 import { forceRerender } from "../stateful"
 import { fetchGeneral } from "../fetch"
 
+export type Lang = { id: string; title: string; icon?: string }
+
 const env = getEnv()
 const BASE_URL = env.BASE_URL
 let TRANSLATION_ENABLED
@@ -17,7 +19,7 @@ if (isBrowser()) {
   TRANSLATION_ENABLED = false
   TRANSLATION_DEFAULT_LANGUAGE = "en"
   // @TODO changeit
-  TRANSLATION_LANGUAGES = ["en", "cs"]
+  TRANSLATION_LANGUAGES = ["en", "cs", "de"]
 }
 
 /*
@@ -29,9 +31,10 @@ else {
  */
 
 // @TODO Fill language codelist with values, probably best to use some library codelist, also add country flag icons, use some kind of sorting
-const LANGS = [
+const LANGS: Lang[] = [
   { id: "en", title: "English" },
   { id: "cs", title: "Česky" },
+  { id: "de", title: "Deutsch" },
 ]
 
 const defaultLang = TRANSLATION_DEFAULT_LANGUAGE
@@ -44,7 +47,7 @@ let langs = TRANSLATION_LANGUAGES.map((lang: string) => LANGS.find((langCodelist
   Boolean,
 )
 
-let isCustomLang = currentLang !== defaultLang
+let isCustomLang = currentLang && currentLang !== defaultLang
 
 const setTranslation = (content: Object) => {
   translation = content
@@ -73,6 +76,8 @@ export const setCurrentLang = (lang: string) => {
 }
 
 export const getCurrentLang = () => currentLang
+
+export const getDefaultLang = () => defaultLang
 
 if (isBrowser()) {
   const split = window.location.pathname.split("-")

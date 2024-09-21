@@ -3,7 +3,7 @@ module.exports = {
     // SERVICE_WORKER_REGISTER_AUTOMATICALLY: true,
     // TRANSLATION_ENABLED: true,
     // TRANSLATION_DEFAULT_LANGUAGE: "en",
-    TRANSLATION_LANGUAGES: ["en", "cs"],
+    TRANSLATION_LANGUAGES: ["en", "cs", "de"],
     //  PREFETCHING_STRATEGY: "link", // values = "all" | "link" | "none"
     // ERROR_OVERLAY: true,
     // VERBOSE: false,

@@ -37,6 +37,8 @@ import {
   getCurrentLang,
   getLangs,
   setCurrentLang,
+  Lang,
+  ax,
 } from "../runtime"
 
 addTheme("second", {
@@ -357,17 +359,22 @@ export const selectExample = defineStateful("selectExample", {
   subscribe: FormExample,
 })
 
+const TranslationStore = "translation-lang-store"
+createStore(TranslationStore, { lang: getCurrentLang() })
+
 const onLangSelect =
   isBrowser() &&
   ((event) => {
     const value = event.target.value
     console.log(`Set language -> ${value}`)
+    setStore(TranslationStore, { lang: value })
     setCurrentLang(value)
   })
 
 export const languageSelect = defineStateful("languageSelect", {
   render: () => {
-    const value = getCurrentLang()
+    const value = selector(TranslationStore).lang
+    console.log(value)
     const id = "Language select"
     return div(
       ["col", sx({ alignItems: "center" })],
@@ -376,7 +383,9 @@ export const languageSelect = defineStateful("languageSelect", {
           label(undefined, id, { for: id }),
           select(
             sx({ width: "100%" }),
-            getLangs().map((lang) => option(undefined, lang.title, { value: lang.id })),
+            getLangs().map((lang: Lang) =>
+              option(undefined, lang.title, ax({ value: lang.id }, { selected: value === lang.id && "selected" })),
+            ),
             { value, id },
             { onchange: onLangSelect },
           ),
@@ -384,5 +393,5 @@ export const languageSelect = defineStateful("languageSelect", {
       ],
     )
   },
-  subscribe: FormExample,
+  subscribe: TranslationStore,
 })
